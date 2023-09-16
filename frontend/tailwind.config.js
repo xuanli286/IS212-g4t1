@@ -1,0 +1,43 @@
+const colors = require("tailwindcss/colors");
+
+module.exports = {
+  mode: "jit",
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx,vue}"],
+  darkMode: false,
+  theme: {
+    colors: {
+      grey: {
+        DEFAULT: "#9F9F9F",
+        50: "#EFEFEF",
+      },
+      black: "#323230",
+      white: "#F9F8F4",
+      green: "#307B74",
+      yellow: {
+        DEFAULT: "#FF9D01",
+        50: "#FBB620",
+      },
+      red: "#FE4D35",
+    },
+    fontFamily: {
+      serif: ["GFS Didot"],
+      sans: ["Nunito Sans"],
+    },
+
+    fontWeight: {
+      thin: "100",
+      extralight: "200",
+      light: "300",
+      normal: "400",
+      medium: "500",
+      semibold: "600",
+      bold: "700",
+      extrabold: "800",
+      black: "900",
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
