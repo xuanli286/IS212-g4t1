@@ -1,5 +1,6 @@
 <script setup>
     import { ref } from "vue";
+
     const user = {access_ID: 2, staff_FName: "Philip", staff_LName: "Lee"};
     const access = {0: 'Staff', 1: 'Manager & Director', 2: 'HR Staff'};
 
@@ -11,7 +12,7 @@
 </script>
 
 <template>
-    <div class="font-serif">
+    <div class="font-serif mx-10 my-3">
         <div class="flex">
             <img class="w-16" src="@/assets/logo.png" alt="">
             <div class="flex ml-auto items-center relative">
