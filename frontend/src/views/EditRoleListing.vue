@@ -1,14 +1,21 @@
 <script setup>
     import axios from "axios";
     import { ref, computed } from "vue";
+    import Button from "@/components/Button.vue";
 
-    const rolelistingID = 1;
+    const rolelistingID = 5;
     
     const roles = ref({});
     const selectedTitle = ref("");
     const applicationOpening = ref("");
     const applicationDeadline = ref("");
     const minCloseDate = ref("");
+    const hiringDepartment = ref([]);
+    const selectedDept = ref("");
+    const countries = ref([]);
+    const selectedCountry = ref("");
+    const skills = ref([]);
+    const managerID = ref([]);
 
     const today = new Date();
 
@@ -23,6 +30,7 @@
 
     function updateMinCloseDate() {
         const maxDate = new Date(Math.max(today, new Date(applicationOpening.value)));
+        maxDate.setDate(maxDate.getDate() + 1);
         let year = maxDate.getFullYear();
         let month = String(maxDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
         let day = String(maxDate.getDate()).padStart(2, '0');
@@ -30,13 +38,19 @@
         console.log(maxDate)
     }
 
+    updateMinCloseDate();
+
     axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
         .then((response) => {
             const editRole = response.data.data[rolelistingID];
             selectedTitle.value = editRole.role_name;
+            updateSkills();
             applicationOpening.value = editRole['application_opening'];
             applicationDeadline.value = editRole['application_deadline'];
-            console.log(editRole)
+            selectedDept.value = editRole.dept;
+            selectedCountry.value = editRole.country;
+            managerID.value = editRole['manager_ID'];
+            console.log(editRole);
         })
         .catch((error) => {
             console.log(error.message);
@@ -54,22 +68,66 @@
             console.log(error.message);
         })
 
+    axios.get('http://127.0.0.1:5000/get_dept_country/dept')
+        .then((response) => {
+            hiringDepartment.value = response.data.data;
+        })
+        .catch((error) => {
+            console.log(error.message);
+        })
+
+    axios.get('http://127.0.0.1:5000/get_dept_country/country')
+        .then((response) => {
+            countries.value = response.data.data;
+        })
+        .catch((error) => {
+            console.log(error.message);
+        })
+
+    function updateSkills() {
+        axios.get(`http://127.0.0.1:5000/get_role_skill/${selectedTitle.value}`)
+            .then((response) => {
+                skills.value = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error.message);
+            })
+    }
+
+    function editRoleListing() {
+        const body = {
+            "application_deadline": applicationDeadline.value,
+            "application_opening": applicationOpening.value,
+            "country": selectedCountry.value,
+            "dept": selectedDept.value,
+            "manager_ID": managerID.value,
+            "role_name": selectedTitle.value,
+        }
+        console.log(body)
+        axios.put(`http://127.0.0.1:5000/updaterolelisting/${rolelistingID}`, body)
+            .then((response) => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data.message);
+            })
+    }
     
 </script>
 
 <template>
-    <div class="bg-white px-10 py-5">
+    <div class="bg-beige px-10 py-5">
         <p class="font-serif flex justify-center items-center">Edit Role Listing</p>
-        <div class="bg-grey-50 rounded-lg p-5 mt-5">
+        <div class="bg-grey-50 rounded-lg p-5 mt-5 font-sans text-base">
             <div class="grid grid-cols-3 gap-28">
                 <div>
-                    <p class="font-sans font-bold text-base">Title</p>
-                    <select class="mt-1 p-2 rounded-md w-full" v-model="selectedTitle">
+                    <p class="font-bold">Title</p>
+                    <select class="mt-1 p-2 rounded-md w-full" v-model="selectedTitle" @change="updateSkills">
                         <option v-for="(description, role) in roles" :key="description">{{ role }}</option>
                     </select>
                 </div>
                 <div>
-                    <label for="applicationOpening" class="block font-sans font-bold text-base">Application Opening</label>
+                    <label for="applicationOpening" class="block font-bold">Application Opening</label>
                     <input
                         type="date"
                         id="applicationOpening"
@@ -81,7 +139,7 @@
                     />
                 </div>
                 <div>
-                    <label for="applicationDeadline" class="block font-sans font-bold text-base">Application Deadline</label>
+                    <label for="applicationDeadline" class="block font-bold">Application Deadline</label>
                     <input
                         type="date"
                         id="applicationDeadline"
@@ -91,10 +149,44 @@
                         :min="minCloseDate"
                     />
                 </div>
-
+            </div>
+            <div class="grid grid-cols-2 pt-5 gap-16">
+                <div>
+                    <p class="font-bold">Hiring Department</p>
+                    <select class="mt-1 p-2 rounded-md w-full" v-model="selectedDept">
+                        <option v-for="dept of hiringDepartment" :key="dept">{{ dept }}</option>
+                    </select>
+                </div>
+                <div>
+                    <p class="font-bold">Country</p>
+                    <select class="mt-1 p-2 rounded-md w-full" v-model="selectedCountry">
+                        <option v-for="country of countries" :key="country">{{ country }}</option>
+                    </select>
+                    
+                </div>
+            </div>
+            <div class="pt-5">
+                <p class="font-bold">Description</p>
+                <textarea
+                    :value="roles[selectedTitle]"
+                    disabled
+                    class="w-full h-24 p-2 bg-white rounded-md text-grey"
+                >
+                </textarea>
+            </div>
+            <div class="pt-5">
+                <p class="font-bold">Required Skills</p>
+                <label class="flex text-grey" v-for="skill of skills" :key="skill">
+                    <input type="checkbox" :value="skill" checked disabled />
+                    <p class="ml-2">{{ skill }}</p>
+                </label>
             </div>
         </div>
-
-        <!-- {{ roles[selectedTitle] }} -->
+        <Button @click="editRoleListing">
+            <template v-slot:icon>
+                <img class="mr-2" src="@/assets/icons/edit.svg" alt="">
+            </template>
+            <template v-slot:text>Save Edit</template>
+        </Button>
     </div>
 </template>

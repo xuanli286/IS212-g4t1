@@ -24,7 +24,7 @@
                 <img class="ml-3 cursor-pointer" src="@/assets/icons/dropdown.svg" alt="" @click="expandDropdown">
             </div>
         </div>
-        <div v-if="isExpand" class="absolute right-0 mr-10 bg-grey-50 text-xs cursor-pointer">
+        <div v-if="isExpand" class="absolute right-0 mr-10 bg-grey-50 text-sm cursor-pointer">
             <div class="flex w-36 p-3 rounded-md hover:bg-grey">
                 <img class="mr-2" src="@/assets/icons/folder.svg" alt="">
                 <p>My Skill Profile</p>
