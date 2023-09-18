@@ -1,7 +1,16 @@
 <script setup>
     import axios from "axios";
-    import { ref, computed } from "vue";
     import Button from "@/components/Button.vue";
+    import Modal from "@/components/Modal.vue";
+    import { ref, computed } from "vue";
+    import { storeToRefs } from 'pinia';
+    import { useEditRoleListingStore } from "@/store/useEditRoleListingStore.js";
+
+    const store = useEditRoleListingStore();
+    const {
+        isOpen,
+        isSuccess,
+    } = storeToRefs(store);
 
     const rolelistingID = 5;
     
@@ -16,6 +25,7 @@
     const selectedCountry = ref("");
     const skills = ref([]);
     const managerID = ref([]);
+    const errorMessage = ref("");
 
     const today = new Date();
 
@@ -103,13 +113,14 @@
             "manager_ID": managerID.value,
             "role_name": selectedTitle.value,
         }
-        console.log(body)
         axios.put(`http://127.0.0.1:5000/updaterolelisting/${rolelistingID}`, body)
             .then((response) => {
-                console.log(response.data);
+                isOpen.value = true;
+                isSuccess.value = true;
             })
             .catch((error) => {
-                console.log(error.response.data.message);
+                errorMessage.value = error.response.data.message;
+                isOpen.value = true;
             })
     }
     
@@ -188,5 +199,12 @@
             </template>
             <template v-slot:text>Save Edit</template>
         </Button>
+
+        <Modal v-if="isOpen" :isSuccess=isSuccess>
+            <template v-slot:text>
+                <p v-if="isSuccess">Role listing has been updated successfully.</p>
+                <p v-else>{{ errorMessage }}</p>
+            </template>
+        </Modal>
     </div>
 </template>
