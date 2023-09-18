@@ -24,7 +24,7 @@
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 export default {
   name: 'HelloWorld',
@@ -35,7 +35,7 @@ export default {
     }
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       // Gather user input data
       console.log(this.email)
       console.log(this.password)
@@ -49,19 +49,26 @@ export default {
         "password": password
       };
       console.log(formData)
-
-      // Make a POST request to your backend API
-      // axios.post('/api/login', formData)
-      //   .then(response => {
-      //     // Handle successful response from the backend
-      //     console.log('Login successful:', response.data);
-      //     // You can perform any necessary actions here, e.g., redirect the user to another page.
-      //   })
-      //   .catch(error => {
-      //     // Handle error response from the backend
-      //     console.error('Login failed:', error);
-      //     // You can display an error message to the user or take other appropriate actions.
-      //   });
+      try {
+        // const response = await axios.get(`/api/user?email=${formData.email}&password=${formData.password}`);
+        
+        // Handle successful response
+        this.userInfo = response.data; // 
+        
+        console.log(this.userInfo);
+        
+        // Reset the error message (if there was one)
+        this.error = null;
+      } catch (error) {
+        // Handle error response
+        console.error('Error fetching user information:', error);
+        
+        // Set an error message to display to the user
+        this.error = "Invalid email or password. Please try again.";
+        
+        // Reset userInfo to null
+        this.userInfo = null;
+      }
     }
   }
 }
