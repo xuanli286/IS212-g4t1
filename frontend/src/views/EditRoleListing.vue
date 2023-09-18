@@ -4,13 +4,20 @@
     import Modal from "@/components/Modal.vue";
     import { ref, computed } from "vue";
     import { storeToRefs } from 'pinia';
-    import { useEditRoleListingStore } from "@/store/useEditRoleListingStore.js";
+    import { useConstantStore } from '@/store/useConstantStore';
+    import { useEditRoleListingStore } from "@/store/useEditRoleListingStore";
 
     const store = useEditRoleListingStore();
     const {
         isOpen,
         isSuccess,
     } = storeToRefs(store);
+
+    const constStore = useConstantStore();
+    const {
+        hiringDepartment,
+        countries,
+    } = storeToRefs(constStore);
 
     const rolelistingID = 5;
     
@@ -19,9 +26,7 @@
     const applicationOpening = ref("");
     const applicationDeadline = ref("");
     const minCloseDate = ref("");
-    const hiringDepartment = ref([]);
     const selectedDept = ref("");
-    const countries = ref([]);
     const selectedCountry = ref("");
     const skills = ref([]);
     const managerID = ref([]);
@@ -73,22 +78,6 @@
                     roles.value[key] = i[key];
                 }
             }
-        })
-        .catch((error) => {
-            console.log(error.message);
-        })
-
-    axios.get('http://127.0.0.1:5000/get_dept_country/dept')
-        .then((response) => {
-            hiringDepartment.value = response.data.data;
-        })
-        .catch((error) => {
-            console.log(error.message);
-        })
-
-    axios.get('http://127.0.0.1:5000/get_dept_country/country')
-        .then((response) => {
-            countries.value = response.data.data;
         })
         .catch((error) => {
             console.log(error.message);

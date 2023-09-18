@@ -256,6 +256,7 @@ def enum_values(column_name):
 
     if hasattr(column.type, "enums"):
         enum_values = column.type.enums
+        enum_values.sort()
         return jsonify(
         {
             "code": 200,

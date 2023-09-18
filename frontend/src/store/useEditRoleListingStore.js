@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const useEditRoleListingStore = defineStore('editRoleListing', () => {
   const isOpen = ref(false);
@@ -8,5 +8,5 @@ export const useEditRoleListingStore = defineStore('editRoleListing', () => {
   return {
     isOpen,
     isSuccess,
-  } 
+  }
 })
