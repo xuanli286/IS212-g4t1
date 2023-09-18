@@ -1,6 +1,7 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="TEST COMMIT App" />
+  <div class="bg-beige min-h-screen">
+    <HelloWorld msg="TEST COMMIT App" />
+  </div>
   <!-- <Login></Login> -->
 </template>
 
@@ -23,6 +24,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
