@@ -1,10 +1,8 @@
 # IG_8      HR staff can update a role listing
 import json
 import pytest
-import sys
-sys.path.append('..')
 
-from g4t1 import *
+from g4t1_test import *
 from os import environ
 from sqlalchemy.exc import IntegrityError
 
