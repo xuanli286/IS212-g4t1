@@ -12,8 +12,8 @@
 </script>
 
 <template>
-    <div class="font-serif mx-10 my-3">
-        <div class="flex">
+    <div class="bg-white font-serif">
+        <div class="flex py-3">
             <img class="w-16" src="@/assets/logo.png" alt="">
             <div class="flex ml-auto items-center relative">
                 <img src="@/assets/hr_staff.svg" alt="">
