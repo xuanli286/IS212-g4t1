@@ -11,13 +11,20 @@ module.exports = {
         50: "#EFEFEF",
       },
       black: "#323230",
-      white: "#F9F8F4",
-      green: "#307B74",
+      beige: "#F9F8F4",
+      white: colors.white,
+      green: {
+        DEFAULT: "#307B74",
+        50: "#D0FFE3",
+      },
       yellow: {
         DEFAULT: "#FF9D01",
         50: "#FBB620",
       },
-      red: "#FE4D35",
+      red: {
+        DEFAULT: "#FE4D35",
+        50: "#FFD8D6",
+      },
     },
     fontFamily: {
       serif: ["GFS Didot"],
