@@ -3,13 +3,11 @@ import json
 import pytest
 
 from g4t1_test import *
-from os import environ
 from sqlalchemy.exc import IntegrityError
 
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("dbURL")
     client = app.test_client()
     yield client
 
