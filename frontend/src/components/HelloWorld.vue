@@ -5,14 +5,15 @@
       <h1 class="flex mb-14 text-4xl font-serif">Sign In</h1>
       <form class="space-y-4 md:space-y-6" action="#">
         <div>
-            <label for="email" class="mb-2 text-sm font-medium text-black flex">Email</label>
-            <input v-model="email" type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="name@company.com" required="">
+            <label for="staffId" class="mb-2 text-sm font-medium text-black flex">Staff ID</label>
+            <input v-model="staffId" name="staffId" id="staffId" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="" required="">
         </div>
         <div>
             <label for="password" class="flex mb-2 text-sm font-medium text-black">Password</label>
             <input v-model="password" type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="">
         </div>
-        <button @click="submitForm" type="submit" class="bg-yellow hover:bg-yellow w-full text-white font-bold py-2 px-4 rounded">Sign in</button>
+        <button @click="submitForm" class="bg-yellow hover:bg-yellow w-full text-white font-bold py-2 px-4 rounded">Sign in</button>
+        <span v-if="wrongMsg" class="text-red">Wrong Staff ID or password! Please re-enter your details. If you have any other issues, contact the administrator</span>
       </form>
     </div>
     <div class="p-0">
@@ -24,51 +25,58 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+const get_staff_URL = "http://127.0.0.1:5000/staff";
 
 export default {
   name: 'HelloWorld',
   data() {
     return {
-      email: "",
-      password: ""
+      staffId: "",
+      password: "",
+      user: {},
+      wrongMsg: false
     }
   },
   methods: {
-    async submitForm() {
+    async submitForm(event) {
+      event.preventDefault();
       // Gather user input data
-      console.log(this.email)
+      console.log(this.staffId)
       console.log(this.password)
-      const email = this.email
-      const password = this.password
-  
-      // Create a data object to send to the backend
-      
-      const formData = {
-        "email": email,
-        "password": password
-      };
-      console.log(formData)
-      try {
-        // const response = await axios.get(`/api/user?email=${formData.email}&password=${formData.password}`);
-        
-        // Handle successful response
-        this.userInfo = response.data; // 
-        
-        console.log(this.userInfo);
-        
-        // Reset the error message (if there was one)
-        this.error = null;
-      } catch (error) {
-        // Handle error response
-        console.error('Error fetching user information:', error);
-        
-        // Set an error message to display to the user
-        this.error = "Invalid email or password. Please try again.";
-        
-        // Reset userInfo to null
-        this.userInfo = null;
-      }
+      fetch(`${get_staff_URL}/${this.staffId}`)
+      .then((response) => {
+                if (response.status === 404) {
+                  this.wrongMsg = true;
+                }
+                return response.json();
+              })
+              .then((data) => {
+                // console.log(data);
+                if (data.code === 200) {
+                  console.log(data.data[this.staffId])
+                  const staffData = data.data[this.staffId]
+                  const staffPassword = staffData['staff_password']
+                  console.log(staffPassword)
+                  if (this.password == staffPassword)
+                  {
+                    this.wrongMsg = false
+                    this.user = {access_ID: staffData['access_ID'], staff_FName: staffData['staff_FName'], staff_LName: staffData['staff_LName']}
+                      // {access_ID: 2, staff_FName: "Philip", staff_LName: "Lee"};
+                    console.log("Success!", this.user)
+                  }
+                  else
+                  {
+                    this.wrongMsg = true
+                    // alert("Wrong Staff ID or Password! Please reenter.")
+                  }
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+                this.wrongMsg = true
+                // alert("Wrong Staff ID or Password! Please reenter.")
+              });
     }
   }
 }

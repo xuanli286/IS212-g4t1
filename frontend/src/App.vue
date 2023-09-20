@@ -1,6 +1,6 @@
 <template>
   <div class="bg-beige min-h-screen">
-    <HelloWorld msg="TEST COMMIT App" />
+    <HelloWorld/>
   </div>
   <!-- <Login></Login> -->
 </template>
