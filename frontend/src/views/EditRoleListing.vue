@@ -25,7 +25,6 @@
     const selectedTitle = ref("");
     const applicationOpening = ref("");
     const applicationDeadline = ref("");
-    const minCloseDate = ref("");
     const selectedDept = ref("");
     const selectedCountry = ref("");
     const skills = ref([]);
@@ -36,24 +35,32 @@
 
     const minOpenDate = computed(() => {
         let year = today.getFullYear();
-        let month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        let month = String(today.getMonth() + 1).padStart(2, '0');
         let day = String(today.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     })
 
     applicationOpening.value = minOpenDate.value;
 
+    const minCloseDate = computed(() => {
+        const dates = [new Date(applicationOpening.value), today];
+        const maxDate = new Date(Math.max.apply(null, dates));
+        maxDate.setDate(maxDate.getDate() + 1);
+        const year = maxDate.getFullYear();
+        const month = String(maxDate.getMonth() + 1).padStart(2, '0');
+        const day = String(maxDate.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    });
+
     function updateMinCloseDate() {
-        const maxDate = new Date(Math.max(today, new Date(applicationOpening.value)));
+        const dates = [new Date(applicationOpening.value), today];
+        const maxDate = new Date(Math.max.apply(null, dates));
         maxDate.setDate(maxDate.getDate() + 1);
         let year = maxDate.getFullYear();
-        let month = String(maxDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        let month = String(maxDate.getMonth() + 1).padStart(2, '0');
         let day = String(maxDate.getDate()).padStart(2, '0');
-        minCloseDate.value = `${year}-${month}-${day}`
-        console.log(maxDate)
+        minCloseDate.value = `${year}-${month}-${day}`;
     }
-
-    updateMinCloseDate();
 
     axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
         .then((response) => {
