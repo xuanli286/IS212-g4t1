@@ -60,6 +60,7 @@
         let month = String(maxDate.getMonth() + 1).padStart(2, '0');
         let day = String(maxDate.getDate()).padStart(2, '0');
         minCloseDate.value = `${year}-${month}-${day}`;
+        applicationDeadline.value = minCloseDate.value;
     }
 
     axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
