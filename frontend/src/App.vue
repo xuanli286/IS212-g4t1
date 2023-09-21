@@ -1,28 +1,25 @@
-<template>
-  <div class="bg-beige min-h-screen">
-    <HelloWorld/>
-  </div>
-  <!-- <Login></Login> -->
-</template>
-
-<script>
-import HelloWorld from "./components/HelloWorld.vue";
-
-export default {
-  name: "App",
-  components: {
-    // Login,
-    HelloWorld,
-  },
-};
+<script setup>
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<style></style>
+
+<template>
+  <div>
+    <!-- Contains the main content of the webpage-->
+    <router-view></router-view>
+  </div>
+</template>
+
+
+<script>
+export default {
+  data() {
+    return {
+    }
+  },
+  created() {
+  },
+  methods: {
+  }
 }
-</style>
+</script>
