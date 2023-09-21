@@ -26,6 +26,8 @@
 
 <script>
 // import axios from 'axios';
+import { useUserStore } from '../store/userStore';
+
 const get_staff_URL = "http://127.0.0.1:5000/staff";
 
 export default {
@@ -64,6 +66,13 @@ export default {
                     this.user = {access_ID: staffData['access_ID'], staff_FName: staffData['staff_FName'], staff_LName: staffData['staff_LName']}
                       // {access_ID: 2, staff_FName: "Philip", staff_LName: "Lee"};
                     console.log("Success!", this.user)
+
+                    const userStore = useUserStore();
+                    userStore.setUser({
+                      access_ID: staffData['access_ID'],
+                      staff_FName: staffData['staff_FName'],
+                      staff_LName: staffData['staff_LName'],
+                    });
                     // Redirect to the home page
                     this.$router.push({ name: 'Home' });
                   }
