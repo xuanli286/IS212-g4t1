@@ -13,7 +13,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/",
+      path: "/home",
       name: "Home",
       component: Home,
     },
@@ -28,7 +28,7 @@ const router = createRouter({
       component: SkillManagement,
     },
     {
-      path: "/login",
+      path: "/",
       name: "Login",
       component: Login,
     },
