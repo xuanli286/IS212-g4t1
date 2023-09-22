@@ -6,12 +6,16 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useConstantStore } from "@/store/useConstantStore";
 import { useModalStore } from "@/store/useModalStore";
+import { useUserStore } from '@/store/useUserStore'
 
 const store = useModalStore();
 const { isOpen, isSuccess } = storeToRefs(store);
 
 const constStore = useConstantStore();
 const { hiringDepartment, countries } = storeToRefs(constStore);
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore)
 
 // const rolelistingID = 3;
 
@@ -71,25 +75,38 @@ axios
   });
 
 function addRoleListing(){
-  const body = {
-            "application_deadline": applicationDeadline.value,
-            "application_opening": applicationOpening.value,
-            "country": selectedCountry.value,
-            "dept": selectedDept.value,
-            "manager_ID": managerID.value,
-            "role_name": selectedTitle.value,
-        }
-        axios.post(`http://127.0.0.1:5000/addrolelisting`, body)
-            .then((response) => {
-                isOpen.value = true;
-                isSuccess.value = true;
-            })
-            .catch((error) => {
-                errorMessage.value = error.response.data.message;
-                isOpen.value = true;
-            })
 
+  if (user.value.access_ID == 2){ //admin
+    if (applicationDeadline.value == "" || applicationOpening.value=="" || selectedCountry.value=="" || selectedDept.value=="" || managerID.value=="" || selectedTitle.value==""){
+      errorMessage.value = "Not all fields are filled!";
+      isOpen.value = true;
+    } else{
+      const body = {
+          "application_deadline": applicationDeadline.value,
+          "application_opening": applicationOpening.value,
+          "country": selectedCountry.value,
+          "dept": selectedDept.value,
+          "manager_ID": managerID.value,
+          "role_name": selectedTitle.value,
+      }
+      axios.post(`http://127.0.0.1:5000/addrolelisting`, body)
+      .then((response) => {
+          isOpen.value = true;
+          isSuccess.value = true;
+      })
+      .catch((error) => {
+          errorMessage.value = error.response.data.message;
+          isOpen.value = true;
+      })
+    }
+  } else { // not admin
+    errorMessage.value = "Unauthorised access!";
+    isOpen.value = true;
+  }
+
+  
 }
+
 function updateSkills() {
   axios
     .get(`http://127.0.0.1:5000/get_role_skill/${selectedTitle.value}`)
