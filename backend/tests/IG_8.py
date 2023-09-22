@@ -16,7 +16,7 @@ def test_invalid_role(client):
         "role_name": "Consult",
         "application_opening": "2023-10-01",
         "application_deadline": "2023-10-15",
-        "manager_ID": 1033,
+        "manager_ID": 1030,
         "dept": "Finance",
         "country": "Hong Kong",
     }
@@ -30,7 +30,7 @@ def test_update_role_listing(client):
         "role_name": "Consultant",
         "application_opening": "2023-10-01",
         "application_deadline": "2023-10-15",
-        "manager_ID": 1033,
+        "manager_ID": 1030,
         "dept": "Finance",
         "country": "Hong Kong",
     }
@@ -50,7 +50,7 @@ def test_update_duplicate_role_listing(client):
         "role_name": "Consultant",
         "application_opening": "2023-10-01",
         "application_deadline": "2023-10-15",
-        "manager_ID": 1033,
+        "manager_ID": 1030,
         "dept": "Finance",
         "country": "Hong Kong",
     }

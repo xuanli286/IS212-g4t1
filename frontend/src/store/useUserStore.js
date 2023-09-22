@@ -1,7 +1,5 @@
-// userStore.js
 import { defineStore } from 'pinia';
 
-// Define the user store
 export const useUserStore = defineStore({
   id: 'user',
   state: () => ({

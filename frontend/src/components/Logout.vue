@@ -1,13 +1,27 @@
 <script setup>
     import { ref } from "vue";
+    import { useUserStore } from "@/store/useUserStore";
+    import { storeToRefs } from 'pinia';
+    import router from '@/router';
 
-    const user = {access_ID: 2, staff_FName: "Philip", staff_LName: "Lee"};
+    const store = useUserStore();
+    const {
+        user,
+    } = storeToRefs(store);
+
     const access = {0: 'Staff', 1: 'Manager & Director', 2: 'HR Staff'};
+
+    console.log(user.value)
 
     const isExpand = ref(false);
 
     function expandDropdown() {
         isExpand.value = !isExpand.value;
+    }
+
+    function logout() {
+        router.push({name: 'Login'});
+        user.value = null;
     }
 </script>
 
@@ -29,7 +43,7 @@
                 <img class="mr-2" src="@/assets/icons/folder.svg" alt="">
                 <p>My Skill Profile</p>
             </div>
-            <div class="flex w-36 p-3 rounded-md hover:bg-grey">
+            <div class="flex w-36 p-3 rounded-md hover:bg-grey" @click="logout">
                 <img class="mr-2" src="@/assets/icons/logout.svg" alt="">
                 <p>Logout</p>
             </div>
