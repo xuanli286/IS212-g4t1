@@ -21,3 +21,5 @@ def client():
     # Drop the test database after the tests are finished
     with app.app_context():
         db.drop_all()
+        
+###
