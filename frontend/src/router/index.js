@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import RoleListingManagement from "../views/RoleListingManagement.vue";
 import SkillManagement from "../views/SkillManagement.vue";
 import Login from "../views/Login.vue";
+import AddRoleListing from "../views/AddRoleListing.vue";
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -31,6 +32,11 @@ const router = createRouter({
       path: "/",
       name: "Login",
       component: Login,
+    },
+    {
+      path: "/addrolelisting",
+      name: "AddRoleListing",
+      component: AddRoleListing,
     },
   ],
 });
