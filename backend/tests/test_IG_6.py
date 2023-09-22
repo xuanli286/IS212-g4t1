@@ -40,7 +40,7 @@ def test_duplicate_rolelisting(client):
         "application_deadline": "2023-12-31",
         "dept": "Engineering Operation",
         "country": "Hong Kong",
-        "manager_ID": "1033",
+        "manager_ID": "1033"
     }
     
     response = client.post("/addrolelisting", json=rolelisting_data)
