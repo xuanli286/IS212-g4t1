@@ -71,28 +71,23 @@ axios
   });
 
 function addRoleListing(){
-  const newRoleListing = {
-    role_name: selectedTitle,
-    application_opening: applicationOpening,
-    application_deadline: applicationDeadline,
-    dept: selectedDept,
-    country: selectedCountry,
-    manager_ID: managerID,
-  };
-  axios
-  .post(
-    'http://127.0.0.1:5000/addrolelisting', newRoleListing
-  )
-  .then((response) => {
-    console.log('Role listing added:', response.data);
-    isOpen.value = true;
-    isSuccess.value = true;
-  })
-  .catch((error) => {
-    // errorMessage.value = error.response.data.message;
-    // isOpen.value = true;
-    console.log(error)
-  });
+  const body = {
+            "application_deadline": applicationDeadline.value,
+            "application_opening": applicationOpening.value,
+            "country": selectedCountry.value,
+            "dept": selectedDept.value,
+            "manager_ID": managerID.value,
+            "role_name": selectedTitle.value,
+        }
+        axios.post(`http://127.0.0.1:5000/addrolelisting`, body)
+            .then((response) => {
+                isOpen.value = true;
+                isSuccess.value = true;
+            })
+            .catch((error) => {
+                errorMessage.value = error.response.data.message;
+                isOpen.value = true;
+            })
 
 }
 function updateSkills() {
@@ -105,7 +100,6 @@ function updateSkills() {
       console.log(error.message);
     });
 }
-
 </script>
 
 <template>
@@ -174,7 +168,8 @@ function updateSkills() {
           <p class="font-bold">Manager ID</p>
           <input 
             type="text" 
-            class="w-full p-2 bg-white rounded-md text-grey"
+            class="w-full p-2 bg-white rounded-md" 
+            v-model="managerID"
           />
         </div>
       </div>
