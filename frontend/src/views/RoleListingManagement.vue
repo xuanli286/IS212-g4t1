@@ -1,31 +1,28 @@
 <script setup>
   import axios from "axios";
+  import { ref } from "vue";
 
-  var roleListings = []
+  const roleListings = ref({})
+
   axios
     .get("http://127.0.0.1:5000/openrolelisting")
     .then((response) => {
-      roleListings = cleanResponseData(response)
-      console.log(roleListings);
-
-    })
-
-  function cleanResponseData(response){
-    roleListings = response.data.data.rolelisting
-    var cleanedRoleListings = []
-      for(let i = 0; i < roleListings.length; i++){
-        let key = Object.keys(roleListings[i])
-        let roleListingObj = roleListings[i][key]
-        cleanedRoleListings.push(roleListingObj)
+      let receivedListings = response.data.data.rolelisting
+      for(let listing of receivedListings){
+        for(let key in listing){
+          roleListings.value[key] = listing[key]
+        }
       }
-    return cleanedRoleListings
-  }
+      console.log(roleListings);
+    });
 
 </script>
 
 <template>
   <div>
     <h1>Role Listing Management</h1>
+    <ul>
+    </ul>
   </div>
 </template>
 
