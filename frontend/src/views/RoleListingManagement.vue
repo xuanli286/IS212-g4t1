@@ -1,6 +1,7 @@
 <script setup>
   import axios from "axios";
   import { ref } from "vue";
+  import Button from "@/components/Button.vue";
 
   const roleListings = ref({})
 
@@ -20,9 +21,23 @@
 
 <template>
   <div class="bg-beige min-h-screen px-10 py-5">
-    <h1 class="mx-64 text-center py-10 text-xl font-serif" id="roleListings">Manage Role Listing</h1>
-    <ul class="mx-64">
-      <li class="flex border-t-2 py-5 hover:bg-grey-50">
+    <div class="flex flex-row mx-64">
+      <div class="flex flex-row grow py-10 text-xl font-serif text-center " id="roleListings">
+        <div class="grow"></div>
+        <h1 class="translate-x-[85px]">Manage Role Listing</h1>
+        <div class="grow"></div>
+      </div>
+      <div class="flex items-center">
+        <router-link to="/addrolelisting" class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm" >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div class="my-auto">Add Role Listing</div>
+        </router-link>
+      </div>
+    </div>
+    <ul class="mx-64 min-w-fit">
+      <li class="flex border-t py-5 hover:bg-grey-50">
         <div class="flex-none h-100">
           <div class="text-yellow text-xl"> Software Engineer </div>
           <div class="text-base"> Reporting Manager: 1003 </div>
@@ -36,7 +51,7 @@
         </div>
         <div class="grow"></div>
         <div>
-          <div class="flex flex-row ">
+          <div class="flex flex-row">
             <div class="grow"></div>
             <div class="me-5 text-xs bg-red px-4 py-1 rounded-full text-white">Closed</div>
           </div>
@@ -47,7 +62,7 @@
           </div>
         </div>
       </li>
-      <li class="flex border-t-2 py-5 hover:bg-grey-50">
+      <li class="flex border-t py-5 hover:bg-grey-50">
         <div class="flex-none h-100">
           <div class="text-yellow text-xl"> Software Engineer </div>
           <div class="text-base"> Reporting Manager: 1003 </div>
@@ -72,7 +87,7 @@
           </div>
         </div>
       </li>
-      <li class="flex border-t-2 py-5 hover:bg-grey-50">
+      <li class="flex border-t py-5 hover:bg-grey-50">
         <div class="flex-none h-100">
           <div class="text-yellow text-xl"> Software Engineer </div>
           <div class="text-base"> Reporting Manager: 1003 </div>
