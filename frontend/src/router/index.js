@@ -5,7 +5,6 @@ import RoleListingManagement from "../views/RoleListingManagement.vue";
 import SkillManagement from "../views/SkillManagement.vue";
 import Login from "../views/Login.vue";
 import AddRoleListing from "../views/AddRoleListing.vue";
-import AllRoleListing from "../views/AllRoleListing.vue";
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -23,11 +22,6 @@ const router = createRouter({
       path: "/rolelistingmanagement",
       name: "Role Listing Management",
       component: RoleListingManagement,
-    },
-    {
-      path: "/allrolelisting",
-      name: "All Role Listings",
-      component: AllRoleListing,
     },
     {
       path: "/skillmanagement",
