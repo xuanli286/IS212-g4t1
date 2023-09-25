@@ -10,7 +10,7 @@ def chrome_driver():
     driver.quit()
 
 @pytest.mark.parametrize("url, element_selector", [
-    ("http://localhost:8080/rolelistingmanagement", "#rolelistings"),
+    ("http://localhost:8080/rolelistingmanagement", "#roleListings"),
     # Add more test cases as needed
 ])
 def test_check_rolelistings_ui(chrome_driver, url, element_selector):
