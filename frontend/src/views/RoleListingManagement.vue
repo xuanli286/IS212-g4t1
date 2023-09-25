@@ -19,28 +19,32 @@
 </script>
 
 <template>
-  <div>
-    <h1>Role Listing Management</h1>
+  <div class="bg-beige min-h-screen px-10 py-5">
+    <h1 class="text-center">Manage Role Listing</h1>
     <ul>
+      <li class="flex border-t-2 ">
+        <div class="flex-none h-100 ">
+          <div> Software Engineer </div>
+          <div> Reporting Manager: 1003 </div>
+          <div class="flex flex-row"> 
+            <div> Apply by 5 September 2023 </div>
+            <div class="flex items-center mx-2">
+              <span class="bg-black h-1 w-1 rounded-full"></span>
+            </div>
+            <div> 11 applicants </div>
+          </div>
+        </div>
+        <div class="grow"></div>
+        <div class="flex flex-row items-center">
+          <div>Engineering Operation</div>
+          <div class="flex bg-black mx-2 h-1 w-1 rounded-full"> </div>
+          <div>Hong Kong</div>
+        </div>
+      </li>
+      <li class="border-t-2">Database Admin</li>
+      <li class="border-t-2">Financial Analyst</li>
     </ul>
   </div>
 </template>
-
-<!-- <script>
-export default {
-  name: 'RoleListingManagement',
-  components: {},
-  props: {
-  },
-  data() {
-    return {
-    };
-  },
-  methods: {
-  },
-  created() {
-  },
-}
-</script> -->
 
 <style></style>
