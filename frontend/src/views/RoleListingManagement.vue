@@ -35,6 +35,14 @@
     
     return false
   }  
+
+  function formatDate(dateString){
+    let date = new Date(dateString)
+    let day = date.getDate() 
+    let month = date.toLocaleString('default', { month: 'long' });
+    let year = date.getFullYear()
+    return `${day} ${month} ${year}`
+  }
 </script>
 
 <template>
@@ -60,7 +68,7 @@
           <div class="text-yellow text-xl"> {{listing.role_name}} </div>
           <div class="text-base"> Reporting Manager: {{listing.manager_ID}} </div>
           <div class="flex flex-row text-xs"> 
-            <div class="text-grey"> Apply by {{listing.application_deadline}}</div>
+            <div class="text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
             <div class="flex items-center mx-2">
               <span class="bg-black h-1 w-1 rounded-full"></span>
             </div>
