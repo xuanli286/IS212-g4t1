@@ -48,8 +48,8 @@
 <template>
   <div class="bg-beige min-h-screen px-10 py-5">
     <div class="flex flex-row mx-64">
-      <div class="flex flex-row grow py-10 text-xl font-serif text-center " id="roleListings">
-        <div class="grow"></div>
+      <div class="flex flex-row grow py-20 text-xl font-serif text-center " id="roleListings">
+        <div class="grow"></div>Manage Role Listing
         <h1 class="translate-x-[85px]">Manage Role Listing</h1>
         <div class="grow"></div>
       </div>
