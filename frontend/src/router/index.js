@@ -5,7 +5,7 @@ import RoleListingManagement from "../views/RoleListingManagement.vue";
 import SkillManagement from "../views/SkillManagement.vue";
 import Login from "../views/Login.vue";
 import AddRoleListing from "../views/AddRoleListing.vue";
-import EditRoleListing from "@/views/EditRoleListing.vue";
+import EditRoleListing from "../views/EditRoleListing.vue";
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {

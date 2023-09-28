@@ -22,7 +22,7 @@
 
     const route = useRoute();
     const rolelistingID = route.params.id;
-    
+
     const roles = ref({});
     const selectedTitle = ref("");
     const applicationOpening = ref("");
@@ -122,7 +122,6 @@
                 isOpen.value = true;
             })
     }
-    
 </script>
 
 <template>
