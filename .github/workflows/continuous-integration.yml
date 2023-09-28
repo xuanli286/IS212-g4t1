@@ -67,3 +67,4 @@ jobs:
 
           # Push the Docker image to Docker Hub
           docker push chulintian/is212-g4t1
+...
