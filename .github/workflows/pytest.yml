@@ -56,7 +56,7 @@ build-and-push-docker:
     - name: Docker Build and Push
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+        DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       run: 
         # Build Docker image
         docker build -t my-app .
