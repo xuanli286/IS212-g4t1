@@ -17,21 +17,21 @@ const router = createRouter({
       name: "Home",
       component: Home,
     },
-    {
-      path: "/rolelistingmanagement",
-      name: "Role Listing Management",
-      component: RoleListingManagement,
-    },
-    {
-      path: "/skillmanagement",
-      name: "SkillManagement",
-      component: SkillManagement,
-    },
-    {
-      path: "/login",
-      name: "Login",
-      component: Login,
-    },
+    // {
+    //   path: "/rolelistingmanagement",
+    //   name: "Role Listing Management",
+    //   component: RoleListingManagement,
+    // },
+    // {
+    //   path: "/skillmanagement",
+    //   name: "SkillManagement",
+    //   component: SkillManagement,
+    // },
+    // {
+    //   path: "/login",
+    //   name: "Login",
+    //   component: Login,
+    // },
   ],
 });
 
