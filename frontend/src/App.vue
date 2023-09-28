@@ -1,25 +1,17 @@
-<script setup>
-</script>
-
-<style></style>
-
 <template>
-  <div>
-    <!-- Contains the main content of the webpage-->
-    <router-view></router-view>
+  <div class="min-h-screen bg-beige">
+    <Logout v-if="user" class="px-10 mb-3"/>
+    <router-view class="px-10"></router-view>
   </div>
 </template>
 
+<script setup>
+  import Logout from '@/components/Logout.vue'
+  import { useUserStore } from '@/store/useUserStore.js';
+  import { storeToRefs } from 'pinia';
 
-<script>
-export default {
-  data() {
-    return {
-    }
-  },
-  created() {
-  },
-  methods: {
-  }
-}
+  const userStore = useUserStore();
+  const {
+    user,
+  } = storeToRefs(userStore);
 </script>

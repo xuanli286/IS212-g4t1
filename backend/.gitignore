@@ -1,5 +1,1 @@
-# local env files
 .env
-
-# test cache files
-.pyc
