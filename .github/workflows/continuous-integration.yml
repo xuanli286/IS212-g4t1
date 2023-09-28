@@ -50,7 +50,7 @@ jobs:
       - name: Test backend code using pytest
         run: pytest backend/tests
 
-build-and-push-docker:
+  build-and-push-docker:
     needs: test
     runs-on: ubuntu-latest
     steps:
