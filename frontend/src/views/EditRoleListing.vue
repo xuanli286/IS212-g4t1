@@ -6,6 +6,7 @@
     import { storeToRefs } from 'pinia';
     import { useConstantStore } from '@/store/useConstantStore';
     import { useModalStore } from "@/store/useModalStore";
+    import { useRoute } from 'vue-router';
 
     const store = useModalStore();
     const {
@@ -19,7 +20,8 @@
         countries,
     } = storeToRefs(constStore);
 
-    const rolelistingID = 3;
+    const route = useRoute();
+    const rolelistingID = route.params.id;
     
     const roles = ref({});
     const selectedTitle = ref("");
