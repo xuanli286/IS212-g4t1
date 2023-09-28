@@ -26,7 +26,7 @@
 
 <script>
 // import axios from 'axios';
-import { useUserStore } from '../store/useUserStore';
+import { useUserStore } from '../store/userStore';
 
 const get_staff_URL = "http://127.0.0.1:5000/staff";
 

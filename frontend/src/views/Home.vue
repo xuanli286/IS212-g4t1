@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { useUserStore } from '@/store/useUserStore.js';
+import { useUserStore } from '@/store/userStore.js';
 
 
 export default {
