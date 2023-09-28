@@ -45,32 +45,12 @@ jobs:
           python-version: "3.9"
 
       - name: Install Dependencies
-        run: pip install -r backend/requirements.txt
+        run: |
+          cd backend
+          pip install -r requirements.txt
 
       - name: Test backend code using pytest
-        run: pytest backend/tests
-
-  build-and-push-docker:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Docker Build and Push
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
         run: |
-          # Build Docker image
-          docker build -t my-app .
-
-          # Tag Docker image
-          docker tag my-app chulintian/is212-g4t1
-
-          # Authenticate with Docker Hub
-          docker login -u "$DOCKER_USERNAME" \
-            --password-stdin <<< "$DOCKER_ACCESS_TOKEN"
-
-          # Push the Docker image to Docker Hub
-          docker push chulintian/is212-g4t1
+          cd backend
+          pytest tests
+...

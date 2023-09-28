@@ -4,11 +4,12 @@ from flask_cors import CORS
 from datetime import datetime
 from os import environ
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("dbURL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
