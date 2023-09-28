@@ -56,6 +56,21 @@
       </div>
     </div>
 
+    <div class="mt-16 p-10">
+      <div class="grid grid-cols-2">
+        <div>
+          <p class=" text-bold">Description</p>
+          <p class="pr-8">{{ description }}</p>
+        </div>
+        <div>
+          <p class="text-bold">Required Skills</p>
+          <ul class="list-disc pl-4">
+            <li v-for="skill in skills" :key="skill">{{ skill }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -77,6 +92,8 @@ export default {
       managerName: "",
       department: "",
       country: "",
+      skills: [],
+      description: "",
     };
   },
   methods: {
@@ -84,7 +101,7 @@ export default {
       axios
         .get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
         .then((response) => {
-          console.log(response.data.data[rolelistingID])
+          // console.log(response.data.data[rolelistingID])
           this.roleName = response.data.data[rolelistingID]["role_name"]
           this.expiryDate = response.data.data[rolelistingID]["application_deadline"]
           this.managerId = response.data.data[rolelistingID]["manager_ID"]
@@ -93,6 +110,12 @@ export default {
 
           // set managerName variable after obtaining managerId
           this.getStaffName();
+
+          // set skills variable after obtaining roleName
+          this.getRoleSkills();
+
+          // set description variable after obtaining roleName
+          this.getRoleDescription();
         })
         .catch((error) => {
           console.log(error.message);
@@ -106,6 +129,44 @@ export default {
           if (managerData) {
             this.managerName = managerData["staff_FName"] + " " + managerData["staff_LName"];
           }
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
+    getRoleSkills() {
+
+      axios
+        .get(`http://127.0.0.1:5000/get_role_skill/${this.roleName}`)
+        .then((response) => {
+          const roleSkillsData = response.data.data;
+          // console.log(roleSkillsData)
+          if (roleSkillsData) {
+            this.skills = roleSkillsData;
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
+    getRoleDescription() {
+
+      axios
+        .get(`http://127.0.0.1:5000/get_all_role`)
+        .then((response) => {
+          const roleDescriptionsData = response.data.data
+          for (const role of roleDescriptionsData) {
+            for (let rName in role) {
+              if (rName == this.roleName) {
+                this.description = role[this.roleName]
+              }
+            }
+          }
+          // const roleDescription = response.data.data[$roleName];
+          // console.log(roleDescription)
+          // if (roleDescription) {
+          //   this.description = roleDescription;
+          // }
         })
         .catch((error) => {
           console.log(error.message);
