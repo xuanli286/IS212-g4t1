@@ -1,5 +1,4 @@
 ---
-
 name: CI Workflow
 
 on:
@@ -11,30 +10,38 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 10
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          cd frontend
+          npm install
 
       - name: Build code
-        run: npm run serve
+        run: |
+          cd frontend
+          npm run build
 
   test:
     needs: build
     runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
@@ -44,28 +51,27 @@ jobs:
       - name: Test backend code using pytest
         run: pytest backend/tests
 
-  build-and-push-docker:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # build-and-push-docker:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Docker Build and Push
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-        run: |
-          # Build Docker image
-          docker build -t my-app .
+  #     - name: Docker Build and Push
+  #       env:
+  #         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  #         DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+  #       run: |
+  #         # Build Docker image
+  #         docker build -t my-app .
 
-          # Tag Docker image
-          docker tag my-app chulintian/is212-g4t1
+  #         # Tag Docker image
+  #         docker tag my-app chulintian/is212-g4t1
 
-          # Authenticate with Docker Hub
-          docker login -u "$DOCKER_USERNAME" \
-            --password-stdin <<< "$DOCKER_ACCESS_TOKEN"
+  #         # Authenticate with Docker Hub
+  #         docker login -u "$DOCKER_USERNAME" \
+  #           --password-stdin <<< "$DOCKER_ACCESS_TOKEN"
 
-          # Push the Docker image to Docker Hub
-          docker push chulintian/is212-g4t1
-...
+  #         # Push the Docker image to Docker Hub
+  #         docker push chulintian/is212-g4t1
