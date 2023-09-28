@@ -1,11 +1,7 @@
 <template>
   <div>
-    <h1>Home</h1>
     <div v-if="user">
-      <h2>User Data:</h2>
-      <p>Access ID: {{ user.access_ID }}</p>
-      <p>First Name: {{ user.staff_FName }}</p>
-      <p>Last Name: {{ user.staff_LName }}</p>
+      <RoleListingManagement/>
     </div>
     <div v-else>
       <p>No user data available.</p>
@@ -14,12 +10,14 @@
 </template>
 
 <script>
-import { useUserStore } from '@/store/userStore.js';
-
+import { useUserStore } from '@/store/useUserStore.js';
+import RoleListingManagement from "../views/RoleListingManagement.vue";
 
 export default {
   name: 'Home',
-  components: {},
+  components: {
+    RoleListingManagement,
+  },
   props: {
   },
   data() {
