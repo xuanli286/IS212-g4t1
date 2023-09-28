@@ -5,9 +5,9 @@
     import { ref, computed } from "vue";
     import { storeToRefs } from 'pinia';
     import { useConstantStore } from '@/store/useConstantStore';
-    import { useEditRoleListingStore } from "@/store/useEditRoleListingStore";
+    import { useModalStore } from "@/store/useModalStore";
 
-    const store = useEditRoleListingStore();
+    const store = useModalStore();
     const {
         isOpen,
         isSuccess,

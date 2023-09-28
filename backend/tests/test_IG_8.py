@@ -3,13 +3,8 @@ import json
 import pytest
 
 from g4t1_test import *
+from conftest import client, app
 from sqlalchemy.exc import IntegrityError
-
-@pytest.fixture
-def client():
-    app.config['TESTING'] = True
-    client = app.test_client()
-    yield client
 
 def test_invalid_role(client):
     invalid_data = {

@@ -1,8 +1,8 @@
 <script setup>
-    import { useEditRoleListingStore } from "@/store/useEditRoleListingStore.js";
+    import { useModalStore } from "@/store/useModalStore.js";
     import { storeToRefs } from 'pinia';
 
-    const store = useEditRoleListingStore();
+    const store = useModalStore();
     const {
         isOpen,
         isSuccess,
