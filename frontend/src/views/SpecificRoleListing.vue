@@ -57,18 +57,15 @@
     </div>
 
     <div class="mt-16 p-10">
-      <div class="grid grid-cols-2">
-        <div>
-          <p class=" text-bold">Description</p>
-          <p class="pr-8">{{ description }}</p>
-        </div>
-        <div>
-          <p class="text-bold">Required Skills</p>
-          <ul class="list-disc pl-4">
-            <li v-for="skill in skills" :key="skill">{{ skill }}</li>
-          </ul>
-        </div>
-      </div>
+      <p class=" text-bold">Description</p>
+      <p class="pr-8">{{ description }}</p>
+    </div>
+
+    <div class="mt-1 p-10">
+      <p class="text-bold">Required Skills</p>
+      <ul class="list-disc pl-4">
+        <li v-for="skill in skills" :key="skill">{{ skill }}</li>
+      </ul>
     </div>
 
   </div>
