@@ -61,6 +61,22 @@ function updateMinCloseDate() {
   applicationDeadline.value = minCloseDate.value;
 }
 
+function validateApplicationOpening() {
+    const enteredDate = new Date(applicationOpening.value);
+    const minDate = new Date(minOpenDate.value);
+    if (enteredDate < minDate) {
+        applicationOpening.value = minOpenDate.value;
+    }
+}
+
+function validateApplicationDeadline() {
+    const enteredDate = new Date(applicationDeadline.value);
+    const minDate = new Date(minCloseDate.value);
+    if (enteredDate < minDate) {
+        applicationDeadline.value = minCloseDate.value;
+    }
+}
+
 axios
   .get("http://127.0.0.1:5000/get_all_role")
   .then((response) => {
@@ -148,6 +164,7 @@ function updateSkills() {
             v-model="applicationOpening"
             :min="minOpenDate"
             @change="updateMinCloseDate"
+            @input="validateApplicationOpening"
           />
         </div>
         <div>
@@ -161,6 +178,7 @@ function updateSkills() {
             class="mt-1 p-2 rounded-md w-full"
             v-model="applicationDeadline"
             :min="minCloseDate"
+            @input="validateApplicationDeadline"
           />
         </div>
       </div>
