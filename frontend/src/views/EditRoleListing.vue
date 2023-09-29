@@ -18,6 +18,7 @@ const constStore = useConstantStore();
 const {
     hiringDepartment,
     countries,
+    staff,
 } = storeToRefs(constStore);
 
 const route = useRoute();
@@ -30,7 +31,7 @@ const applicationDeadline = ref("");
 const selectedDept = ref("");
 const selectedCountry = ref("");
 const skills = ref([]);
-const managerID = ref([]);
+const managerID = ref("");
 const errorMessage = ref("");
 
 const today = new Date();
@@ -65,6 +66,22 @@ function updateMinCloseDate() {
     applicationDeadline.value = minCloseDate.value;
 }
 
+function validateApplicationOpening() {
+    const enteredDate = new Date(applicationOpening.value);
+    const minDate = new Date(minOpenDate.value);
+    if (enteredDate < minDate) {
+        applicationOpening.value = minOpenDate.value;
+    }
+}
+
+function validateApplicationDeadline() {
+    const enteredDate = new Date(applicationDeadline.value);
+    const minDate = new Date(minCloseDate.value);
+    if (enteredDate < minDate) {
+        applicationDeadline.value = minCloseDate.value;
+    }
+}
+
 axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
     .then((response) => {
         const editRole = response.data.data[rolelistingID];
@@ -75,7 +92,6 @@ axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
         selectedDept.value = editRole.dept;
         selectedCountry.value = editRole.country;
         managerID.value = editRole['manager_ID'];
-        console.log(editRole);
     })
     .catch((error) => {
         console.log(error.message);
@@ -131,7 +147,7 @@ function editRoleListing() {
         <div class="grid grid-cols-3 gap-28">
             <div>
                 <p class="font-bold">Title</p>
-                <select class="mt-1 p-2 rounded-md w-full" v-model="selectedTitle" @change="updateSkills">
+                <select id="title" class="mt-1 p-2 rounded-md w-full" v-model="selectedTitle" @change="updateSkills">
                     <option v-for="(description, role) in roles" :key="description">{{ role }}</option>
                 </select>
             </div>
@@ -145,6 +161,7 @@ function editRoleListing() {
                     v-model="applicationOpening"
                     :min="minOpenDate"
                     @change="updateMinCloseDate"
+                    @input="validateApplicationOpening"
                 />
             </div>
             <div>
@@ -156,23 +173,29 @@ function editRoleListing() {
                     class="mt-1 p-2 rounded-md w-full"
                     v-model="applicationDeadline"
                     :min="minCloseDate"
+                    @input="validateApplicationDeadline"
                 />
             </div>
         </div>
         <div class="grid grid-cols-2 pt-5 gap-16">
             <div>
                 <p class="font-bold">Hiring Department</p>
-                <select class="mt-1 p-2 rounded-md w-full" v-model="selectedDept">
+                <select id="department" class="mt-1 p-2 rounded-md w-full" v-model="selectedDept">
                     <option v-for="dept of hiringDepartment" :key="dept">{{ dept }}</option>
                 </select>
             </div>
             <div>
                 <p class="font-bold">Country</p>
-                <select class="mt-1 p-2 rounded-md w-full" v-model="selectedCountry">
+                <select id="country" class="mt-1 p-2 rounded-md w-full" v-model="selectedCountry">
                     <option v-for="country of countries" :key="country">{{ country }}</option>
                 </select>
-                
             </div>
+        </div>
+        <div class="pt-5">
+            <p class="font-bold">Reporting Manager</p>
+            <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
+                <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
+            </select>
         </div>
         <div class="pt-5">
             <p class="font-bold">Description</p>
