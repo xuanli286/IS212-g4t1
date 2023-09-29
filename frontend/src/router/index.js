@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "../views/Home.vue";
+import RoleListingManagement from "../views/RoleListingManagement.vue";
 import SkillManagement from "../views/SkillManagement.vue";
 import Login from "../views/Login.vue";
 import AddRoleListing from "../views/AddRoleListing.vue";
@@ -17,6 +18,11 @@ const router = createRouter({
         path: "/home",
         name: "Home",
         component: Home,
+      },
+      {
+        path: "/rolelistingmanagement",
+        name: "Role Listing Management",
+        component: RoleListingManagement,
       },
       {
         path: "/skillmanagement",
