@@ -1,28 +1,28 @@
 <script setup>
-import { ref } from "vue";
-import { useUserStore } from "@/store/useUserStore";
-import { storeToRefs } from 'pinia';
-import router from '@/router';
+    import { ref } from "vue";
+    import { useUserStore } from "@/store/useUserStore";
+    import { storeToRefs } from 'pinia';
+    import router from '@/router';
 
-const store = useUserStore();
-const {
-    user,
-} = storeToRefs(store);
+    const store = useUserStore();
+    const {
+        user,
+    } = storeToRefs(store);
 
-const access = {0: 'Staff', 1: 'Manager & Director', 2: 'HR Staff'};
+    const access = {0: 'Staff', 1: 'Manager & Director', 2: 'HR Staff'};
 
-console.log(user.value)
+    console.log(user.value)
 
-const isExpand = ref(false);
+    const isExpand = ref(false);
 
-function expandDropdown() {
-    isExpand.value = !isExpand.value;
-}
+    function expandDropdown() {
+        isExpand.value = !isExpand.value;
+    }
 
-function logout() {
-    router.push({name: 'Login'});
-    user.value = null;
-}
+    function logout() {
+        router.push({name: 'Login'});
+        user.value = null;
+    }
 </script>
 
 <template>
