@@ -44,7 +44,7 @@ const router = createRouter({
         path: "/editrolelisting/:id",
         name: "EditRoleListing",
         component: EditRoleListing,
-      }
+      },
       {
       path: "/specificrolelisting",
       name: "SpecificRoleListing",
