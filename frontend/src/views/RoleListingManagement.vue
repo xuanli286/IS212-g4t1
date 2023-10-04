@@ -1,7 +1,9 @@
 <script setup>
   import axios from "axios";
-  import { ref } from "vue";
+  import { ref } from "vue";  
+  import { useRoleListingStore } from '@/store/useRoleListingStore';
 
+  const roleListingStore = useRoleListingStore();
   const roleListings = ref({})
 
   axios
@@ -43,6 +45,11 @@
     let year = date.getFullYear()
     return `${day} ${month} ${year}`
   }
+
+  const updateRoleListingId = (id) => {
+    roleListingStore.setRoleListingId(id)
+  }
+
 </script>
 
 <template>
@@ -64,7 +71,7 @@
     </div>
     <ul class="mx-64 min-w-fit rolelisting-container">
       <li v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
-        <router-link to="/specificrolelisting">
+        <router-link to="/specificrolelisting" @click= updateRoleListingId(id)>
           <div class="flex-none h-100">
             <div label="role-title" class="text-yellow text-xl"> {{listing.role_name}} </div>
             <div label="role-manager" class="text-base"> Reporting Manager: {{listing.manager_ID}} </div>
