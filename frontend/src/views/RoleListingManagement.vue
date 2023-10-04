@@ -64,17 +64,19 @@
     </div>
     <ul class="mx-64 min-w-fit rolelisting-container">
       <li v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
-        <div class="flex-none h-100">
-          <div label="role-title" class="text-yellow text-xl"> {{listing.role_name}} </div>
-          <div label="role-manager" class="text-base"> Reporting Manager: {{listing.manager_ID}} </div>
-          <div class="flex flex-row text-xs"> 
-            <div label="role-deadline" class="text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
-            <div class="flex items-center mx-2">
-              <span class="bg-black h-1 w-1 rounded-full"></span>
+        <router-link to="/specificrolelisting">
+          <div class="flex-none h-100">
+            <div label="role-title" class="text-yellow text-xl"> {{listing.role_name}} </div>
+            <div label="role-manager" class="text-base"> Reporting Manager: {{listing.manager_ID}} </div>
+            <div class="flex flex-row text-xs">
+              <div label="role-deadline" class="text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
+              <div class="flex items-center mx-2">
+                <span class="bg-black h-1 w-1 rounded-full"></span>
+              </div>
+              <div label="role-applicants" class="font-bold text-green"> 11 applicants </div>
             </div>
-            <div label="role-applicants" class="font-bold text-green"> 11 applicants </div>
           </div>
-        </div>
+        </router-link>
         <div class="grow"></div>
         <div>
           <div class="flex flex-row">
