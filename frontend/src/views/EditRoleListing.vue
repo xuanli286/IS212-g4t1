@@ -19,18 +19,18 @@ const {
     hiringDepartment,
     countries,
     staff,
+    roles,
+    roleSkills,
 } = storeToRefs(constStore);
 
 const route = useRoute();
 const rolelistingID = route.params.id;
 
-const roles = ref({});
 const selectedTitle = ref("");
 const applicationOpening = ref("");
 const applicationDeadline = ref("");
 const selectedDept = ref("");
 const selectedCountry = ref("");
-const skills = ref([]);
 const managerID = ref("");
 const errorMessage = ref("");
 
@@ -86,7 +86,7 @@ axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
     .then((response) => {
         const editRole = response.data.data[rolelistingID];
         selectedTitle.value = editRole.role_name;
-        updateSkills();
+        constStore.getSkills(selectedTitle.value);
         applicationOpening.value = editRole['application_opening'];
         applicationDeadline.value = editRole['application_deadline'];
         selectedDept.value = editRole.dept;
@@ -96,28 +96,6 @@ axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
     .catch((error) => {
         console.log(error.message);
     })
-
-axios.get('http://127.0.0.1:5000/get_all_role')
-    .then((response) => {
-        for (let i of response.data.data) {
-            for (let key in i) {
-                roles.value[key] = i[key];
-            }
-        }
-    })
-    .catch((error) => {
-        console.log(error.message);
-    })
-
-function updateSkills() {
-    axios.get(`http://127.0.0.1:5000/get_role_skill/${selectedTitle.value}`)
-        .then((response) => {
-            skills.value = response.data.data;
-        })
-        .catch((error) => {
-            console.log(error.message);
-        })
-}
 
 function editRoleListing() {
     const body = {
@@ -147,7 +125,7 @@ function editRoleListing() {
         <div class="grid grid-cols-3 gap-28">
             <div>
                 <p class="font-bold">Title</p>
-                <select id="title" class="mt-1 p-2 rounded-md w-full" v-model="selectedTitle" @change="updateSkills">
+                <select id="title" class="mt-1 p-2 rounded-md w-full" v-model="selectedTitle" @change="constStore.getSkills(selectedTitle)">
                     <option v-for="(description, role) in roles" :key="description">{{ role }}</option>
                 </select>
             </div>
@@ -202,13 +180,13 @@ function editRoleListing() {
             <textarea
                 :value="roles[selectedTitle]"
                 disabled
-                class="w-full h-24 p-2 bg-white rounded-md text-grey"
+                class="w-full h-24 p-2 bg-white rounded-md text-grey text-justify"
             >
             </textarea>
         </div>
         <div class="pt-5">
             <p class="font-bold">Required Skills</p>
-            <label class="flex text-grey" v-for="skill of skills" :key="skill">
+            <label class="flex text-grey" v-for="skill of roleSkills" :key="skill">
                 <input type="checkbox" :value="skill" checked disabled />
                 <p class="ml-2">{{ skill }}</p>
             </label>

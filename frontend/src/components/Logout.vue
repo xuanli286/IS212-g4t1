@@ -11,8 +11,6 @@
 
     const access = {0: 'Staff', 1: 'Manager & Director', 2: 'HR Staff'};
 
-    console.log(user.value)
-
     const isExpand = ref(false);
 
     function expandDropdown() {
@@ -27,10 +25,20 @@
 
 <template>
 <div class="bg-white font-serif">
-    <div class="flex py-3">
+    <div class="flex py-3 items-center">
         <img class="w-16" src="@/assets/logo.png" alt="">
+        <div class="ml-auto">
+            <router-link v-if="user.access_ID > 0" :class="$route.name === 'Home' ? 'font-semibold text-yellow' : ''" to="/home">
+                Manage
+            </router-link>
+            <router-link class="ml-12" :class="$route.name === 'ViewRoleListing' || (user.access_ID == 0 && $route.name === 'Home') ? 'font-semibold text-yellow' : ''" to="/viewrolelisting">
+                View
+            </router-link>
+        </div>
         <div class="flex ml-auto items-center relative">
-            <img src="@/assets/hr_staff.svg" alt="">
+            <img v-if="user.access_ID == 0" src="@/assets/staff.svg" alt="">
+            <img v-else-if="user.access_ID == 2" src="@/assets/hr_staff.svg" alt="">
+            <img v-else src="@/assets/manager.svg" alt="">
             <div class="ml-2">
                 <p class="text-base">{{ user.staff_FName + " " + user.staff_LName }}</p>
                 <p class="text-xs">{{ access[user.access_ID] }}</p>
