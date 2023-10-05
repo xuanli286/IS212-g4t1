@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="user">
-      <RoleListingManagement/>
+      <RoleListingManagement v-if="user.access_ID > 0"/>
     </div>
     <div v-else>
       <p>No user data available.</p>
@@ -36,5 +36,3 @@ export default {
   },
 }
 </script>
-
-<style></style>
