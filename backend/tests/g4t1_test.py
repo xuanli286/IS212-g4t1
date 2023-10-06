@@ -463,6 +463,41 @@ def update_rolelisting(rolelisting_ID):
         }
     )
 
+# delete role listing
+@app.route("/rolelisting/<rolelisting_ID>", methods=['DELETE'])
+def delete_rolelisting(rolelisting_ID):
+
+    # Check if the role listing exists in the database
+    rolelisting = RoleListing.query.filter_by(rolelisting_ID=rolelisting_ID).first()
+
+    if rolelisting:
+        try:
+            db.session.delete(rolelisting)
+            db.session.commit()
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": rolelisting_ID,
+                    "message": "Role Listing deleted successfully"
+                }
+            ), 200
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "data": rolelisting,
+                    "message": "An error occurred when deleting the role listing."
+                }
+            ), 500
+    else:
+        return jsonify(
+            {
+                "code": 404,
+                "data": rolelisting_ID,
+                "message": "Role Listing does not exist."
+            }
+        ), 404
+
 
 # get all applications from a rolelisting_ID
 # or choose to get 1 application from a rolelisting_ID by passing the staff_ID in params
@@ -500,6 +535,50 @@ def get_all_applications_for_a_rolelisting(rolelisting_ID):
             "message": "There are no applicants for the role."
         }
     ), 404
+
+# delete an application
+@app.route("/applications/<staff_ID>/<rolelisting_ID>", methods=['DELETE'])
+def delete_application(staff_ID, rolelisting_ID):
+
+    # Check if the role listing exists in the database
+    application = Application.query.filter_by(staff_ID=staff_ID, rolelisting_ID=rolelisting_ID).first()
+
+    if application:
+        try:
+            db.session.delete(application)
+            db.session.commit()
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "staff_ID": staff_ID,
+                        "rolelisting_ID": rolelisting_ID
+                        },
+                    "message": "Application deleted successfully"
+                }
+            ), 200
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "data": {
+                        "staff_ID": staff_ID,
+                        "rolelisting_ID": rolelisting_ID
+                        },
+                    "message": "An error occurred when deleting the application."
+                }
+            ), 500
+    else:
+        return jsonify(
+            {
+                "code": 404,
+                "data": {
+                    "staff_ID": staff_ID,
+                    "rolelisting_ID": rolelisting_ID
+                    },
+                "message": "Application does not exist."
+            }
+        ), 404
 
 
 if __name__ == '__main__':
