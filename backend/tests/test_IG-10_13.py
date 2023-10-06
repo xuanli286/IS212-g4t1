@@ -1,4 +1,5 @@
 # IG_10     Staff can view a specific role listing
+# IG_13     Staff can view role-skill match
 import json
 import pytest
 
@@ -57,6 +58,21 @@ def test_apply_role_button(chrome_driver, url):
     driver.get(url)
     apply_btn = driver.find_element(By.ID, "apply")
     assert apply_btn.is_displayed()
+
+
+"""
+    Check if 
+        percentage match between my skills and the skills required for the role
+        list of matched and missing skills
+    are displayed
+"""
+def test_percentage_match_selenium(chrome_driver, url): 
+    driver = chrome_driver
+    driver.get(url)
+    fields = ["percentage", "matched-skills", "missing-skills"]
+    for field in fields:
+        fieldDisplayed = driver.find_element(By.ID, field)
+        assert fieldDisplayed.is_displayed()
 
 
 """
