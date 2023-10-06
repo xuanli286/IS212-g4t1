@@ -190,6 +190,14 @@ class Application(db.Model):
             "percentage_match": self.percentage_match
         }
     
+    def json(self):
+        return {
+            "staff_ID": self.staff_ID,
+            "rolelisting_ID": self.rolelisting_ID,
+            "application_date": self.application_date.strftime('%Y-%m-%d'),
+            "percentage_match": self.percentage_match
+        }
+    
 
 
 #############################################################################################################
@@ -501,6 +509,50 @@ def get_all_applications_for_a_rolelisting(rolelisting_ID):
         }
     ), 404
 
+
+# add an application
+@app.route("/addapplication", methods=['POST'])
+def create_application():
+
+    # this returns in dictionary format
+    application = request.get_json()
+
+    # check if role listing exists
+    condition1 = Application.staff_ID == application["staff_ID"]
+    condition2 = Application.rolelisting_ID == application["rolelisting_ID"]
+    
+    results = Application.query.filter(condition1, condition2).first()
+
+    if results:
+        return jsonify(
+            {
+                "code": 400,
+                "data": application,
+                "message": "Application exists."
+            }
+        ), 400
+
+    # creating the role listing instance
+    new_application = Application(**application)
+
+    try:
+        db.session.add(new_application)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": application,
+                "message": "An error occurred creating the application."
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 201,
+            "data": new_application.json()
+        }
+    ), 201
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
