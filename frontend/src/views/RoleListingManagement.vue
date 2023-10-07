@@ -16,7 +16,14 @@
           roleListings.value[key] = listing[key]
         }
       }
-    });
+    })
+    .catch(error => {
+      if (error.response) {
+        if (error.response.status === 404) {
+          console.log("No open listings at this moment.");
+        }
+      }
+    }) 
 
   axios
     .get("http://127.0.0.1:5000/closerolelisting")
@@ -27,7 +34,14 @@
           roleListings.value[key] = listing[key]
         }
       }
-    });
+    })
+    .catch(error => {
+      if (error.response) {
+        if (error.response.status === 404) {
+          console.log("No closed listings at this moment.");
+        }
+      }
+    }) 
 
     axios
     .get("http://127.0.0.1:5000/staff")
@@ -38,7 +52,7 @@
           staffNames.value[key] = staff[key]
         }
       }
-    });
+    })
 
   function checkOpen(listing){
     let today = new Date();
@@ -92,7 +106,12 @@
       </div>
     </div>
     <ul class="mx-64 min-w-fit rolelisting-container">
-      <li v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
+      <li v-if="Object.keys(roleListings).length == 0" class="rolelisting-panel py-5 text-center">
+        <div class="grow"></div>
+        <div class="font-bold">No listings available!</div>
+        <div class="grow"></div>
+      </li>
+      <li v-else v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
         <router-link to="/specificrolelisting" @click= updateRoleListingId(id)>
           <div class="flex-none h-100">
             <div label="role-title" class="text-yellow text-xl"> {{listing.role_name}} </div>
