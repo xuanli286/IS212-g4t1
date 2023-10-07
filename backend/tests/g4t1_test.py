@@ -473,7 +473,7 @@ def update_rolelisting(rolelisting_ID):
 
 
 # delete a role listing
-@app.route("/rolelisting/<rolelisting_ID>", methods=['DELETE'])
+@app.route("/deleterolelisting/<rolelisting_ID>", methods=['DELETE'])
 def delete_rolelisting(rolelisting_ID):
 
     # Check if the role listing exists in the database
@@ -591,7 +591,7 @@ def create_application():
 
 
 # delete an application
-@app.route("/applications/<staff_ID>/<rolelisting_ID>", methods=['DELETE'])
+@app.route("/deleteapplications/<staff_ID>/<rolelisting_ID>", methods=['DELETE'])
 def delete_application(staff_ID, rolelisting_ID):
 
     # Check if the role listing exists in the database
