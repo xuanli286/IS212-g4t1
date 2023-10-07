@@ -380,8 +380,11 @@ def create_rolelisting():
     condition1 = RoleListing.role_name == rolelisting["role_name"]
     condition2 = RoleListing.application_opening == rolelisting["application_opening"]
     condition3 = RoleListing.application_deadline == rolelisting["application_deadline"]
+    condition4 = RoleListing.manager_ID == rolelisting["manager_ID"]
+    condition5 = RoleListing.dept == rolelisting["dept"]
+    condition6 = RoleListing.country == rolelisting["country"]
 
-    results = RoleListing.query.filter(condition1, condition2, condition3).first()
+    results = RoleListing.query.filter(condition1, condition2, condition3, condition4, condition5, condition6).first()
 
     if results:
         return jsonify(
@@ -426,11 +429,11 @@ def update_rolelisting(rolelisting_ID):
     condition1 = RoleListing.role_name == rolelisting["role_name"]
     condition2 = RoleListing.application_opening == rolelisting["application_opening"]
     condition3 = RoleListing.application_deadline == rolelisting["application_deadline"]
+    condition4 = RoleListing.manager_ID == rolelisting["manager_ID"]
+    condition5 = RoleListing.dept == rolelisting["dept"]
+    condition6 = RoleListing.country == rolelisting["country"]
 
-    results = RoleListing.query.filter(condition1, condition2, condition3).first()
-
-    print(rolelisting)
-    print(results)
+    results = RoleListing.query.filter(condition1, condition2, condition3, condition4, condition5, condition6).first()
 
     if results:
         return jsonify(

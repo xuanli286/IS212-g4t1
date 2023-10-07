@@ -2,14 +2,13 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
-import os
 from os import environ
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("TEST_DB_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("testdbURL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

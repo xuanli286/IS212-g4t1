@@ -1,13 +1,23 @@
 <template>
   <div>
-    <h1>Home</h1>
+    <div v-if="user">
+      <RoleListingManagement/>
+    </div>
+    <div v-else>
+      <p>No user data available.</p>
+    </div>
   </div>
 </template>
 
 <script>
+import { useUserStore } from '@/store/useUserStore.js';
+import RoleListingManagement from "../views/RoleListingManagement.vue";
+
 export default {
   name: 'Home',
-  components: {},
+  components: {
+    RoleListingManagement,
+  },
   props: {
   },
   data() {
@@ -15,6 +25,12 @@ export default {
     };
   },
   methods: {
+  },
+  computed: {
+    user() {
+      const userStore = useUserStore();
+      return userStore.user;
+    },
   },
   created() {
   },
