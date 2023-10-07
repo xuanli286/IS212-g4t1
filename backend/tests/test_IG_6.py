@@ -1,51 +1,61 @@
 import json
-import pytest
-from g4t1_test import RoleListing
-from conftest import client, app
+import requests
+from conftest import *
 
-def test_create_rolelisting(client):
+##################### FRONTEND TESTING ####################
+
+
+##################### BACKEND TESTING #####################
+
+def test_create_rolelisting():
     rolelisting_data = {
-        "role_name": "Software Engineer",
-        "application_opening": "2023-09-21",
-        "application_deadline": "2023-12-31",
-        "dept": "Engineering Operation",
-        "country": "Hong Kong",
-        "manager_ID": "1033",
-    }
+            "role_name": "Account Manager",
+            "application_opening": "2023-09-21",
+            "application_deadline": "2023-12-31",
+            "dept": "Consultancy",
+            "country": "Hong Kong",
+            "manager_ID": 140001
+        }
 
-    response = client.post("/addrolelisting", json=rolelisting_data)
+    response = requests.post(f'{backend_base_url}/addrolelisting', json=rolelisting_data)
 
     assert response.status_code == 201
 
-    response_data = json.loads(response.data)
-
+    response_data = json.loads(response.content)
     assert "code" in response_data
     assert "data" in response_data
     assert "message" not in response_data
 
-    with app.app_context():
-        created_role_listing = RoleListing.query.filter(
-            RoleListing.role_name == "Software Engineer",
-            RoleListing.application_opening == "2023-09-21",
-            RoleListing.application_deadline == "2023-12-31"
-        ).first()
-        assert created_role_listing is not None
+    rolelisting_id = response_data["data"][0]
+    response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_id}')
+
+    assert response.status_code == 200
+
+    retrieved_data = json.loads(response.content)
+    assert retrieved_data["role_name"] == rolelisting_data["role_name"]
+    assert retrieved_data["application_opening"] == rolelisting_data["application_opening"]
+    assert retrieved_data["application_deadline"] == rolelisting_data["application_deadline"]
+    assert retrieved_data["dept"] == rolelisting_data["dept"]
+    assert retrieved_data["country"] == rolelisting_data["country"]
+    assert retrieved_data["manager_ID"] == rolelisting_data["manager_ID"]
+    
+    response = requests.delete(f'{backend_base_url}/rolelisting/{rolelisting_id}')
+
+    assert response.status_code == 200
         
         
-def test_duplicate_rolelisting(client):
+def test_duplicate_rolelisting():
     
     rolelisting_data = {
-        "role_name": "Software Engineer",
+        "role_name": "Call Centre",
         "application_opening": "2023-09-15",
-        "application_deadline": "2023-12-31",
-        "dept": "Engineering Operation",
-        "country": "Hong Kong",
-        "manager_ID": "1033"
+        "application_deadline": "2023-10-28",
+        "manager_ID": 140003,
+        "dept": "Sales",
+        "country": "Vietnam",
     }
     
-    response = client.post("/addrolelisting", json=rolelisting_data)
-
-    response_duplicate = client.post("/addrolelisting", json=rolelisting_data)
+    response_duplicate = requests.post("/addrolelisting", json=rolelisting_data)
 
     assert response_duplicate.status_code == 400
 
@@ -55,4 +65,5 @@ def test_duplicate_rolelisting(client):
     assert "data" in response_duplicate_data
     assert "message" in response_duplicate_data
     assert response_duplicate_data["message"] == 'Role Listing exists.'
+
 

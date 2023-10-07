@@ -1,23 +1,13 @@
 import pytest
-import os
-import sys
+from selenium import webdriver
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from g4t1_test import app, db
+backend_base_url = "http://13.212.177.124:5000"        
+frontend_base_url = "http://localhost:8080"
 
 @pytest.fixture
-def client():
-    app.config['TESTING'] = True
+def chrome_driver():
+    driver = webdriver.Chrome()
+    yield driver
+    driver.quit()
+    return driver
 
-    # Create the test database
-    with app.app_context():
-        db.create_all()
-
-    # Create a test client for the application
-    with app.test_client() as client:
-        yield client
-
-    # Drop the test database after the tests are finished
-    with app.app_context():
-        db.drop_all()
