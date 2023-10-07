@@ -2,25 +2,17 @@
 import json
 import pytest
 import datetime
+import requests
 
-from g4t1_test import *
-from conftest import client, app
-from sqlalchemy.exc import IntegrityError
-from selenium import webdriver
+from conftest import *
 from selenium.webdriver.common.by import By
 from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
-def chrome_driver():
-    driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
-
-@pytest.fixture
 def url():
-    return "http://localhost:8080/editrolelisting/1"
+    return f'{frontend_base_url}/editrolelisting/1'
 
 
 ##################### FRONTEND TESTING #####################
@@ -192,36 +184,50 @@ def test_invalid_update_role_listing_selenium(chrome_driver, url):
 
 ##################### BACKEND TESTING #####################
 
-def test_update_role_listing(client):
-    updated_data = {
-        "role_name": "Consultant",
-        "application_opening": "2023-10-01",
-        "application_deadline": "2023-10-15",
-        "manager_ID": 1030,
-        "dept": "Finance",
-        "country": "Hong Kong",
-    }
-    with app.app_context():
-        latest_rolelisting_ID = str(RoleListing.query.order_by(RoleListing.rolelisting_ID.desc()).first().rolelisting_ID)
-        response = client.put('/updaterolelisting/'+latest_rolelisting_ID, json=updated_data)
-        assert response.status_code == 200
-        updated_role_listing = json.loads(response.data)["data"][latest_rolelisting_ID]
-        assert updated_role_listing["role_name"] == "Consultant"
-        assert updated_role_listing["application_opening"] == "2023-10-01"
-        assert updated_role_listing["application_deadline"] == "2023-10-15"
-        assert updated_role_listing["dept"] == "Finance"
-        assert updated_role_listing["country"] == "Hong Kong"
+def test_update_role_listing():
 
-def test_update_duplicate_role_listing(client):
-    duplicate_update_data = {
-        "role_name": "Consultant",
-        "application_opening": "2023-10-01",
-        "application_deadline": "2023-10-15",
-        "manager_ID": 1030,
-        "dept": "Finance",
+    updated_data = {
+        "role_name": "Account Manager",
+        "application_opening": "2023-09-16",
+        "application_deadline": "2023-10-29",
+        "manager_ID": 140003,
+        "dept": "Consultancy",
         "country": "Hong Kong",
     }
-    with app.app_context():
-        latest_rolelisting_ID = str(RoleListing.query.order_by(RoleListing.rolelisting_ID.desc()).first().rolelisting_ID)
-        response = client.put('/updaterolelisting/'+latest_rolelisting_ID, json=duplicate_update_data)
-        assert response.status_code == 400
+
+    response = requests.put(f'{backend_base_url}/updaterolelisting/1', json=updated_data)
+    
+    assert response.status_code == 200
+    
+    updated_role_listing = json.loads(response.content)["data"]["1"]
+    
+    assert updated_role_listing["role_name"] == "Account Manager"
+    assert updated_role_listing["application_opening"] == "2023-09-16"
+    assert updated_role_listing["application_deadline"] == "2023-10-29"
+    assert updated_role_listing["dept"] == "Consultancy"
+    assert updated_role_listing["country"] == "Hong Kong"
+    
+    actual_data = {
+        "role_name": "Call Centre",
+        "application_opening": "2023-09-15",
+        "application_deadline": "2023-10-28",
+        "manager_ID": 140003,
+        "dept": "Sales",
+        "country": "Vietnam",
+    }
+    
+    cleaned_response = requests.put(f'{backend_base_url}/updaterolelisting/1', json=actual_data)
+    
+    assert cleaned_response.status_code == 200
+
+def test_update_duplicate_role_listing():
+    duplicate_update_data = {
+        "role_name": "Call Centre",
+        "application_opening": "2023-09-15",
+        "application_deadline": "2023-10-28",
+        "manager_ID": 140003,
+        "dept": "Sales",
+        "country": "Vietnam",
+    }
+    response = requests.put(f'{backend_base_url}/updaterolelisting/2', json=duplicate_update_data)
+    assert response.status_code == 400
