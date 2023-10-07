@@ -5,6 +5,7 @@
 
   const roleListingStore = useRoleListingStore();
   const roleListings = ref({})
+  const staffNames = ref({})
 
   axios
     .get("http://127.0.0.1:5000/openrolelisting")
@@ -24,6 +25,17 @@
       for(let listing of receivedListings){
         for(let key in listing){
           roleListings.value[key] = listing[key]
+        }
+      }
+    });
+
+    axios
+    .get("http://127.0.0.1:5000/staff")
+    .then((response) => {
+      let allStaff = response.data.data.staff
+      for(let staff of allStaff){
+        for(let key in staff){
+          staffNames.value[key] = staff[key]
         }
       }
     });
@@ -50,6 +62,16 @@
     roleListingStore.setRoleListingId(id)
   }
 
+  const getManagerName = (id) => {
+    try {
+      var FName = staffNames.value[id]["staff_FName"]
+      var LName = staffNames.value[id]["staff_LName"][0]
+    } catch (error) {
+
+    }
+    return `${FName} ${LName}.`
+  }
+
 </script>
 
 <template>
@@ -74,7 +96,7 @@
         <router-link to="/specificrolelisting" @click= updateRoleListingId(id)>
           <div class="flex-none h-100">
             <div label="role-title" class="text-yellow text-xl"> {{listing.role_name}} </div>
-            <div label="role-manager" class="text-base"> Reporting Manager: {{listing.manager_ID}} </div>
+            <div label="role-manager" class="text-base"> Reporting Manager: {{getManagerName(listing.manager_ID)}} </div>
             <div class="flex flex-row text-xs">
               <div label="role-deadline" class="text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
               <div class="flex items-center mx-2">
