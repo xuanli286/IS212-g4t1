@@ -24,9 +24,9 @@ class Staff(db.Model):
     staff_ID = db.Column(db.Integer, primary_key=True)
     staff_FName = db.Column(db.String(50), nullable=False)
     staff_LName = db.Column(db.String(50), nullable=False)
-    staff_password = db.Column(db.String(20), nullable=False)
-    dept = db.Column(db.Enum("Sales", "Consultancy", "System Solutioning", "Engineering Operation", "HR and Admin", "Finance", "IT"), nullable=False)
-    country = db.Column(db.Enum("Malaysia", "Indonesia", "Vietnam", "Hong Kong"), nullable=False)
+    staff_password = db.Column(db.String(50), nullable=False)
+    dept = db.Column(db.Enum("Chairman", "CEO", "Sales", "Consultancy", "Solutioning", "Engineering", "HR", "Finance", "IT"), nullable=False)
+    country = db.Column(db.Enum("Malaysia", "Indonesia", "Vietnam", "Hong Kong", "Singapore"), nullable=False)
     email = db.Column(db.String(50), nullable=False)
     access_ID = db.Column(db.Integer, nullable=False)
 
@@ -62,7 +62,7 @@ class StaffSkill(db.Model):
     __tablename__ = "staff_skill"
 
     staff_ID = db.Column(db.Integer, db.ForeignKey("staff.staff_ID"), primary_key=True)
-    skill_name = db.Column(db.String(20), primary_key=True)
+    skill_name = db.Column(db.String(50), primary_key=True)
 
 
     # properties of the staff when it is created
@@ -105,8 +105,8 @@ class RoleListing(db.Model):
     application_opening = db.Column(db.Date, nullable=False)
     application_deadline = db.Column(db.Date, nullable=False)
     manager_ID = db.Column(db.Integer, db.ForeignKey("staff.staff_ID"), nullable=False)
-    dept = db.Column(db.Enum("Sales", "Consultancy", "System Solutioning", "Engineering Operation", "HR and Admin", "Finance", "IT"), nullable=False)
-    country = db.Column(db.Enum("Malaysia", "Indonesia", "Vietnam", "Hong Kong"), nullable=False)
+    dept = db.Column(db.Enum("Chairman", "CEO", "Sales", "Consultancy", "Solutioning", "Engineering", "HR", "Finance", "IT"), nullable=False)
+    country = db.Column(db.Enum("Malaysia", "Indonesia", "Vietnam", "Hong Kong", "Singapore"), nullable=False)
    
 
     # properties of the role_listing when it is created
@@ -138,7 +138,7 @@ class RoleSkill(db.Model):
     __tablename__ = "role_skill"
 
     role_name = db.Column(db.String(20), db.ForeignKey("role.role_name"), primary_key=True)
-    skill_name = db.Column(db.String(20), primary_key=True)
+    skill_name = db.Column(db.String(50), primary_key=True)
    
 
     # properties of the role_listing when it is created
@@ -472,6 +472,41 @@ def update_rolelisting(rolelisting_ID):
     )
 
 
+# delete a role listing
+@app.route("/deleterolelisting/<rolelisting_ID>", methods=['DELETE'])
+def delete_rolelisting(rolelisting_ID):
+
+    # Check if the role listing exists in the database
+    rolelisting = RoleListing.query.filter_by(rolelisting_ID=rolelisting_ID).first()
+
+    if rolelisting:
+        try:
+            db.session.delete(rolelisting)
+            db.session.commit()
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": rolelisting_ID,
+                    "message": "Role Listing deleted successfully"
+                }
+            ), 200
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "data": rolelisting,
+                    "message": "An error occurred when deleting the role listing."
+                }
+            ), 500
+    else:
+        return jsonify(
+            {
+                "code": 404,
+                "data": rolelisting_ID,
+                "message": "Role Listing does not exist."
+            }
+        ), 404
+
 # get all applications from a rolelisting_ID
 # or choose to get 1 application from a rolelisting_ID by passing the staff_ID in params
 #   e.g., /applications/1?staff_ID=1030
@@ -554,5 +589,51 @@ def create_application():
         }
     ), 201
 
+
+# delete an application
+@app.route("/deleteapplications/<staff_ID>/<rolelisting_ID>", methods=['DELETE'])
+def delete_application(staff_ID, rolelisting_ID):
+
+    # Check if the role listing exists in the database
+    application = Application.query.filter_by(staff_ID=staff_ID, rolelisting_ID=rolelisting_ID).first()
+
+    if application:
+        try:
+            db.session.delete(application)
+            db.session.commit()
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "staff_ID": staff_ID,
+                        "rolelisting_ID": rolelisting_ID
+                        },
+                    "message": "Application deleted successfully"
+                }
+            ), 200
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "data": {
+                        "staff_ID": staff_ID,
+                        "rolelisting_ID": rolelisting_ID
+                        },
+                    "message": "An error occurred when deleting the application."
+                }
+            ), 500
+    else:
+        return jsonify(
+            {
+                "code": 404,
+                "data": {
+                    "staff_ID": staff_ID,
+                    "rolelisting_ID": rolelisting_ID
+                    },
+                "message": "Application does not exist."
+            }
+        ), 404
+
+
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
