@@ -12,7 +12,11 @@ const store = useModalStore();
 const { isOpen, isSuccess } = storeToRefs(store);
 
 const constStore = useConstantStore();
-const { hiringDepartment, countries } = storeToRefs(constStore);
+const {
+    hiringDepartment,
+    countries,
+    staff,
+} = storeToRefs(constStore);
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore)
@@ -192,12 +196,10 @@ function updateSkills() {
           </select>
         </div>
         <div>
-          <p class="font-bold">Country</p>
-          <select class="mt-1 p-2 rounded-md w-full" v-model="selectedCountry">
-            <option v-for="country of countries" :key="country">
-              {{ country }}
-            </option>
-          </select>
+            <p class="font-bold">Reporting Manager</p>
+            <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
+                <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
+            </select>
         </div>
         <div>
           <p class="font-bold">Manager ID</p>
