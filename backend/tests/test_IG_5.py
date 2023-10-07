@@ -1,18 +1,10 @@
 import pytest
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-import time
-
-@pytest.fixture
-def chrome_driver():
-    driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
+from conftest import *
 
 @pytest.fixture
 def url():
-    return "http://localhost:8080/rolelistingmanagement"
+    return f'{frontend_base_url}/rolelistingmanagement'
 
 def test_add_rolelisting_button(chrome_driver, url):
     driver = chrome_driver
