@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
+          cache: 'npm'
 
       - name: Install Dependencies
         run: |
@@ -48,6 +49,19 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
+      - name: Set up Chrome
+        run: |
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb
+          sudo apt-get -f install
+
+      - name: Download Chrome WebDriver
+        run: |
+          LATEST_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+          wget "https://chromedriver.storage.googleapis.com/$LATEST_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          chmod +x chromedriver
+          sudo mv chromedriver /usr/local/bin/
 
       - name: Test backend code using pytest
         run: |
