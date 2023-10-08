@@ -20,6 +20,15 @@ jobs:
         with:
           node-version: "18"
 
+      - name: Installing package list
+        run: apt list --installed
+
+      - name: Install xvfb
+        run: sudo apt-get install xvfb
+
+      - name: Removing previous chrome instances on runner 
+        run: sudo apt purge google-chrome-stable     
+
       - name: Install Dependencies
         run: |
           cd frontend
