@@ -9,7 +9,7 @@ export const useConstantStore = defineStore('constant', () => {
 
     axios.get('http://127.0.0.1:5000/get_dept_country/dept')
         .then((response) => {
-            hiringDepartment.value = response.data.data;
+            hiringDepartment.value = response.data.data.slice(2);
         })
         .catch((error) => {
             console.log(error.message);

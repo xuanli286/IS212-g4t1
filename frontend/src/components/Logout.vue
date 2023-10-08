@@ -9,7 +9,7 @@
         user,
     } = storeToRefs(store);
 
-    const access = {0: 'Staff', 1: 'Manager & Director', 2: 'HR Staff'};
+    const access = {1: 'Admin', 2: 'Staff', 3: 'Manager', 4: 'HR Staff'};
 
     console.log(user.value)
 

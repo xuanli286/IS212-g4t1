@@ -96,7 +96,7 @@ axios
 
 function addRoleListing(){
 
-  if (user.value.access_ID == 2){ //admin
+  if (user.value.access_ID == 4){ //HR only
     if (applicationDeadline.value == "" || applicationOpening.value=="" || selectedCountry.value=="" || selectedDept.value=="" || managerID.value=="" || selectedTitle.value==""){
       errorMessage.value = "Not all fields are filled!";
       isOpen.value = true;
@@ -208,16 +208,6 @@ function updateSkills() {
             <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
                 <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
             </select>
-        </div>
-      </div>
-      <div class="grid grid-cols-3 pt-5 gap-28">
-        <div>
-          <p class="font-bold">Manager ID</p>
-          <input 
-            type="text" 
-            class="mt-1 w-full p-2 bg-white rounded-md" 
-            v-model="managerID"
-          />
         </div>
       </div>
       <div class="pt-5">
