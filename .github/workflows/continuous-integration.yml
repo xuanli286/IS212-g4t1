@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     continue-on-error: false
-    timeout-minutes: 10
+    # timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,15 +19,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-
-      - name: Installing package list
-        run: apt list --installed
-
-      - name: Install xvfb
-        run: sudo apt-get install xvfb
-
-      - name: Removing previous chrome instances on runner 
-        run: sudo apt purge google-chrome-stable     
 
       - name: Install Dependencies
         run: |
@@ -38,6 +29,12 @@ jobs:
         run: |
           cd frontend
           npm run build
+      - name: Cache node modules
+      uses: actions/cache@v2
+      with:
+        path: |
+          frontend
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
   test:
     runs-on: ubuntu-latest
@@ -51,6 +48,15 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+
+      - name: Installing package list
+        run: apt list --installed
+
+      - name: Install xvfb
+        run: sudo apt-get install xvfb
+
+      - name: Removing previous chrome instances on runner 
+        run: sudo apt purge google-chrome-stable     
 
       - name: Install Dependencies
         run: |
