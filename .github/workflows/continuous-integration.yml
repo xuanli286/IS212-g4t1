@@ -21,6 +21,13 @@ jobs:
         with:
           node-version: "18"
 
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            frontend
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
       - name: Install Dependencies
         run: |
           cd frontend
@@ -30,12 +37,7 @@ jobs:
         run: |
           cd frontend
           npm run build
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            frontend
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      
 
   test:
     runs-on: ubuntu-latest
