@@ -51,6 +51,39 @@
                 </ul>
             </div>
         </div>
+        <div class="mt-10 rounded-lg bg-white p-5">
+            <div class="flex items-center">
+                <img src="@/assets/icons/puzzle.svg" alt="">
+                <p class="font-bold text-yellow ml-1">Skills Match</p>
+            </div>
+            <div class="ml-8">
+                <p class="mt-2 font-serif text-green text-sm" id="percentage">{{ (matchedSkills.length/roleSkills.length*100).toFixed(0) }}% skills match</p>
+                <div class="flex gap-1">
+                    <img v-for="skill of matchedSkills.length" :key="skill" src="@/assets/matchedSkill.svg" alt="">
+                    <img v-for="skill of missingSkills.length" :key="skill" src="@/assets/unmatchedSkill.svg" alt="">
+                </div>
+                <div class="mt-2">
+                    <div class="flex items-center">
+                        <img src="@/assets/icons/check.svg" alt="">
+                        <p class="font-bold text-sm ml-1">{{ matchedSkills.length }} skills on your profile</p>
+                    </div>
+                    <p class="ml-4 text-sm" id="matched-skills">
+                        <span v-if="matchedSkills.length > 0">{{ matchedSkills.join(', ') }}</span>
+                        <span class="text-grey" v-else>No matching skill found</span>
+                    </p>
+                </div>
+                <div class="mt-2">
+                    <div class="flex items-center">
+                        <img src="@/assets/icons/exclamation.svg" alt="">
+                        <p class="font-bold text-sm ml-1">{{ missingSkills.length }} skills missing on your profile</p>
+                    </div>
+                    <p class="ml-4 text-sm" id="missing-skills">
+                        <span v-if="missingSkills.length > 0">{{ missingSkills.join(', ') }}</span>
+                        <span class="text-grey">All skills matched</span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -76,10 +109,11 @@
         roles,
         staff,
         roleSkills,
+        staffSkills,
     } = storeToRefs(store);
 
     // const rolelistingID = route.params.id;
-    const rolelistingID = 1;
+    const rolelistingID = 2;
     const roleName = ref("");
     const roleDetails = ref({});
 
@@ -89,11 +123,32 @@
             roleDetails.value = response.data.data[rolelistingID];
             roleName.value = roleDetails.value.role_name;
             store.getSkills(roleName.value);
+            store.getStaffSkills(user.value.staff_ID);
         }
         catch (error) {
             console.log(error.message);
         }
     })
+
+    const matchedSkills = computed(() => {
+        const matched = [];
+        for (let skill of roleSkills.value) {
+            if (staffSkills.value.indexOf(skill) !== -1) {
+                matched.push(skill);
+            }
+        }
+        return matched;
+    });
+
+    const missingSkills = computed(() => {
+        const missing = [];
+        for (let skill of roleSkills.value) {
+            if (staffSkills.value.indexOf(skill) === -1) {
+                missing.push(skill);
+            }
+        }
+        return missing;
+    });
 
     function back() {
         window.history.back();
