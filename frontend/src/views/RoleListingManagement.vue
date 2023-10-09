@@ -129,7 +129,7 @@
         <div>
           <div class="flex flex-row">
             <div class="grow"></div>
-            <div :class="{'bg-green': checkOpen(listing), 'bg-red': !checkOpen(listing)}" class="me-5 text-xs px-4 py-1 rounded-full text-white">  
+            <div :class="{'bg-green': checkOpen(listing), 'bg-red': !checkOpen(listing)}" class="role-status me-5 text-xs px-4 py-1 rounded-full text-white">  
               <span v-if="checkOpen(listing)">Open</span>
               <span v-else>Closed</span>
             </div>
