@@ -1,3 +1,124 @@
+<script>
+import axios from "axios";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "../store/useUserStore";
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const rolelistingID = 1
+
+export default {
+  name: 'SpecificRoleListing',
+  components: {},
+  props: {
+  },
+  data() {
+    return {
+      roleName: "",
+      expiryDate: "",
+      managerId: null,
+      managerName: "",
+      department: "",
+      country: "",
+      skills: [],
+      description: "",
+      hrRights: false,
+    };
+  },
+  methods: {
+    getRoleListingInfo() {
+      axios
+        .get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
+        .then((response) => {
+          // console.log(response.data.data[rolelistingID])
+          this.roleName = response.data.data[rolelistingID]["role_name"]
+          this.expiryDate = response.data.data[rolelistingID]["application_deadline"]
+          this.managerId = response.data.data[rolelistingID]["manager_ID"]
+          this.department = response.data.data[rolelistingID]["dept"]
+          this.country = response.data.data[rolelistingID]["country"]
+
+          // set managerName variable after obtaining managerId
+          this.getStaffName();
+
+          // set skills variable after obtaining roleName
+          this.getRoleSkills();
+
+          // set description variable after obtaining roleName
+          this.getRoleDescription();
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
+    getStaffName() {
+      axios
+        .get(`http://127.0.0.1:5000/staff/${this.managerId}`)
+        .then((response) => {
+          const managerData = response.data.data[this.managerId];
+          if (managerData) {
+            this.managerName = managerData["staff_FName"] + " " + managerData["staff_LName"];
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
+    getRoleSkills() {
+
+      axios
+        .get(`http://127.0.0.1:5000/get_role_skill/${this.roleName}`)
+        .then((response) => {
+          const roleSkillsData = response.data.data;
+          // console.log(roleSkillsData)
+          if (roleSkillsData) {
+            this.skills = roleSkillsData;
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
+    openApply() {
+      document.getElementById('authentication-modal').classList.remove('hidden')
+      console.log(user.value.access_ID)
+    },
+    closeApply() {
+      document.getElementById('authentication-modal').classList.add('hidden')
+    },
+    getRoleDescription() {
+
+      axios
+        .get(`http://127.0.0.1:5000/get_all_role`)
+        .then((response) => {
+          const roleDescriptionsData = response.data.data
+          for (const role of roleDescriptionsData) {
+            for (let rName in role) {
+              if (rName == this.roleName) {
+                this.description = role[this.roleName]
+              }
+            }
+          }
+          // const roleDescription = response.data.data[$roleName];
+          // console.log(roleDescription)
+          // if (roleDescription) {
+          //   this.description = roleDescription;
+          // }
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }
+  },
+  created() {
+    this.getRoleListingInfo();
+    if (user.value.access_ID == 2) {
+      this.hrRights = true;
+    }
+  }
+}
+</script>
+
 <template>
   <div class="bg-beige px-10 py-5">
     <div class="flex items-center justify-between">
@@ -22,7 +143,7 @@
       </div>
 
       <!-- Edit button -->
-      <router-link
+      <router-link v-if="hrRights"
         to="/edit-role-listing"
         class="bg-yellow text-white rounded-full px-4 py-2 flex items-center space-x-2"
       >
@@ -188,119 +309,3 @@
 </template>
 
 <link rel="stylesheet" href="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.min.css" />
-
-
-<script>
-import axios from "axios";
-
-
-
-const rolelistingID = 1
-
-export default {
-  name: 'SpecificRoleListing',
-  components: {},
-  props: {
-  },
-  data() {
-    return {
-      roleName: "",
-      expiryDate: "",
-      managerId: null,
-      managerName: "",
-      department: "",
-      country: "",
-      skills: [],
-      description: "",
-    };
-  },
-  methods: {
-    getRoleListingInfo() {
-      axios
-        .get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
-        .then((response) => {
-          // console.log(response.data.data[rolelistingID])
-          this.roleName = response.data.data[rolelistingID]["role_name"]
-          this.expiryDate = response.data.data[rolelistingID]["application_deadline"]
-          this.managerId = response.data.data[rolelistingID]["manager_ID"]
-          this.department = response.data.data[rolelistingID]["dept"]
-          this.country = response.data.data[rolelistingID]["country"]
-
-          // set managerName variable after obtaining managerId
-          this.getStaffName();
-
-          // set skills variable after obtaining roleName
-          this.getRoleSkills();
-
-          // set description variable after obtaining roleName
-          this.getRoleDescription();
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    getStaffName() {
-      axios
-        .get(`http://127.0.0.1:5000/staff/${this.managerId}`)
-        .then((response) => {
-          const managerData = response.data.data[this.managerId];
-          if (managerData) {
-            this.managerName = managerData["staff_FName"] + " " + managerData["staff_LName"];
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    getRoleSkills() {
-
-      axios
-        .get(`http://127.0.0.1:5000/get_role_skill/${this.roleName}`)
-        .then((response) => {
-          const roleSkillsData = response.data.data;
-          // console.log(roleSkillsData)
-          if (roleSkillsData) {
-            this.skills = roleSkillsData;
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    openApply() {
-      document.getElementById('authentication-modal').classList.remove('hidden')
-    },
-    closeApply() {
-      document.getElementById('authentication-modal').classList.add('hidden')
-    },
-    getRoleDescription() {
-
-      axios
-        .get(`http://127.0.0.1:5000/get_all_role`)
-        .then((response) => {
-          const roleDescriptionsData = response.data.data
-          for (const role of roleDescriptionsData) {
-            for (let rName in role) {
-              if (rName == this.roleName) {
-                this.description = role[this.roleName]
-              }
-            }
-          }
-          // const roleDescription = response.data.data[$roleName];
-          // console.log(roleDescription)
-          // if (roleDescription) {
-          //   this.description = roleDescription;
-          // }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    }
-  },
-  created() {
-    this.getRoleListingInfo();
-  }
-}
-</script>
-
-<style></style>
