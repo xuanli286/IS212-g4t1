@@ -114,14 +114,14 @@
       <li v-else v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
         <router-link to="/specificrolelisting" @click= updateRoleListingId(id)>
           <div class="flex-none h-100">
-            <div label="role-title" class="text-yellow text-xl"> {{listing.role_name}} </div>
-            <div label="role-manager" class="text-base"> Reporting Manager: {{getManagerName(listing.manager_ID)}} </div>
+            <div class="role-title text-yellow text-xl"> {{listing.role_name}} </div>
+            <div class="role-manager text-base"> Reporting Manager: {{getManagerName(listing.manager_ID)}} </div>
             <div class="flex flex-row text-xs">
-              <div label="role-deadline" class="text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
+              <div class="role-deadline text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
               <div class="flex items-center mx-2">
                 <span class="bg-black h-1 w-1 rounded-full"></span>
               </div>
-              <div label="role-applicants" class="font-bold text-green"> 11 applicants </div>
+              <div class="role-applicants font-bold text-green"> 11 applicants </div>
             </div>
           </div>
         </router-link>
@@ -136,8 +136,8 @@
           </div>
           <div class="flex flex-row items-center text-yellow pt-3">
             <div class="font-bold">{{ listing.dept }}</div>
-            <div label="role-department" class="flex bg-yellow mx-2 h-1 w-1 rounded-full"> </div>
-            <div label="role-country">{{ listing.country }}</div>
+            <div class="role-department flex bg-yellow mx-2 h-1 w-1 rounded-full"> </div>
+            <div class="role-country">{{ listing.country }}</div>
           </div>
         </div>
       </li>
