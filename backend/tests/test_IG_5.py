@@ -18,7 +18,7 @@ def test_open_pill_color(chrome_driver, url):
         openPill = driver.find_element(By.XPATH, "//*[contains(text(), 'Open')]/..")    
         assert "bg-green" in openPill.get_attribute("class")
     except:
-        assert True
+        assert driver.find_element(By.XPATH, "//div[contains(text(), 'No listings available!')]").is_displayed()
 
 def test_closed_pill_color(chrome_driver, url):
     driver = chrome_driver
@@ -27,22 +27,18 @@ def test_closed_pill_color(chrome_driver, url):
         closedPill = driver.find_element(By.XPATH, "//*[contains(text(), 'Closed')]/..")    
         assert "bg-red" in closedPill.get_attribute("class")
     except:
-        assert True
-
-def test_rolelistings(chrome_driver, url):
-    driver = chrome_driver
-    driver.get(url)
-    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
-    for listing in rolelistings:
-        assert listing.is_displayed()
+        assert driver.find_element(By.XPATH, "//div[contains(text(), 'No listings available!')]").is_displayed()
 
 def test_rolelisting_items(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
-    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
-    for listing in rolelistings:
-        assert listing.find_element(By.XPATH, "//div[@label='role-title']").is_displayed()
-        assert listing.find_element(By.XPATH, "//div[@label='role-manager']").is_displayed()
-        assert listing.find_element(By.XPATH, "//div[@label='role-applicants']").is_displayed()
-        assert listing.find_element(By.XPATH, "//div[@label='role-deadline']").is_displayed()
-        assert listing.find_element(By.XPATH, "//div[@label='role-department']").is_displayed()
+    if len(driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")) > 0:
+        rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
+        for listing in rolelistings:
+            assert listing.find_element(By.XPATH, "//div[@label='role-title']").is_displayed()
+            assert listing.find_element(By.XPATH, "//div[@label='role-manager']").is_displayed()
+            assert listing.find_element(By.XPATH, "//div[@label='role-applicants']").is_displayed()
+            assert listing.find_element(By.XPATH, "//div[@label='role-deadline']").is_displayed()
+            assert listing.find_element(By.XPATH, "//div[@label='role-department']").is_displayed()
+    else:
+        assert driver.find_element(By.XPATH, "//div[contains(text(), 'No listings available!')]").is_displayed()

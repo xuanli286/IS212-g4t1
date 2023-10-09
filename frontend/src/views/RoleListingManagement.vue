@@ -106,7 +106,7 @@
       </div>
     </div>
     <ul class="mx-64 min-w-fit rolelisting-container">
-      <li v-if="Object.keys(roleListings).length == 0" class="rolelisting-panel py-5 text-center">
+      <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center">
         <div class="grow"></div>
         <div class="font-bold">No listings available!</div>
         <div class="grow"></div>
