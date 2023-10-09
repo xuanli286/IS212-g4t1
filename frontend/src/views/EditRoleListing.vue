@@ -177,7 +177,7 @@ function editRoleListing() {
                 />
             </div>
         </div>
-        <div class="grid grid-cols-2 pt-5 gap-16">
+        <div class="grid grid-cols-3 pt-5 gap-28">
             <div>
                 <p class="font-bold">Hiring Department</p>
                 <select id="department" class="mt-1 p-2 rounded-md w-full" v-model="selectedDept">
@@ -190,12 +190,12 @@ function editRoleListing() {
                     <option v-for="country of countries" :key="country">{{ country }}</option>
                 </select>
             </div>
-        </div>
-        <div class="pt-5">
-            <p class="font-bold">Reporting Manager</p>
-            <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
-                <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
-            </select>
+            <div>
+                <p class="font-bold">Reporting Manager</p>
+                <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
+                    <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
+                </select>
+            </div>
         </div>
         <div class="pt-5">
             <p class="font-bold">Description</p>
