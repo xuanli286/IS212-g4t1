@@ -89,7 +89,7 @@
 </script>
 
 <template>
-  <div class="bg-beige min-h-screen px-10 py-5">
+  <div class="bg-beige px-10 py-5">
     <div class="flex flex-row mx-64">
       <div class="flex flex-row grow py-20 text-xl font-serif text-center " id="roleListings">
         <div class="grow"></div>
