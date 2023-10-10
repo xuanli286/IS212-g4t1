@@ -48,15 +48,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Dependencies
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: npm cache
+        uses: actions/cache@v3
+        id: frontend-node
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-frontend-node-${{ hashFiles('frontend/package-lock.json') }}
+
+      - name: Install packages
+        if: steps.frontend-node.outputs.cache-hit != 'true'
         run: |
           cd frontend
           npm ci
 
-      - name: Run App Test Environment
+      - name: Build code
         run: |
           cd frontend
-          npm run test
+          npm run serve
 
       - name: Setup Python
         uses: actions/setup-python@v4
