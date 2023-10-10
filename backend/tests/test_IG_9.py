@@ -37,19 +37,19 @@ def test_rolelisting_items(chrome_driver, url):
     Check if number of rolelistings shown on frontend is equivalent to
     the number of rolelistings on backend
 """
-def test_openrolelisting(chrome_driver, url, backend_base_url):
+def test_openrolelisting(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
+
     num_frontend = len(driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel"))
-    
+
     open_role_listings_response = requests.get(f'{backend_base_url}/openrolelisting')
     open_role_listings = json.loads(open_role_listings_response.content)
-    
     if open_role_listings['code'] == 404:
         open_role_listings = []
     else:
         open_role_listings = open_role_listings['data']['rolelisting']
-    
+
     assert len(open_role_listings) == num_frontend
 
 
