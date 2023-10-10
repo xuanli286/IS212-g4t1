@@ -1,7 +1,7 @@
 import pytest
 from selenium import webdriver
 
-backend_base_url = "http://13.212.177.124:5000"        
+backend_base_url = "http://13.212.177.124:5001"        
 frontend_base_url = "http://localhost:8080"
 
 @pytest.fixture

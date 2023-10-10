@@ -27,11 +27,17 @@
 <script>
 // import axios from 'axios';
 import { useUserStore } from '../store/useUserStore';
-
-const get_staff_URL = "http://127.0.0.1:5000/staff";
+import { useConstantStore } from '@/store/useConstantStore';
 
 export default {
   name: 'HelloWorld',
+  setup() {
+    const backend_url = useConstantStore().backend_url;
+
+    const userStore = useUserStore();
+
+    return { backend_url, userStore}
+  },
   data() {
     return {
       staffId: "",
@@ -46,7 +52,7 @@ export default {
       // Gather user input data
       console.log(this.staffId)
       console.log(this.password)
-      fetch(`${get_staff_URL}/${this.staffId}`)
+      fetch(`${this.backend_url}/staff/${this.staffId}`)
       .then((response) => {
                 if (response.status === 404) {
                   this.wrongMsg = true;
@@ -67,8 +73,7 @@ export default {
                       // {access_ID: 2, staff_FName: "Philip", staff_LName: "Lee"};
                     console.log("Success!", this.user)
 
-                    const userStore = useUserStore();
-                    userStore.setUser({
+                    this.userStore.setUser({
                       access_ID: staffData['access_ID'],
                       staff_FName: staffData['staff_FName'],
                       staff_LName: staffData['staff_LName'],
