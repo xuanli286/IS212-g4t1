@@ -30,24 +30,6 @@ axios
   })
 
 axios
-  .get(`${backend_url.value}/closerolelisting`)
-  .then((response) => {
-    let receivedListings = response.data.data.rolelisting
-    for (let listing of receivedListings) {
-      for (let key in listing) {
-        roleListings.value[key] = listing[key]
-      }
-    }
-  })
-  .catch(error => {
-    if (error.response) {
-      if (error.response.status === 404) {
-        console.log("No closed listings at this moment.");
-      }
-    }
-  })
-
-axios
   .get(`${backend_url.value}/staff`)
   .then((response) => {
     let allStaff = response.data.data.staff
@@ -57,16 +39,6 @@ axios
       }
     }
   })
-
-function checkOpen(listing) {
-  let today = new Date();
-  let deadline = new Date(listing.application_deadline)
-  if (deadline > today) {
-    return true
-  }
-
-  return false
-}
 
 function formatDate(dateString) {
   let date = new Date(dateString)
@@ -123,11 +95,6 @@ const getManagerName = (id) => {
         <div>
           <div class="flex flex-row">
             <div class="grow"></div>
-            <div :class="{ 'bg-green': checkOpen(listing), 'bg-red': !checkOpen(listing) }"
-              class="role-status me-5 text-xs px-4 py-1 rounded-full text-white">
-              <span v-if="checkOpen(listing)">Open</span>
-              <span v-else>Closed</span>
-            </div>
           </div>
           <div class="flex flex-row items-center text-yellow pt-3">
             <div class="font-bold">{{ listing.dept }}</div>
