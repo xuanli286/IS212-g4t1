@@ -65,7 +65,7 @@ export const useConstantStore = defineStore('constant', () => {
         }
 
     function getStaffSkills(staffID) {
-        axios.get('http://127.0.0.1:5000/get_staff_skill/' + staffID)
+        axios.get(`${backend_url.value}/get_staff_skill/` + staffID)
             .then((response) => {
                 staffSkills.value = response.data.data;
             })
