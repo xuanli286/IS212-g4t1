@@ -2,13 +2,17 @@
   import axios from "axios";
   import { ref } from "vue";  
   import { useRoleListingStore } from '@/store/useRoleListingStore';
+  import { storeToRefs } from 'pinia';
+  import { useConstantStore } from '@/store/useConstantStore';
 
+  const constStore = useConstantStore();
+  const { backend_url } = storeToRefs(constStore);
   const roleListingStore = useRoleListingStore();
   const roleListings = ref({})
   const staffNames = ref({})
 
   axios
-    .get("http://127.0.0.1:5000/openrolelisting")
+    .get(`${backend_url.value}/openrolelisting`)
     .then((response) => {
       let receivedListings = response.data.data.rolelisting
       for(let listing of receivedListings){
@@ -26,7 +30,7 @@
     }) 
 
   axios
-    .get("http://127.0.0.1:5000/closerolelisting")
+    .get(`${backend_url.value}/closerolelisting`)
     .then((response) => {
       let receivedListings = response.data.data.rolelisting
       for(let listing of receivedListings){
@@ -44,7 +48,7 @@
     }) 
 
     axios
-    .get("http://127.0.0.1:5000/staff")
+    .get(`${backend_url.value}/staff`)
     .then((response) => {
       let allStaff = response.data.data.staff
       for(let staff of allStaff){

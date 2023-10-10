@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS application (
 -- Load Data into tables
 -- ---------------------------------------------------------
 
-LOAD DATA INFILE "/opt/lampp/temp/data/Access_Control.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/data/Access_Control.csv"
 INTO TABLE access_control
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -85,7 +85,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
-LOAD DATA INFILE "/opt/lampp/temp/data/staff.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/data/staff.csv"
 INTO TABLE staff
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -97,7 +97,7 @@ SET
 	Access_ID = @Role,
     Staff_password = CONCAT(LOWER(Staff_FName), "@123");
 
-LOAD DATA INFILE "/opt/lampp/temp/data/role.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/data/role.csv"
 INTO TABLE `role`
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -106,7 +106,7 @@ LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
 
-LOAD DATA INFILE "/opt/lampp/temp/data/skill.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/data/skill.csv"
 INTO TABLE skill
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -114,7 +114,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
-LOAD DATA INFILE "/opt/lampp/temp/data/role_skill.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/data/role_skill.csv"
 INTO TABLE role_skill
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -122,7 +122,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
-LOAD DATA INFILE "/opt/lampp/temp/data/staff_skill.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/data/staff_skill.csv"
 INTO TABLE staff_skill
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
