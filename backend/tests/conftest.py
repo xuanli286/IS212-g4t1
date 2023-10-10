@@ -14,7 +14,6 @@ def chrome_driver():
     # display.start()
     
     # Install and configure Chrome WebDriver
-    print("ChromeDriver version:", chromedriver_autoinstaller.get_version())
     chromedriver_autoinstaller.install()
     chrome_options = webdriver.ChromeOptions()
     
