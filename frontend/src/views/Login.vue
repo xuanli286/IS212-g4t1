@@ -27,11 +27,17 @@
 <script>
 // import axios from 'axios';
 import { useUserStore } from '../store/useUserStore';
-
-const get_staff_URL = "http://127.0.0.1:5000/staff";
+import { useConstantStore } from '@/store/useConstantStore';
 
 export default {
   name: 'HelloWorld',
+  setup() {
+    const backend_url = useConstantStore().backend_url;
+
+    const userStore = useUserStore();
+
+    return { backend_url, userStore}
+  },
   data() {
     return {
       staffId: "",
@@ -44,7 +50,7 @@ export default {
     async submitForm(event) {
       event.preventDefault();
       // Gather user input data
-      fetch(`${get_staff_URL}/${this.staffId}`)
+      fetch(`${this.backend_url}/staff/${this.staffId}`)
       .then((response) => {
                 if (response.status === 404) {
                   this.wrongMsg = true;
@@ -60,12 +66,11 @@ export default {
                     this.wrongMsg = false
                     this.user = {access_ID: staffData['access_ID'], staff_FName: staffData['staff_FName'], staff_LName: staffData['staff_LName']}
 
-                    const userStore = useUserStore();
-                    userStore.setUser({
-                      staff_ID: this.staffId,
+                    this.userStore.setUser({
                       access_ID: staffData['access_ID'],
                       staff_FName: staffData['staff_FName'],
                       staff_LName: staffData['staff_LName'],
+                      staff_ID: this.staffId,
                     });
                     // Redirect to the home page
                     this.$router.push({ name: 'Home' });

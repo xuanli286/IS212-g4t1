@@ -21,6 +21,7 @@ const {
     staff,
     roles,
     roleSkills,
+    backend_url,
 } = storeToRefs(constStore);
 
 const route = useRoute();
@@ -82,7 +83,7 @@ function validateApplicationDeadline() {
     }
 }
 
-axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
+axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`)
     .then((response) => {
         const editRole = response.data.data[rolelistingID];
         selectedTitle.value = editRole.role_name;
@@ -106,7 +107,7 @@ function editRoleListing() {
         "manager_ID": managerID.value,
         "role_name": selectedTitle.value,
     }
-    axios.put(`http://127.0.0.1:5000/updaterolelisting/${rolelistingID}`, body)
+    axios.put(`${backend_url.value}/updaterolelisting/${rolelistingID}`, body)
         .then((response) => {
             isOpen.value = true;
             isSuccess.value = true;
@@ -155,7 +156,7 @@ function editRoleListing() {
                 />
             </div>
         </div>
-        <div class="grid grid-cols-2 pt-5 gap-16">
+        <div class="grid grid-cols-3 pt-5 gap-28">
             <div>
                 <p class="font-bold">Hiring Department</p>
                 <select id="department" class="mt-1 p-2 rounded-md w-full" v-model="selectedDept">
@@ -168,12 +169,12 @@ function editRoleListing() {
                     <option v-for="country of countries" :key="country">{{ country }}</option>
                 </select>
             </div>
-        </div>
-        <div class="pt-5">
-            <p class="font-bold">Reporting Manager</p>
-            <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
-                <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
-            </select>
+            <div>
+                <p class="font-bold">Reporting Manager</p>
+                <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
+                    <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
+                </select>
+            </div>
         </div>
         <div class="pt-5">
             <p class="font-bold">Description</p>

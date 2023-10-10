@@ -110,6 +110,7 @@
         staff,
         roleSkills,
         staffSkills,
+        backend_url,
     } = storeToRefs(store);
 
     // const rolelistingID = route.params.id;
@@ -119,7 +120,7 @@
 
     onMounted(async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`);
+            const response = await axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`);
             roleDetails.value = response.data.data[rolelistingID];
             roleName.value = roleDetails.value.role_name;
             store.getSkills(roleName.value);

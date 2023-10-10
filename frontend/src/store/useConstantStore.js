@@ -9,16 +9,17 @@ export const useConstantStore = defineStore('constant', () => {
     const staffSkills = ref([]);
     const staff = ref({});
     const roles = ref({});
+    const backend_url = ref("http://13.212.177.124:5000");
 
-    axios.get('http://127.0.0.1:5000/get_dept_country/dept')
+    axios.get(`${backend_url.value}/get_dept_country/dept`)
         .then((response) => {
-            hiringDepartment.value = response.data.data;
+            hiringDepartment.value = response.data.data.slice(2);
         })
         .catch((error) => {
             console.log(error.message);
         })
 
-    axios.get('http://127.0.0.1:5000/get_dept_country/country')
+    axios.get(`${backend_url.value}/get_dept_country/country`)
         .then((response) => {
             countries.value = response.data.data;
         })
@@ -26,7 +27,7 @@ export const useConstantStore = defineStore('constant', () => {
             console.log(error.message);
         })
 
-    axios.get('http://127.0.0.1:5000/staff')
+    axios.get(`${backend_url.value}/staff`)
         .then((response) => {
             let data = response.data.data.staff
             for (const item of data) {
@@ -41,7 +42,7 @@ export const useConstantStore = defineStore('constant', () => {
             console.log(error.message);
         })
 
-    axios.get('http://127.0.0.1:5000/get_all_role')
+    axios.get(`${backend_url.value}/get_all_role`)
         .then((response) => {
             for (let i of response.data.data) {
                 for (let key in i) {
@@ -54,7 +55,7 @@ export const useConstantStore = defineStore('constant', () => {
         })
 
     function getSkills(roleName) {
-        axios.get('http://127.0.0.1:5000/get_role_skill/' + roleName)
+        axios.get(`${backend_url.value}/get_role_skill/` + roleName)
             .then((response) => {
                 roleSkills.value = response.data.data;
             })
@@ -83,5 +84,6 @@ export const useConstantStore = defineStore('constant', () => {
         roles,
         getSkills,
         getStaffSkills,
+        backend_url,
     };
 })

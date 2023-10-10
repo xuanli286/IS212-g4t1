@@ -7,6 +7,7 @@ import Login from "../views/Login.vue";
 import RoleListingManagement from "../views/RoleListingManagement.vue";
 import SkillManagement from "../views/SkillManagement.vue";
 import StaffViewSpecificRoleListing from "@/views/StaffViewSpecificRoleListing.vue";
+import SpecificRoleListing from "../views/SpecificRoleListing.vue";
 
 const router = createRouter({
     scrollBehavior(to, from, savedPosition) {
@@ -50,7 +51,12 @@ const router = createRouter({
         name: "StaffViewSpecificRoleListing",
         component: StaffViewSpecificRoleListing,
       },
-    ],
+      {
+        path: "/specificrolelisting",
+        name: "SpecificRoleListing",
+        component: SpecificRoleListing,
+      },
+  ],
 });
 
 export default router;
