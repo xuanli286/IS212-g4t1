@@ -6,20 +6,16 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useConstantStore } from "@/store/useConstantStore";
 import { useModalStore } from "@/store/useModalStore";
-import { useUserStore } from '@/store/useUserStore'
+import { useUserStore } from "@/store/useUserStore";
 
 const store = useModalStore();
 const { isOpen, isSuccess } = storeToRefs(store);
 
 const constStore = useConstantStore();
-const {
-    hiringDepartment,
-    countries,
-    staff,
-} = storeToRefs(constStore);
+const { hiringDepartment, countries, staff } = storeToRefs(constStore);
 
 const userStore = useUserStore();
-const { user } = storeToRefs(userStore)
+const { user } = storeToRefs(userStore);
 
 // const rolelistingID = 3;
 
@@ -66,19 +62,19 @@ function updateMinCloseDate() {
 }
 
 function validateApplicationOpening() {
-    const enteredDate = new Date(applicationOpening.value);
-    const minDate = new Date(minOpenDate.value);
-    if (enteredDate < minDate) {
-        applicationOpening.value = minOpenDate.value;
-    }
+  const enteredDate = new Date(applicationOpening.value);
+  const minDate = new Date(minOpenDate.value);
+  if (enteredDate < minDate) {
+    applicationOpening.value = minOpenDate.value;
+  }
 }
 
 function validateApplicationDeadline() {
-    const enteredDate = new Date(applicationDeadline.value);
-    const minDate = new Date(minCloseDate.value);
-    if (enteredDate < minDate) {
-        applicationDeadline.value = minCloseDate.value;
-    }
+  const enteredDate = new Date(applicationDeadline.value);
+  const minDate = new Date(minCloseDate.value);
+  if (enteredDate < minDate) {
+    applicationDeadline.value = minCloseDate.value;
+  }
 }
 
 axios
@@ -94,37 +90,48 @@ axios
     console.log(error.message);
   });
 
-function addRoleListing(){
-
-  if (user.value.access_ID == 4){ //HR only
-    if (applicationDeadline.value == "" || applicationOpening.value=="" || selectedCountry.value=="" || selectedDept.value=="" || managerID.value=="" || selectedTitle.value==""){
+function addRoleListing() {
+  if (user.value.access_ID == 2) {
+    //admin
+    if (
+      applicationDeadline.value == "" ||
+      applicationOpening.value == "" ||
+      selectedCountry.value == "" ||
+      selectedDept.value == "" ||
+      managerID.value == "" ||
+      selectedTitle.value == ""
+    ) {
       errorMessage.value = "Not all fields are filled!";
       isOpen.value = true;
-    } else{
+    } else {
       const body = {
-          "application_deadline": applicationDeadline.value,
-          "application_opening": applicationOpening.value,
-          "country": selectedCountry.value,
-          "dept": selectedDept.value,
-          "manager_ID": managerID.value,
-          "role_name": selectedTitle.value,
-      }
-      axios.post(`http://127.0.0.1:5000/addrolelisting`, body)
-      .then((response) => {
+        application_deadline: applicationDeadline.value,
+        application_opening: applicationOpening.value,
+        country: selectedCountry.value,
+        dept: selectedDept.value,
+        manager_ID: managerID.value,
+        role_name: selectedTitle.value,
+      };
+      axios
+        .post(`http://127.0.0.1:5000/addrolelisting`, body)
+        .then((response) => {
           isOpen.value = true;
           isSuccess.value = true;
-      })
-      .catch((error) => {
+        })
+        .catch((error) => {
           errorMessage.value = error.response.data.message;
           isOpen.value = true;
-      })
+        });
     }
-  } else { // not admin
+  } else {
+    // not admin
     errorMessage.value = "Unauthorised access!";
     isOpen.value = true;
   }
+}
 
-  
+function goBack() {
+  this.$router.push(-1);
 }
 
 function updateSkills() {
@@ -140,7 +147,27 @@ function updateSkills() {
 </script>
 
 <template>
-  <div class="bg-beige min-h-screen px-10 py-5">
+  <div class="bg-beige min-h-screen px-10">
+    <router-link
+      id="backButton"
+      to="/home"
+      class="w-full flex w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700"
+    >
+      <svg
+        class="w-5 h-5 rtl:rotate-180"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+        />
+      </svg>
+    </router-link>
     <p class="font-serif flex justify-center items-center">Add Role Listing</p>
     <div class="bg-grey-50 rounded-lg p-5 mt-5 font-sans text-base">
       <div class="grid grid-cols-3 gap-28">
@@ -204,10 +231,26 @@ function updateSkills() {
           </select>
         </div>
         <div>
-            <p class="font-bold">Reporting Manager</p>
-            <select id="manager" class="mt-1 p-2 rounded-md w-full" v-model="managerID">
-                <option v-for="(name, id) in staff" :key="id" :value="id">{{ name }} ({{ id }})</option>
-            </select>
+          <p class="font-bold">Reporting Manager</p>
+          <select
+            id="manager"
+            class="mt-1 p-2 rounded-md w-full"
+            v-model="managerID"
+          >
+            <option v-for="(name, id) in staff" :key="id" :value="id">
+              {{ name }} ({{ id }})
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 pt-5 gap-28">
+        <div>
+          <p class="font-bold">Manager ID</p>
+          <input
+            type="text"
+            class="mt-1 w-full p-2 bg-white rounded-md"
+            v-model="managerID"
+          />
         </div>
       </div>
       <div class="pt-5">
