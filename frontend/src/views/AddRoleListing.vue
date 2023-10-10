@@ -12,7 +12,7 @@ const store = useModalStore();
 const { isOpen, isSuccess } = storeToRefs(store);
 
 const constStore = useConstantStore();
-const { hiringDepartment, countries, staff } = storeToRefs(constStore);
+const { hiringDepartment, countries, staff, backend_url } = storeToRefs(constStore);
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -78,7 +78,7 @@ function validateApplicationDeadline() {
 }
 
 axios
-  .get("http://127.0.0.1:5000/get_all_role")
+  .get(`${backend_url.value}/get_all_role`)
   .then((response) => {
     for (let i of response.data.data) {
       for (let key in i) {
@@ -91,8 +91,8 @@ axios
   });
 
 function addRoleListing() {
-  if (user.value.access_ID == 2) {
-    //admin
+  if (user.value.access_ID == 4) {
+    // HR only
     if (
       applicationDeadline.value == "" ||
       applicationOpening.value == "" ||
@@ -113,7 +113,7 @@ function addRoleListing() {
         role_name: selectedTitle.value,
       };
       axios
-        .post(`http://127.0.0.1:5000/addrolelisting`, body)
+        .post(`${backend_url.value}/addrolelisting`, body)
         .then((response) => {
           isOpen.value = true;
           isSuccess.value = true;
@@ -136,7 +136,7 @@ function goBack() {
 
 function updateSkills() {
   axios
-    .get(`http://127.0.0.1:5000/get_role_skill/${selectedTitle.value}`)
+    .get(`${backend_url.value}/get_role_skill/${selectedTitle.value}`)
     .then((response) => {
       skills.value = response.data.data;
     })
@@ -241,16 +241,6 @@ function updateSkills() {
               {{ name }} ({{ id }})
             </option>
           </select>
-        </div>
-      </div>
-      <div class="grid grid-cols-3 pt-5 gap-28">
-        <div>
-          <p class="font-bold">Manager ID</p>
-          <input
-            type="text"
-            class="mt-1 w-full p-2 bg-white rounded-md"
-            v-model="managerID"
-          />
         </div>
       </div>
       <div class="pt-5">

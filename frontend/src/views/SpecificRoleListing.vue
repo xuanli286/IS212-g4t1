@@ -73,6 +73,9 @@
 
 <script>
 import axios from "axios";
+// import { storeToRefs } from 'pinia';
+import { useConstantStore } from '@/store/useConstantStore';
+
 
 const rolelistingID = 1
 
@@ -80,6 +83,12 @@ export default {
   name: 'SpecificRoleListing',
   components: {},
   props: {
+  },
+  setup() {
+
+    const backend_url = useConstantStore().backend_url;
+
+    return { backend_url }
   },
   data() {
     return {
@@ -96,7 +105,7 @@ export default {
   methods: {
     getRoleListingInfo() {
       axios
-        .get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
+        .get(`${this.backend_url}/rolelisting/${rolelistingID}`)
         .then((response) => {
           // console.log(response.data.data[rolelistingID])
           this.roleName = response.data.data[rolelistingID]["role_name"]
@@ -120,7 +129,7 @@ export default {
     },
     getStaffName() {
       axios
-        .get(`http://127.0.0.1:5000/staff/${this.managerId}`)
+        .get(`${this.backend_url}/staff/${this.managerId}`)
         .then((response) => {
           const managerData = response.data.data[this.managerId];
           if (managerData) {
@@ -134,7 +143,7 @@ export default {
     getRoleSkills() {
 
       axios
-        .get(`http://127.0.0.1:5000/get_role_skill/${this.roleName}`)
+        .get(`${this.backend_url}/get_role_skill/${this.roleName}`)
         .then((response) => {
           const roleSkillsData = response.data.data;
           // console.log(roleSkillsData)
@@ -149,7 +158,7 @@ export default {
     getRoleDescription() {
 
       axios
-        .get(`http://127.0.0.1:5000/get_all_role`)
+        .get(`${this.backend_url}/get_all_role`)
         .then((response) => {
           const roleDescriptionsData = response.data.data
           for (const role of roleDescriptionsData) {

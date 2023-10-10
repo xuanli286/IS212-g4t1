@@ -19,6 +19,7 @@ const {
     hiringDepartment,
     countries,
     staff,
+    backend_url
 } = storeToRefs(constStore);
 
 const route = useRoute();
@@ -82,7 +83,7 @@ function validateApplicationDeadline() {
     }
 }
 
-axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
+axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`)
     .then((response) => {
         const editRole = response.data.data[rolelistingID];
         selectedTitle.value = editRole.role_name;
@@ -97,7 +98,7 @@ axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`)
         console.log(error.message);
     })
 
-axios.get('http://127.0.0.1:5000/get_all_role')
+axios.get(`${backend_url.value}/get_all_role`)
     .then((response) => {
         for (let i of response.data.data) {
             for (let key in i) {
@@ -110,7 +111,7 @@ axios.get('http://127.0.0.1:5000/get_all_role')
     })
 
 function updateSkills() {
-    axios.get(`http://127.0.0.1:5000/get_role_skill/${selectedTitle.value}`)
+    axios.get(`${backend_url.value}/get_role_skill/${selectedTitle.value}`)
         .then((response) => {
             skills.value = response.data.data;
         })
@@ -128,7 +129,7 @@ function editRoleListing() {
         "manager_ID": managerID.value,
         "role_name": selectedTitle.value,
     }
-    axios.put(`http://127.0.0.1:5000/updaterolelisting/${rolelistingID}`, body)
+    axios.put(`${backend_url.value}/updaterolelisting/${rolelistingID}`, body)
         .then((response) => {
             isOpen.value = true;
             isSuccess.value = true;
