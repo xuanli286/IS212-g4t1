@@ -113,8 +113,7 @@
         backend_url,
     } = storeToRefs(store);
 
-    // const rolelistingID = route.params.id;
-    const rolelistingID = 2;
+    const rolelistingID = route.params.id;
     const roleName = ref("");
     const roleDetails = ref({});
 

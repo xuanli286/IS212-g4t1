@@ -2,9 +2,10 @@
 # IG_13     Staff can view role-skill match
 import json
 import pytest
+import requests
 
 from g4t1_test import *
-from conftest import client, app
+from conftest import *
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -19,7 +20,7 @@ def chrome_driver():
 
 @pytest.fixture
 def url():
-    return "http://localhost:8080/viewspecificrolelisting/1"
+    return f'{frontend_base_url}/viewspecificrolelisting/1'
 
 rolelisting_ID = "1"
 
@@ -41,7 +42,7 @@ def test_all_visible_fields_selenium(chrome_driver, url):
 """
 def test_back_button_selenium(chrome_driver, url):
     driver = chrome_driver
-    previous_url = "http://localhost:8080/viewrolelistings"
+    previous_url = f"{frontend_base_url}/viewrolelistings"
     driver.get(previous_url)
     driver.get(url)
     back_btn = driver.find_element(By.ID, "back")
@@ -78,46 +79,44 @@ def test_percentage_match_selenium(chrome_driver, url):
 """
     Check if role listing is currently open
 """
-def test_application_deadline(client):
-    with app.app_context():
-        response = client.get('/rolelisting/' + rolelisting_ID)
-        assert response.status_code == 200
-        data = json.loads(response.data)["data"][rolelisting_ID]
-        assert datetime.fromisoformat(data["application_deadline"]) >= datetime.now()
+def test_application_deadline():
+    response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_ID}')
+    assert response.status_code == 200
+    data = json.loads(response.data)["data"][rolelisting_ID]
+    assert datetime.fromisoformat(data["application_deadline"]) >= datetime.now()
 
 
 """
     Check if values of role listing returned tallies with that stored in test database
 """
-def test_all_available_fields(client):
+def test_all_available_fields():
     rolelisting_ID = "1"
-    with app.app_context():
-        # Fields: Role Title, Hiring Department, Application Deadline, Geographic Location of the role
-        rolelisting_response = client.get('/rolelisting/' + rolelisting_ID)
-        assert rolelisting_response.status_code == 200
-        rolelisting_data = json.loads(rolelisting_response.data)["data"][rolelisting_ID]
-        role_name = rolelisting_data["role_name"]
-        assert role_name == "Software Engineer"
-        assert rolelisting_data["dept"] == "Engineering Operation"
-        assert rolelisting_data["application_deadline"] == "2023-12-31"
-        assert rolelisting_data["country"] == "Hong Kong"
-        manager_ID = str(rolelisting_data["manager_ID"])
-        assert manager_ID == "1033"
-        # Field: Reporting Manager
-        staff_response = client.get('/staff/' + manager_ID)
-        assert staff_response.status_code == 200
-        staff_data = json.loads(staff_response.data)["data"][manager_ID]
-        assert staff_data["staff_FName"] == "Philip"
-        assert staff_data["staff_LName"] == "Lee"
-        # Field: Role Description
-        role_description_response = client.get('/get_all_role')
-        assert role_description_response.status_code == 200
-        role_description_data = json.loads(role_description_response.data)["data"]
-        for idx in range(len(role_description_data)):
-            if role_description_data[idx] == role_name:
-                assert(role_description_data[idx][role_name] == "As a Software Engineer, you will be responsible for designing, developing, and maintaining software applications. You will collaborate with cross-functional teams to understand requirements, write code, and perform testing to ensure the software meets quality standards. Strong programming skills and problem-solving abilities are essential for success in this role.")
-        # Field: Required Skills
-        role_skill_response = client.get('/get_role_skill/' + role_name)
-        assert role_skill_response.status_code == 200
-        role_skill_data = json.loads(role_skill_response.data)["data"]
-        assert(role_skill_data == ["Communication Skills", "Data Structures", "Problem Solving", "Version Control", "Web Development"])
+    # Fields: Role Title, Hiring Department, Application Deadline, Geographic Location of the role
+    rolelisting_response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_ID}')
+    assert rolelisting_response.status_code == 200
+    rolelisting_data = json.loads(rolelisting_response.data)["data"][rolelisting_ID]
+    role_name = rolelisting_data["role_name"]
+    assert role_name == "Call Centre"
+    assert rolelisting_data["dept"] == "Sales"
+    assert rolelisting_data["application_deadline"] == "2024-10-28"
+    assert rolelisting_data["country"] == "Vietnam"
+    manager_ID = str(rolelisting_data["manager_ID"])
+    assert manager_ID == "140003"
+    # Field: Reporting Manager
+    staff_response = requests.get(f'{backend_base_url}/staff/{manager_ID}')
+    assert staff_response.status_code == 200
+    staff_data = json.loads(staff_response.data)["data"][manager_ID]
+    assert staff_data["staff_FName"] == "Janice"
+    assert staff_data["staff_LName"] == "Chan"
+    # Field: Role Description
+    role_description_response = requests.get(f'{backend_base_url}/get_all_role')
+    assert role_description_response.status_code == 200
+    role_description_data = json.loads(role_description_response.data)["data"]
+    for idx in range(len(role_description_data)):
+        if role_description_data[idx] == role_name:
+            assert(role_description_data[idx][role_name] == "Call Centre Executive is responsible for providing assistance to customers by addressing their queries and requests. He/She advises customers on appropriate products and services based on their needs. He is responsible for the preparation of customer documentation. In the case of complex customer requests, he escalates them to senior officers. He is able to abide by safety and/or security standards in the workplace. The Call Centre Executive  pays strong attention to details to verify and process documentation. He also shows initiative and quick decision-making skills to provide excellent personalised customer services and support. He is comfortable with various stakeholder interactions whilst working in shifts and possesses adequate computer literacy to process customer documentation.")
+    # Field: Required Skills
+    role_skill_response = requests.get(f'{backend_base_url}/get_role_skill/{role_name}')
+    assert role_skill_response.status_code == 200
+    role_skill_data = json.loads(role_skill_response.data)["data"]
+    assert(role_skill_data == ["Call Centre Management", "Collaboration", "Communication", "Customer Relationship Management", "Digital Fluency", "Problem Solving", "Stakeholder Management", "Technology Application"])
