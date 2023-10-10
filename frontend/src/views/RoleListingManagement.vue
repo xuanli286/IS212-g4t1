@@ -4,12 +4,15 @@ import { ref } from "vue";
 import { useRoleListingStore } from '@/store/useRoleListingStore';
 import { storeToRefs } from 'pinia';
 import { useConstantStore } from '@/store/useConstantStore';
+import { useRoute } from 'vue-router';
+import router from '@/router';
 
 const constStore = useConstantStore();
 const { backend_url } = storeToRefs(constStore);
 const roleListingStore = useRoleListingStore();
 const roleListings = ref({})
 const staffNames = ref({})
+const route = useRoute();
 
 axios
   .get(`${backend_url.value}/openrolelisting`)
@@ -78,6 +81,7 @@ function formatDate(dateString) {
 
 const updateRoleListingId = (id) => {
   roleListingStore.setRoleListingId(id)
+  router.push('/specificrolelisting' + id);
 }
 
 const getManagerName = (id) => {
@@ -118,20 +122,18 @@ const getManagerName = (id) => {
         <div class="grow"></div>
       </li>
       <li v-else v-for="(listing, id) in roleListings" :key="id"
-        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
-        <router-link to="/specificrolelisting" @click=updateRoleListingId(id)>
-          <div class="flex-none h-100">
-            <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
-            <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
-            <div class="flex flex-row text-xs">
-              <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
-              <div class="flex items-center mx-2">
-                <span class="bg-black h-1 w-1 rounded-full"></span>
-              </div>
-              <div class="role-applicants font-bold text-green"> 11 applicants </div>
+        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50" @click="updateRoleListingId(id)">
+        <div class="flex-none h-100">
+          <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
+          <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
+          <div class="flex flex-row text-xs">
+            <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
+            <div class="flex items-center mx-2">
+              <span class="bg-black h-1 w-1 rounded-full"></span>
             </div>
+            <div class="role-applicants font-bold text-green"> 11 applicants </div>
           </div>
-        </router-link>
+        </div>
         <div class="grow"></div>
         <div>
           <div class="flex flex-row">

@@ -89,10 +89,12 @@ const {
 const roleName = ref("");
 const roleDetails = ref({});
 
+const rolelistingID = route.params.id;
+
 onMounted(async () => {
   try {
-    const response = await axios.get(`${backend_url.value}/rolelisting/${roleListingId.value}`);
-    roleDetails.value = response.data.data[roleListingId.value];
+    const response = await axios.get(`${backend_url.value}/rolelisting/${roleListingId}`);
+    roleDetails.value = response.data.data[roleListingId];
     roleName.value = roleDetails.value.role_name;
     store.getSkills(roleName.value);
     store.getStaffSkills(user.value.staff_ID);

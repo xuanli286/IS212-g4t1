@@ -9,44 +9,44 @@ import EditRoleListing from "../views/EditRoleListing.vue";
 import SpecificRoleListing from "../views/SpecificRoleListing.vue";
 
 const router = createRouter({
-    scrollBehavior(to, from, savedPosition) {
-      // always scroll to top
-      return { top: 0 };
+  scrollBehavior(to, from, savedPosition) {
+    // always scroll to top
+    return { top: 0 };
+  },
+  history: createWebHistory(),
+  routes: [
+    {
+      path: "/home",
+      name: "Home",
+      component: Home,
     },
-    history: createWebHistory(),
-    routes: [
-      {
-        path: "/home",
-        name: "Home",
-        component: Home,
-      },
-      {
-        path: "/rolelistingmanagement",
-        name: "Role Listing Management",
-        component: RoleListingManagement,
-      },
-      {
-        path: "/skillmanagement",
-        name: "SkillManagement",
-        component: SkillManagement,
-      },
-      {
-        path: "/",
-        name: "Login",
-        component: Login,
-      },
-      {
-        path: "/addrolelisting",
-        name: "AddRoleListing",
-        component: AddRoleListing,
-      },
-      {
-        path: "/editrolelisting/:id",
-        name: "EditRoleListing",
-        component: EditRoleListing,
-      },
-      {
-      path: "/specificrolelisting",
+    {
+      path: "/rolelistingmanagement",
+      name: "Role Listing Management",
+      component: RoleListingManagement,
+    },
+    {
+      path: "/skillmanagement",
+      name: "SkillManagement",
+      component: SkillManagement,
+    },
+    {
+      path: "/",
+      name: "Login",
+      component: Login,
+    },
+    {
+      path: "/addrolelisting",
+      name: "AddRoleListing",
+      component: AddRoleListing,
+    },
+    {
+      path: "/editrolelisting/:id",
+      name: "EditRoleListing",
+      component: EditRoleListing,
+    },
+    {
+      path: "/specificrolelisting/:id",
       name: "SpecificRoleListing",
       component: SpecificRoleListing,
     },
