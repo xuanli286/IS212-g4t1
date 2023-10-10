@@ -53,10 +53,10 @@ jobs:
           cd frontend
           npm ci
 
-      - name: Run Vue App
+      - name: Run App Test Environment
         run: |
           cd frontend
-          npm run serve
+          npm run test
 
       - name: Setup Python
         uses: actions/setup-python@v4
