@@ -25,6 +25,14 @@
           Edit Role Listing
         </template>
       </Button>
+      <Button id="apply" class="ml-auto" @click="applyRole">
+        <template v-slot:icon>
+          <img class="mr-1" src="@/assets/icons/attachdocument.svg" alt="">
+        </template>
+        <template v-slot:text>
+          Apply Role
+        </template>
+      </Button>
     </div>
     <div class="grid grid-cols-3 mt-10">
       <div>
