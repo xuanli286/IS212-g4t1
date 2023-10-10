@@ -2,9 +2,7 @@
 import axios from "axios";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../store/useUserStore";
-
-const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
+import { useConstantStore } from "../store/useConstantStore";
 
 const rolelistingID = 1
 
@@ -17,7 +15,9 @@ export default {
 
     const backend_url = useConstantStore().backend_url;
 
-    return { backend_url }
+    const user = useUserStore();
+
+    return { backend_url, user}
   },
   data() {
     return {
@@ -87,7 +87,7 @@ export default {
     },
     openApply() {
       document.getElementById('authentication-modal').classList.remove('hidden')
-      console.log(user.value.access_ID)
+      console.log(this.user.access_ID)
     },
     closeApply() {
       document.getElementById('authentication-modal').classList.add('hidden')
@@ -118,7 +118,7 @@ export default {
   },
   created() {
     this.getRoleListingInfo();
-    if (user.value.access_ID == 2) {
+    if (this.user.access_ID == 2) {
       this.hrRights = true;
     }
   }
