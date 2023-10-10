@@ -72,4 +72,33 @@ def test_duplicate_rolelisting():
     assert "message" in response_duplicate_data
     assert response_duplicate_data["message"] == 'Role Listing exists.'
 
+def test_get_dept():
+    
+    response = requests.get(f'{backend_base_url}/get_dept_country/dept')
+
+    assert response.status_code == 200
+    
+    response_data = json.loads(response.content)
+    assert "code" in response_data
+    assert "data" in response_data
+    
+    dept_list = response_data["data"]
+    
+    assert len(dept_list) !=0
+    
+
+def test_get_country():
+    
+    response = requests.get(f'{backend_base_url}/get_dept_country/country')
+
+    assert response.status_code == 200
+    
+    response_data = json.loads(response.content)
+    assert "code" in response_data
+    assert "data" in response_data
+    
+    country_list = response_data["data"]
+    
+    assert len(country_list) !=0
+
 
