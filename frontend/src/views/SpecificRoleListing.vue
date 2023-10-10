@@ -25,14 +25,6 @@
           Edit Role Listing
         </template>
       </Button>
-      <Button id="apply" class="ml-auto" @click="applyRole">
-        <template v-slot:icon>
-          <img class="mr-1" src="@/assets/icons/attachdocument.svg" alt="">
-        </template>
-        <template v-slot:text>
-          Apply Role
-        </template>
-      </Button>
     </div>
     <div class="grid grid-cols-3 mt-10">
       <div>
@@ -69,7 +61,6 @@
 import { ref, computed, onMounted } from "vue";
 import { useConstantStore } from "@/store/useConstantStore";
 import { useUserStore } from "@/store/useUserStore";
-import { useRoleListingStore } from '@/store/useRoleListingStore';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import axios from "axios";
@@ -82,9 +73,6 @@ const userStore = useUserStore();
 const {
   user,
 } = storeToRefs(userStore);
-
-const roleListingStore = useRoleListingStore();
-const { roleListingId } = storeToRefs(roleListingStore);
 
 const store = useConstantStore();
 const {
@@ -101,8 +89,8 @@ const rolelistingID = route.params.id;
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`${backend_url.value}/rolelisting/${roleListingId}`);
-    roleDetails.value = response.data.data[roleListingId];
+    const response = await axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`);
+    roleDetails.value = response.data.data[rolelistingID];
     roleName.value = roleDetails.value.role_name;
     store.getSkills(roleName.value);
     store.getStaffSkills(user.value.staff_ID);
@@ -117,6 +105,6 @@ function back() {
 }
 
 function editRole() {
-  router.push(`/editrolelisting/${roleListingId}`);
+  router.push(`/editrolelisting/${rolelistingID}`);
 }
 </script>

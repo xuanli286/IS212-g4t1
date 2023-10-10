@@ -81,7 +81,7 @@ function formatDate(dateString) {
 
 const updateRoleListingId = (id) => {
   roleListingStore.setRoleListingId(id)
-  router.push('/specificrolelisting' + id);
+  router.push('/specificrolelisting/' + id);
 }
 
 const getManagerName = (id) => {

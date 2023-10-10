@@ -8,6 +8,8 @@ export const useConstantStore = defineStore("constant", () => {
   const roleSkills = ref([]);
   const staffSkills = ref([]);
   const staff = ref({});
+  const roles = ref({});
+  const backend_url = ref("http://13.212.177.124:5000");
 
   axios
     .get(`${backend_url.value}/get_dept_country/dept`)
@@ -45,7 +47,7 @@ export const useConstantStore = defineStore("constant", () => {
     });
 
   axios
-    .get("http://127.0.0.1:5000/get_all_role")
+    .get(`${backend_url.value}/get_all_role`)
     .then((response) => {
       for (let i of response.data.data) {
         for (let key in i) {
@@ -59,7 +61,7 @@ export const useConstantStore = defineStore("constant", () => {
 
   function getSkills(roleName) {
     axios
-      .get("http://127.0.0.1:5000/get_role_skill/" + roleName)
+      .get(`${backend_url.value}/get_role_skill/` + roleName)
       .then((response) => {
         roleSkills.value = response.data.data;
       })
@@ -85,5 +87,9 @@ export const useConstantStore = defineStore("constant", () => {
     roleSkills,
     staffSkills,
     staff,
+    roles,
+    getSkills,
+    getStaffSkills,
+    backend_url,
   };
 });
