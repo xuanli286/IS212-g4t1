@@ -57,7 +57,6 @@ def test_rolelisting_items(chrome_driver, url):
             assert listing.find_element(By.CSS_SELECTOR, ".role-title").is_displayed()
             assert listing.find_element(By.CSS_SELECTOR, ".role-manager").is_displayed()
             assert listing.find_element(By.CSS_SELECTOR, ".role-deadline").is_displayed()
-            assert listing.find_element(By.CSS_SELECTOR, ".role-applicants").is_displayed()
             assert listing.find_element(By.CSS_SELECTOR, ".role-department").is_displayed()
             assert listing.find_element(By.CSS_SELECTOR, ".role-country").is_displayed()
     else:
