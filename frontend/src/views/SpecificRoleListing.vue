@@ -122,21 +122,19 @@ export default {
     },
     submitApplication() {
       console.log("Hello");
-    //   axios
-    //     .post(`${this.backend_url}/apply_role`, {
-    //       staff_ID: this.currentUser.staff_ID,
-    //       role_name: this.roleName,
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //     });
-    //   document
-    //     .getElementById("confirm-modal")
-    //     .classList.remove("hidden");
-    // },
+      // axios
+      //   .post(`${this.backend_url}/apply_role`, {
+      //     staff_ID: this.currentUser.staff_ID,
+      //     role_name: this.roleName,
+      //   })
+      //   .then((response) => {
+      //     console.log(response);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error.message);
+      //   });
+      document.getElementById("confirm-modal").classList.remove("hidden");
+    },
     closeConfirm() {
       document.getElementById("confirm-modal").classList.add("hidden");
     },
