@@ -1,95 +1,89 @@
-<script setup>
+<script>
   import axios from "axios";
-  import { ref } from "vue";  
   import { useRoleListingStore } from '@/store/useRoleListingStore';
-  import { storeToRefs } from 'pinia';
   import { useConstantStore } from '@/store/useConstantStore';
+  
+  export default {
+  data() {
+    return {
+      roleListings: {},
+      staffNames: {},
+      applications: {}
+    };
+  },
+  methods: {
+    async fetchData() {
+      const constStore = useConstantStore();
+      const { backend_url } = constStore;
 
-  const constStore = useConstantStore();
-  const { backend_url } = storeToRefs(constStore);
-  const roleListingStore = useRoleListingStore();
-  const roleListings = ref({})
-  const staffNames = ref({})
+        const openResponse = await axios.get(`${backend_url}/openrolelisting`);
+        // const closeResponse = await axios.get(`${backend_url}/closerolelisting`);
+        const staffResponse = await axios.get(`${backend_url}/staff`);
 
-  axios
-    .get(`${backend_url.value}/openrolelisting`)
-    .then((response) => {
-      let receivedListings = response.data.data.rolelisting
-      for(let listing of receivedListings){
-        for(let key in listing){
-          roleListings.value[key] = listing[key]
+        this.roleListings = this.processListings(openResponse.data.data.rolelisting);
+        for(let key of Object.keys(this.roleListings)){
+          this.applications[key] = 
+            await axios.get(`${backend_url}/applications/${key}`)
+            .then((response) => {
+              return response.data.data.length
+            })
+            .catch(() => {
+              return 0
+            })
+        }
+        this.staffNames = this.processStaff(staffResponse.data.data.staff);
+
+    },
+    checkOpen(listing) {
+      const today = new Date();
+      const deadline = new Date(listing.application_deadline);
+      return deadline > today;
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.toLocaleString('default', { month: 'long' });
+      const year = date.getFullYear();
+      return `${day} ${month} ${year}`;
+    },
+    updateRoleListingId(id) {
+      useRoleListingStore().setRoleListingId(id);
+    },
+    getManagerName(id) {
+      try {
+        const FName = this.staffNames[id].split(" ")[0];
+        const LName = this.staffNames[id].split(" ")[1][0];
+        return `${FName} ${LName}.`;
+      } catch (error) {
+        return "";
+      }
+    },
+    processListings(listings) {
+      const processedListings = {};
+      for (const listing of listings) {
+        for (const key in listing) {
+          processedListings[key] = listing[key];
         }
       }
-    })
-    .catch(error => {
-      if (error.response) {
-        if (error.response.status === 404) {
-          console.log("No open listings at this moment.");
+      return processedListings;
+    },
+    processStaff(staffData) {
+      const processedStaff = {};
+      for (const staff of staffData) {
+        for (const key in staff) {
+          if (staff[key]) {
+            processedStaff[key] = staff[key]['staff_FName'] + " " + staff[key]['staff_LName'];
+          }
         }
       }
-    }) 
+      return processedStaff;
+    },
+  },
+  created() {
+    this.fetchData(); 
+  },
 
-  axios
-    .get(`${backend_url.value}/closerolelisting`)
-    .then((response) => {
-      let receivedListings = response.data.data.rolelisting
-      for(let listing of receivedListings){
-        for(let key in listing){
-          roleListings.value[key] = listing[key]
-        }
-      }
-    })
-    .catch(error => {
-      if (error.response) {
-        if (error.response.status === 404) {
-          console.log("No closed listings at this moment.");
-        }
-      }
-    }) 
-
-    axios
-    .get(`${backend_url.value}/staff`)
-    .then((response) => {
-      let allStaff = response.data.data.staff
-      for(let staff of allStaff){
-        for(let key in staff){
-          staffNames.value[key] = staff[key]
-        }
-      }
-    })
-
-  function checkOpen(listing){
-    let today = new Date();
-    let deadline = new Date(listing.application_deadline)
-    if(deadline > today){
-        return true
-      }
-    
-    return false
-  }  
-
-  function formatDate(dateString){
-    let date = new Date(dateString)
-    let day = date.getDate() 
-    let month = date.toLocaleString('default', { month: 'long' });
-    let year = date.getFullYear()
-    return `${day} ${month} ${year}`
-  }
-
-  const updateRoleListingId = (id) => {
-    roleListingStore.setRoleListingId(id)
-  }
-
-  const getManagerName = (id) => {
-    try {
-      var FName = staffNames.value[id]["staff_FName"]
-      var LName = staffNames.value[id]["staff_LName"][0]
-    } catch (error) {
-
-    }
-    return `${FName} ${LName}.`
-  }
-
+};
 </script>
 
 <template>
@@ -125,7 +119,11 @@
               <div class="flex items-center mx-2">
                 <span class="bg-black h-1 w-1 rounded-full"></span>
               </div>
-              <div class="role-applicants font-bold text-green"> 11 applicants </div>
+              <div class="role-applicants font-bold text-green">
+                {{applications[id]}}
+                <span v-if="applications[id] == 1"> applicant </span>
+                <span v-else> applicants </span>
+              </div>
             </div>
           </div>
         </router-link>
