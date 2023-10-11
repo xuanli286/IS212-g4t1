@@ -1,6 +1,7 @@
 <script>
 import axios from "axios";
 import { storeToRefs } from "pinia";
+import { ref } from "vue"; // Import ref from Vue
 import { useUserStore } from "../store/useUserStore";
 import { useConstantStore } from "../store/useConstantStore";
 
@@ -13,9 +14,10 @@ export default {
   setup() {
     const backend_url = useConstantStore().backend_url;
 
-    const user = useUserStore();
+    const user = useUserStore().user;
+    const currentUser = ref(user);
 
-    return { backend_url, user };
+    return { backend_url, currentUser };
   },
   data() {
     return {
@@ -28,7 +30,7 @@ export default {
       skills: [],
       description: "",
       hrRights: false,
-      staff_ID: this.user.staff_ID
+      staffSkills: [],
     };
   },
   methods: {
@@ -76,7 +78,7 @@ export default {
         .get(`${this.backend_url}/get_role_skill/${this.roleName}`)
         .then((response) => {
           const roleSkillsData = response.data.data;
-          console.log(roleSkillsData)
+          console.log(roleSkillsData);
           if (roleSkillsData) {
             this.skills = roleSkillsData;
           }
@@ -89,7 +91,9 @@ export default {
       document
         .getElementById("authentication-modal")
         .classList.remove("hidden");
-      console.log(this.user);
+      console.log(this.currentUser);
+      console.log(this.currentUser.access_ID);
+      console.log(this.staffSkills);
     },
     closeApply() {
       document.getElementById("authentication-modal").classList.add("hidden");
@@ -116,12 +120,40 @@ export default {
           console.log(error.message);
         });
     },
+    submitApplication() {
+      console.log("Hello");
+    //   axios
+    //     .post(`${this.backend_url}/apply_role`, {
+    //       staff_ID: this.currentUser.staff_ID,
+    //       role_name: this.roleName,
+    //     })
+    //     .then((response) => {
+    //       console.log(response);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error.message);
+    //     });
+    //   document
+    //     .getElementById("confirm-modal")
+    //     .classList.remove("hidden");
+    // },
+    closeConfirm() {
+      document.getElementById("confirm-modal").classList.add("hidden");
+    },
   },
   created() {
     this.getRoleListingInfo();
-    if (this.user.access_ID == 2) {
+    if (this.currentUser.access_ID == 2) {
       this.hrRights = true;
     }
+    axios
+      .get(`${this.backend_url}/get_staff_skill/${this.currentUser.staff_ID}`)
+      .then((response) => {
+        this.staffSkills = response.data.data;
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   },
 };
 </script>
@@ -217,7 +249,7 @@ export default {
               <span class="font-serif text-lg">Apply Role</span>
             </div>
             <!-- form div here -->
-            <form
+            <div
               class="space-y-6 px-6 lg:px-8 pb-4 sm:pb-6 xl:pb-8 my-3"
               action="#"
             >
@@ -227,8 +259,8 @@ export default {
                     <span class="font-bold pr-3">Staff ID:</span>
                     <input
                       type="text"
-                      class="mt-1 p-2 bg-grey-20 border-2 border-yellow rounded-md w-40"
-                      v-model="staffID"
+                      class="mt-1 p-2 bg-grey-20 border-2 text-grey border-yellow rounded-md w-40"
+                      :value="this.currentUser.staff_ID"
                       placeholder="1389503"
                       disabled
                     />
@@ -237,8 +269,8 @@ export default {
                     <span class="font-bold pr-3">Department:</span>
                     <input
                       type="text"
-                      class="mt-1 p-2 bg-grey-20 border-2 border-yellow rounded-md w-64"
-                      v-model="userDepartment"
+                      class="mt-1 p-2 bg-grey-20 text-grey border-2 border-yellow rounded-md w-64"
+                      :value="this.currentUser.staff_dept"
                       placeholder="IT"
                       disabled
                     />
@@ -251,8 +283,8 @@ export default {
                     <span class="font-bold pr-3">First Name:</span>
                     <input
                       type="text"
-                      class="mt-1 p-2 bg-grey-20 border-2 border-yellow rounded-md"
-                      v-model="staff_ID"
+                      class="mt-1 p-2 bg-grey-20 text-grey border-2 border-yellow rounded-md"
+                      :value="this.currentUser.staff_FName"
                       disabled
                     />
                   </div>
@@ -260,8 +292,8 @@ export default {
                     <span class="font-bold pr-3">Last Name:</span>
                     <input
                       type="text"
-                      class="mt-1 p-2 bg-grey-20 border-2 border-yellow rounded-md"
-                      v-model="userDepartment"
+                      class="mt-1 p-2 bg-grey-20 text-grey border-2 border-yellow rounded-md"
+                      :value="this.currentUser.staff_LName"
                       placeholder="Tam"
                       disabled
                     />
@@ -270,8 +302,8 @@ export default {
                     <span class="font-bold pr-3">Email:</span>
                     <input
                       type="text"
-                      class="mt-1 p-2 bg-grey-20 border-2 border-yellow rounded-md"
-                      v-model="userDepartment"
+                      class="mt-1 p-2 bg-grey-20 text-grey border-2 border-yellow rounded-md"
+                      :value="this.currentUser.staff_email"
                       placeholder="email@123.com"
                       disabled
                     />
@@ -281,46 +313,98 @@ export default {
                 <div class="grid grid-cols-1 pt-5 gap-6 md:gap-8">
                   <span class="font-bold">Your Skills</span>
                   <div class="flex flex-col gap-2">
-                    <label>
+                    <label v-for="(skill, index) in staffSkills" :key="index">
                       <input
                         type="checkbox"
-                        name="analytical-skills"
+                        :name="skill"
+                        :id="skill"
+                        v-model="selectedSkills"
+                        :value="skill"
                         disabled
                         checked
                       />
-                      Analytical Skills
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        name="communication-skills"
-                        disabled
-                        checked
-                      />
-                      Communication Skills
-                    </label>
-                    <label>
-                      <input type="checkbox" name="teamwork" disabled checked />
-                      Teamwork
+                      {{ skill }}
                     </label>
                   </div>
                 </div>
               </div>
               <div class="flex justify-end">
                 <button
-                  @click="closeApply"
+                  @click="goBack"
                   class="text-white bg-grey border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded-md text-md mr-3"
                 >
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  @click="submitApplication"
                   class="text-white bg-yellow border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded-md text-md"
                 >
                   Submit
                 </button>
+                <div
+                  id="confirm-modal"
+                  tabindex="-1"
+                  class="fixed top-0 left-0 right-0 z-50 bg-grey bg-opacity-75 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center flex pt-24"
+                >
+                  <div class="relative w-full max-w-md max-h-full">
+                    <!-- Modal content -->
+                    <div
+                      class="relative text-center bg-white rounded-lg shadow dark:bg-gray-700 w-full"
+                    >
+                      <!-- Modal header -->
+                      <div
+                        class="relative flex flex-col items-center justify-between rounded-t dark:border-gray-600 text-center"
+                      >
+                        <button
+                          type="button"
+                          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          @click="closeConfirm"
+                        >
+                          <svg
+                            class="w-3 h-3"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 14"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                            />
+                          </svg>
+                        </button>
+                        <span class="text-green relative font-serif text-lg"
+                          >Role Applied Successfully!</span
+                        >
+                      </div>
+                      <!-- Modal body -->
+                      <div
+                        class="p-6 space-y-6 flex flex-col justify-center items-center h-full"
+                      >
+                        <p
+                          class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
+                        >
+                          Thank you for your interest in the role!
+                        </p>
+                        <p
+                          class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
+                        >
+                          Your application is currently under review. <br />
+                          We appreciate your patience and will be in touch soon.
+                        </p>
+                      </div>
+                      <!-- Modal footer -->
+                      <div
+                        class="flex items-center space-x-2 border-gray-200 rounded-b dark:border-gray-600"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -343,14 +427,6 @@ export default {
       </svg>
       <p class="font-sans pl-2 text-grey text-bold">Expires On:</p>
       <p class="font-sans pl-2 text-grey pr-8">{{ expiryDate }}</p>
-
-      <!-- display number of applicants -->
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="w-4 h-4 text-green">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-      </svg>
-      <p class="font-sans pl-2 text-green">Number Applicants</p> -->
     </div>
 
     <div class="mt-8 container mx-auto flex items-center justify-between">
