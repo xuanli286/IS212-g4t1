@@ -16,11 +16,19 @@
       const constStore = useConstantStore();
       const { backend_url } = constStore;
 
-        const openResponse = await axios.get(`${backend_url}/openrolelisting`);
-        // const closeResponse = await axios.get(`${backend_url}/closerolelisting`);
+        const openResponse = 
+          await axios.get(`${backend_url}/openrolelisting`)
+          .catch(() => {
+            return {data: {data: {}}}
+          });
+        const closeResponse = 
+          await axios.get(`${backend_url}/closerolelisting`)
+          .catch(() => {
+            return {data: {data: {}}}
+          });
         const staffResponse = await axios.get(`${backend_url}/staff`);
 
-        this.roleListings = this.processListings(openResponse.data.data.rolelisting);
+        this.roleListings = this.processListings(openResponse.data.data.rolelisting.concat(closeResponse.data.data.rolelisting));
         for(let key of Object.keys(this.roleListings)){
           this.applications[key] = 
             await axios.get(`${backend_url}/applications/${key}`)
