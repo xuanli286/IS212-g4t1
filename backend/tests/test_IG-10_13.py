@@ -82,7 +82,7 @@ def test_percentage_match_selenium(chrome_driver, url):
 def test_application_deadline():
     response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_ID}')
     assert response.status_code == 200
-    data = json.loads(response.data)["data"][rolelisting_ID]
+    data = json.loads(response.content)["data"][rolelisting_ID]
     assert datetime.fromisoformat(data["application_deadline"]) >= datetime.now()
 
 
@@ -94,7 +94,7 @@ def test_all_available_fields():
     # Fields: Role Title, Hiring Department, Application Deadline, Geographic Location of the role
     rolelisting_response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_ID}')
     assert rolelisting_response.status_code == 200
-    rolelisting_data = json.loads(rolelisting_response.data)["data"][rolelisting_ID]
+    rolelisting_data = json.loads(rolelisting_response.content)["data"][rolelisting_ID]
     role_name = rolelisting_data["role_name"]
     assert role_name == "Call Centre"
     assert rolelisting_data["dept"] == "Sales"
@@ -105,18 +105,18 @@ def test_all_available_fields():
     # Field: Reporting Manager
     staff_response = requests.get(f'{backend_base_url}/staff/{manager_ID}')
     assert staff_response.status_code == 200
-    staff_data = json.loads(staff_response.data)["data"][manager_ID]
+    staff_data = json.loads(staff_response.content)["data"][manager_ID]
     assert staff_data["staff_FName"] == "Janice"
     assert staff_data["staff_LName"] == "Chan"
     # Field: Role Description
     role_description_response = requests.get(f'{backend_base_url}/get_all_role')
     assert role_description_response.status_code == 200
-    role_description_data = json.loads(role_description_response.data)["data"]
+    role_description_data = json.loads(role_description_response.content)["data"]
     for idx in range(len(role_description_data)):
         if role_description_data[idx] == role_name:
             assert(role_description_data[idx][role_name] == "Call Centre Executive is responsible for providing assistance to customers by addressing their queries and requests. He/She advises customers on appropriate products and services based on their needs. He is responsible for the preparation of customer documentation. In the case of complex customer requests, he escalates them to senior officers. He is able to abide by safety and/or security standards in the workplace. The Call Centre Executive  pays strong attention to details to verify and process documentation. He also shows initiative and quick decision-making skills to provide excellent personalised customer services and support. He is comfortable with various stakeholder interactions whilst working in shifts and possesses adequate computer literacy to process customer documentation.")
     # Field: Required Skills
     role_skill_response = requests.get(f'{backend_base_url}/get_role_skill/{role_name}')
     assert role_skill_response.status_code == 200
-    role_skill_data = json.loads(role_skill_response.data)["data"]
+    role_skill_data = json.loads(role_skill_response.content)["data"]
     assert(role_skill_data == ["Call Centre Management", "Collaboration", "Communication", "Customer Relationship Management", "Digital Fluency", "Problem Solving", "Stakeholder Management", "Technology Application"])
