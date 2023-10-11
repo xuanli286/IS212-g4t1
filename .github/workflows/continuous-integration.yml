@@ -40,37 +40,23 @@ jobs:
   #         cd frontend
   #         npm run build
 
-  test:
+  merge_and_test:
     runs-on: ubuntu-latest
-    continue-on-error: false
+    # continue-on-error: false
     timeout-minutes: 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      
-      - name: npm cache
-        uses: actions/cache@v3
-        id: frontend-node
-        with:
-          path: frontend/node_modules
-          key: ${{ runner.os }}-frontend-node-${{ hashFiles('frontend/package-lock.json') }}
-
-      - name: Install packages
-        if: steps.frontend-node.outputs.cache-hit != 'true'
+      - name: Merge Pull Request
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
-          cd frontend
-          npm ci
-
-      - name: Build code
-        run: |
-          cd frontend
-          npm run serve
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
+          git fetch origin pull/${PR_NUMBER}/head:pr/${PR_NUMBER}
+          git checkout pr/${PR_NUMBER}
+          git merge --no-ff --no-edit origin/${TARGET_BRANCH}
+          git push origin HEAD
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -86,4 +72,19 @@ jobs:
         run: |
           cd backend
           pytest tests
+
+  rollback_on_failure:
+    needs: merge_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Pytest exit code
+        run: |
+          if [[ ${{ job.status }} == 'failure' ]]; then
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            git reset --hard HEAD^
+            git push --force origin HEAD
+            echo "Rollback completed for PR #${PR_NUMBER}"
+          fi
+        if: ${{ always() }}
 ...
