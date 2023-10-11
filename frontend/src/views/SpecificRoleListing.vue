@@ -28,6 +28,7 @@ export default {
       skills: [],
       description: "",
       hrRights: false,
+      staff_ID: this.user.staff_ID
     };
   },
   methods: {
@@ -88,7 +89,7 @@ export default {
       document
         .getElementById("authentication-modal")
         .classList.remove("hidden");
-      console.log(this.user.access_ID);
+      console.log(this.user);
     },
     closeApply() {
       document.getElementById("authentication-modal").classList.add("hidden");
@@ -251,8 +252,7 @@ export default {
                     <input
                       type="text"
                       class="mt-1 p-2 bg-grey-20 border-2 border-yellow rounded-md"
-                      v-model="staffID"
-                      placeholder="Dom"
+                      v-model="staff_ID"
                       disabled
                     />
                   </div>
