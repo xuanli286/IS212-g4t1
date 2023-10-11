@@ -5,7 +5,7 @@ import { ref } from "vue"; // Import ref from Vue
 import { useUserStore } from "../store/useUserStore";
 import { useConstantStore } from "../store/useConstantStore";
 
-const rolelistingID = 1;
+const rolelistingID = 2;
 
 export default {
   name: "SpecificRoleListing",
@@ -31,6 +31,7 @@ export default {
       description: "",
       hrRights: false,
       staffSkills: [],
+      applicationSuccess: false
     };
   },
   methods: {
@@ -122,21 +123,36 @@ export default {
     },
     submitApplication() {
       console.log("Hello");
-      // axios
-      //   .post(`${this.backend_url}/apply_role`, {
-      //     staff_ID: this.currentUser.staff_ID,
-      //     role_name: this.roleName,
-      //   })
-      //   .then((response) => {
-      //     console.log(response);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error.message);
-      //   });
+      const body = {
+        staff_ID: this.currentUser.staff_ID,
+        rolelisting_ID: rolelistingID,
+        application_date: new Date().toISOString().slice(0, 10),
+        percentage_match: this.getSkillPercentage()
+      };
+      console.log(body);
+      axios
+        .post(`${this.backend_url}/addapplication`, body)
+        .then((response) => {
+          console.log(response);
+          this.applicationSuccess = true;
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+
       document.getElementById("confirm-modal").classList.remove("hidden");
     },
     closeConfirm() {
       document.getElementById("confirm-modal").classList.add("hidden");
+    },
+    getSkillPercentage() {
+      let match = 0;
+      for (const skill of this.staffSkills) {
+        if (this.skills.includes(skill)) {
+          match++;
+        }
+      }
+      return (match / this.skills.length) * 100;
     },
   },
   created() {
@@ -374,8 +390,11 @@ export default {
                             />
                           </svg>
                         </button>
-                        <span class="text-green relative font-serif text-lg"
+                        <span v-if="applicationSuccess" class="text-green relative font-serif text-lg"
                           >Role Applied Successfully!</span
+                        >
+                        <span v-else class="text-red relative font-serif text-lg"
+                          >Application Unsuccessful</span
                         >
                       </div>
                       <!-- Modal body -->
@@ -387,11 +406,16 @@ export default {
                         >
                           Thank you for your interest in the role!
                         </p>
-                        <p
+                        <p v-if="applicationSuccess"
                           class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
                         >
                           Your application is currently under review. <br />
                           We appreciate your patience and will be in touch soon.
+                        </p>
+                        <p v-else
+                          class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
+                        >
+                          There was an error with you application. You may only apply for a role once. If you think this is an error, please contact the Human Resource team.
                         </p>
                       </div>
                       <!-- Modal footer -->
