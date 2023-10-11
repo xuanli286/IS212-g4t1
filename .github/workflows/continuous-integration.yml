@@ -4,10 +4,6 @@ name: CI Workflow
 on:
   pull_request:
 
-    branches:
-      # - develop
-      - test-develop
-
 concurrency:
   group: ${{ github.ref }}-ci-workflow
 
