@@ -589,7 +589,6 @@ def create_application():
         }
     ), 201
 
-
 # delete an application
 @app.route("/deleteapplications/<staff_ID>/<rolelisting_ID>", methods=['DELETE'])
 def delete_application(staff_ID, rolelisting_ID):
