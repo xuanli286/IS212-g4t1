@@ -75,7 +75,7 @@ export default {
         .get(`${this.backend_url}/get_role_skill/${this.roleName}`)
         .then((response) => {
           const roleSkillsData = response.data.data;
-          // console.log(roleSkillsData)
+          console.log(roleSkillsData)
           if (roleSkillsData) {
             this.skills = roleSkillsData;
           }
