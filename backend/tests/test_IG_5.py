@@ -98,14 +98,14 @@ def test_rolelisting_tally(chrome_driver, url):
     )
     num_frontend = len(driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel"))
 
-    closed_role_listings_response = requests.get(f'{backend_base_url}/closerolelisting')
+    closed_role_listings_response = requests.get(f'{backend_base_url_production}/closerolelisting')
     closed_role_listings = json.loads(closed_role_listings_response.content)
     if closed_role_listings['code'] == 404:
         closed_role_listings = []
     else:
         closed_role_listings = closed_role_listings['data']['rolelisting']
 
-    open_role_listings_response = requests.get(f'{backend_base_url}/openrolelisting')
+    open_role_listings_response = requests.get(f'{backend_base_url_production}/openrolelisting')
     open_role_listings = json.loads(open_role_listings_response.content)
     if open_role_listings['code'] == 404:
         open_role_listings = []
