@@ -57,10 +57,20 @@ jobs:
         run: |
           PR_NUMBER=${{ github.event.pull_request.number }}
           TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
+          # Fetch and checkout the PR branch
           git fetch origin pull/${PR_NUMBER}/head:pr/${PR_NUMBER}
           git checkout pr/${PR_NUMBER}
-          git merge --no-ff --no-edit origin/${TARGET_BRANCH}
-          git push origin HEAD
+          # Attempt the merge
+          if ! git merge --no-ff --no-edit origin/${TARGET_BRANCH}; then
+            echo "Merge failed. Reverting changes."
+            git merge --abort  # Abort the failed merge
+            git reset --hard HEAD  # Reset the branch to the previous state
+            git push --force origin HEAD  # Force push to update the PR branch
+            echo "Changes reverted."
+            exit 1  # Exit with a non-zero status to indicate the failure
+          else
+            git push origin HEAD  # Push the successful merge
+          fi
 
       - name: Setup Python
         uses: actions/setup-python@v4
