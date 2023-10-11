@@ -33,8 +33,7 @@ def test_create_rolelisting():
     response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_id}')
     
     assert response.status_code == 200
-    print(rolelisting_id)
-    print(retrieved_data)
+    
     assert retrieved_data["role_name"] == rolelisting_data["role_name"]
     assert retrieved_data["application_opening"] == rolelisting_data["application_opening"]
     assert retrieved_data["application_deadline"] == rolelisting_data["application_deadline"]
@@ -42,10 +41,7 @@ def test_create_rolelisting():
     assert retrieved_data["country"] == rolelisting_data["country"]
     assert retrieved_data["manager_ID"] == rolelisting_data["manager_ID"]
     
-    print(f'{backend_base_url}/rolelisting/{rolelisting_id}')
-    
     response = requests.delete(f'{backend_base_url}/deleterolelisting/{rolelisting_id}')
-    print(response.content)
 
     assert response.status_code == 200
         

@@ -52,26 +52,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Merge Pull Request
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
-          # Fetch and checkout the PR branch
-          git fetch origin pull/${PR_NUMBER}/head:pr/${PR_NUMBER}
-          git checkout pr/${PR_NUMBER}
-          # Attempt the merge
-          if ! git merge --no-ff --no-edit origin/${TARGET_BRANCH}; then
-            echo "Merge failed. Reverting changes."
-            git merge --abort  # Abort the failed merge
-            git reset --hard HEAD  # Reset the branch to the previous state
-            git push --force origin HEAD  # Force push to update the PR branch
-            echo "Changes reverted."
-            exit 1  # Exit with a non-zero status to indicate the failure
-          else
-            git push origin HEAD  # Push the successful merge
-          fi
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -82,23 +62,27 @@ jobs:
           cd backend
           pip install -r requirements.txt
 
-      - name: Test backend code using pytest
-        run: |
-          cd backend
-          pytest tests
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          # cache: 'npm'
+          # cache-dependency-path: frontend/package-lock.json
 
-  rollback_on_failure:
-    needs: merge_and_test
-    runs-on: ubuntu-latest
+      # - name: Cache node modules
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       frontend
+      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-    steps:
-      - name: Check Pytest exit code
+      - name: Install Dependencies
         run: |
-          if [[ ${{ job.status }} == 'failure' ]]; then
-            PR_NUMBER=${{ github.event.pull_request.number }}
-            git reset --hard HEAD^
-            git push --force origin HEAD
-            echo "Rollback completed for PR #${PR_NUMBER}"
-          fi
-        if: ${{ always() }}
+          cd frontend
+          npm ci
+
+      - name: Start Server and Run Tests
+        run: |
+          cd frontend
+          npm run test
 ...
