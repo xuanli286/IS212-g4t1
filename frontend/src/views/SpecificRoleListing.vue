@@ -138,6 +138,7 @@ export default {
         })
         .catch((error) => {
           console.log(error.message);
+          this.applicationSuccess = false;
         });
 
       document.getElementById("confirm-modal").classList.remove("hidden");
