@@ -416,7 +416,7 @@ export default {
                         <p v-else
                           class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
                         >
-                          There was an error with you application. You may only apply for a role once. If you think this is an error, please contact the Human Resource team.
+                          There was an error with your application. You may only apply for a role once. If you think this is an error, please contact the Human Resource team.
                         </p>
                       </div>
                       <!-- Modal footer -->
