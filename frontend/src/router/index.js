@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from "../views/Home.vue";
-import RoleListingManagement from "../views/RoleListingManagement.vue";
-import SkillManagement from "../views/SkillManagement.vue";
-import Login from "../views/Login.vue";
 import AddRoleListing from "../views/AddRoleListing.vue";
 import EditRoleListing from "../views/EditRoleListing.vue";
+import Home from "../views/Home.vue";
+import Login from "../views/Login.vue";
+import RoleListingManagement from "../views/RoleListingManagement.vue";
+import SkillManagement from "../views/SkillManagement.vue";
+import StaffViewSpecificRoleListing from "@/views/StaffViewSpecificRoleListing.vue";
 import SpecificRoleListing from "../views/SpecificRoleListing.vue";
 import RoleListingStaff from "../views/RoleListingStaff.vue";
 
@@ -45,6 +46,11 @@ const router = createRouter({
       path: "/editrolelisting/:id",
       name: "EditRoleListing",
       component: EditRoleListing,
+    },
+    {
+      path: "/viewspecificrolelisting/:id",
+      name: "StaffViewSpecificRoleListing",
+      component: StaffViewSpecificRoleListing,
     },
     {
       path: "/specificrolelisting",

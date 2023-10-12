@@ -11,8 +11,6 @@
 
     const access = {1: 'Admin', 2: 'Staff', 3: 'Manager', 4: 'HR Staff'};
 
-    console.log(user.value)
-
     const isExpand = ref(false);
 
     function expandDropdown() {
