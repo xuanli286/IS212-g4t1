@@ -3,6 +3,7 @@
 import json
 import pytest
 import requests
+import time
 
 from conftest import *
 from datetime import datetime
@@ -19,9 +20,9 @@ def chrome_driver():
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/viewspecificrolelisting/1'
+    return f'{frontend_base_url}/viewspecificrolelisting/4'
 
-rolelisting_ID = "1"
+rolelisting_ID = "4"
 
 """
     Check if unique Role Title, Role Description, Hiring Department, Required Skills Set, Application Deadline, 
@@ -33,6 +34,7 @@ def test_all_visible_fields_selenium(chrome_driver, url):
     fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
     for field in fields:
         fieldDisplayed = driver.find_element(By.ID, field)
+        time.sleep(2)
         assert fieldDisplayed.is_displayed()
 
 
@@ -79,7 +81,7 @@ def test_percentage_match_selenium(chrome_driver, url):
     Check if role listing is currently open
 """
 def test_application_deadline():
-    response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_ID}')
+    response = requests.get(f'{backend_base_url_production}/rolelisting/{rolelisting_ID}')
     assert response.status_code == 200
     data = json.loads(response.content)["data"][rolelisting_ID]
     assert datetime.fromisoformat(data["application_deadline"]) >= datetime.now()
@@ -89,15 +91,14 @@ def test_application_deadline():
     Check if values of role listing returned tallies with that stored in test database
 """
 def test_all_available_fields():
-    rolelisting_ID = "1"
     # Fields: Role Title, Hiring Department, Application Deadline, Geographic Location of the role
-    rolelisting_response = requests.get(f'{backend_base_url}/rolelisting/{rolelisting_ID}')
+    rolelisting_response = requests.get(f'{backend_base_url_production}/rolelisting/{rolelisting_ID}')
     assert rolelisting_response.status_code == 200
     rolelisting_data = json.loads(rolelisting_response.content)["data"][rolelisting_ID]
     role_name = rolelisting_data["role_name"]
-    assert role_name == "Call Centre"
+    assert role_name == "Account Manager"
     assert rolelisting_data["dept"] == "Sales"
-    assert rolelisting_data["application_deadline"] == "2024-10-28"
+    assert rolelisting_data["application_deadline"] == "2024-09-30"
     assert rolelisting_data["country"] == "Vietnam"
     manager_ID = str(rolelisting_data["manager_ID"])
     assert manager_ID == "140003"
@@ -113,9 +114,9 @@ def test_all_available_fields():
     role_description_data = json.loads(role_description_response.content)["data"]
     for idx in range(len(role_description_data)):
         if role_description_data[idx] == role_name:
-            assert(role_description_data[idx][role_name] == "Call Centre Executive is responsible for providing assistance to customers by addressing their queries and requests. He/She advises customers on appropriate products and services based on their needs. He is responsible for the preparation of customer documentation. In the case of complex customer requests, he escalates them to senior officers. He is able to abide by safety and/or security standards in the workplace. The Call Centre Executive  pays strong attention to details to verify and process documentation. He also shows initiative and quick decision-making skills to provide excellent personalised customer services and support. He is comfortable with various stakeholder interactions whilst working in shifts and possesses adequate computer literacy to process customer documentation.")
+            assert(role_description_data[idx][role_name] == "The Account Manager acts as a key point of contact between an organisation and its clients. He/She possesses thorough product knowledge and oversees product and/or service sales. He works with customers to identify their wants and prepares reports by collecting, analysing, and summarising sales information. He contacts existing customers to discuss and give recommendations on how specific products or services can meet their needs. He maintains customer relationships to strategically place new products and drive sales for long-term growth. He works in a fast-paced and dynamic environment, and travels frequently to clients' premises for meetings. He is familiar with client relationship management and sales tools. He is knowledgeable of the organisation's products and services, as well as trends, developments and challenges of the industry domain. The Sales Account Manager is a resourceful, people-focused and persistent individual, who takes rejection as a personal challenge to succeed when given opportunity. He appreciates the value of long lasting relationships and prioritises efforts to build trust with existing and potential customers. He exhibits good listening skills and is able to establish rapport with customers and team members alike easily.")
     # Field: Required Skills
     role_skill_response = requests.get(f'{backend_base_url}/get_role_skill/{role_name}')
     assert role_skill_response.status_code == 200
     role_skill_data = json.loads(role_skill_response.content)["data"]
-    assert(role_skill_data == ["Call Centre Management", "Collaboration", "Communication", "Customer Relationship Management", "Digital Fluency", "Problem Solving", "Stakeholder Management", "Technology Application"])
+    assert(role_skill_data == ["Account Management", "Budgeting", "Business Development", "Business Needs Analysis", "Business Negotiation", "Collaboration", "Communication", "Data Analytics", "Pricing Strategy", "Problem Solving", "Product Management", "Sales Strategy", "Stakeholder Management"])
