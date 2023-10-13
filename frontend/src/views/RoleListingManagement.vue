@@ -134,7 +134,7 @@
               <span v-else> applicants </span>
             </div>
           </div>
-        </div>
+        </router-link>
         <div class="grow"></div>
         <div>
           <div class="flex flex-row">
