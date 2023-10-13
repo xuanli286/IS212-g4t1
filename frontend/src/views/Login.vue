@@ -50,8 +50,6 @@ export default {
     async submitForm(event) {
       event.preventDefault();
       // Gather user input data
-      console.log(this.staffId)
-      console.log(this.password)
       fetch(`${this.backend_url}/staff/${this.staffId}`)
       .then((response) => {
                 if (response.status === 404) {
@@ -60,25 +58,27 @@ export default {
                 return response.json();
               })
               .then((data) => {
-                // console.log(data);
                 if (data.code === 200) {
-                  console.log(data.data[this.staffId])
                   const staffData = data.data[this.staffId]
                   const staffPassword = staffData['staff_password']
-                  console.log(staffPassword)
                   if (this.password == staffPassword)
                   {
                     this.wrongMsg = false
-                    this.user = {access_ID: staffData['access_ID'], staff_FName: staffData['staff_FName'], staff_LName: staffData['staff_LName']}
+                    // this.user = {access_ID: staffData['access_ID'], staff_FName: staffData['staff_FName'], staff_LName: staffData['staff_LName'], staff_email:staffData["staff_email"], staff_dept: staffData["dept"], staff_ID: this.staffId}
                       // {access_ID: 2, staff_FName: "Philip", staff_LName: "Lee"};
-                    console.log("Success!", this.user)
+                    // console.log("Success!", this.user)
 
                     this.userStore.setUser({
                       access_ID: staffData['access_ID'],
                       staff_FName: staffData['staff_FName'],
                       staff_LName: staffData['staff_LName'],
+                      staff_dept: staffData['dept'],
+                      staff_country: staffData['country'],
+                      staff_email: staffData['email'],
+                      staff_ID: this.staffId
                     });
                     // Redirect to the home page
+                    
                     this.$router.push({ name: 'Home' });
                   }
                   else
