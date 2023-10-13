@@ -1,10 +1,10 @@
-name: Docker Image CI & CD
+name: CD Workflow
 
 on:
-  push:
-    branches: 
-      - develop
-      - 'IG-*'
+  workflow_run:
+    workflows: ["CI Workflow"]
+    types:
+      - completed
 
 concurrency:
   group: ${{ github.ref }}-cd-workflow
