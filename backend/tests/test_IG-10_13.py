@@ -27,6 +27,7 @@ def test_all_visible_fields_selenium(chrome_driver, url):
     fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
     for field in fields:
         fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
+        time.sleep(2)
         assert fieldDisplayed.is_displayed()
 
 
