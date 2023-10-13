@@ -21,7 +21,6 @@ const {
     staff,
     roles,
     roleSkills,
-    backend_url,
 } = storeToRefs(constStore);
 
 const route = useRoute();
