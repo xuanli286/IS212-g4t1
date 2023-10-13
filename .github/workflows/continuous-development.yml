@@ -12,6 +12,7 @@ concurrency:
 jobs:
 
   build:
+    if: github.ref == 'refs/heads/develop' # only run on develop branch
     runs-on: ubuntu-latest
 
     steps:
