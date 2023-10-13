@@ -2,14 +2,14 @@ import axios from "axios";
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
-export const useConstantStore = defineStore("constant", () => {
-  const hiringDepartment = ref([]);
-  const countries = ref([]);
-  const roleSkills = ref([]);
-  const staffSkills = ref([]);
-  const staff = ref({});
-  const roles = ref({});
-  const backend_url = ref("http://13.212.177.124:5000");
+export const useConstantStore = defineStore('constant', () => {
+    const hiringDepartment = ref([]);
+    const countries = ref([]);
+    const roleSkills = ref([]);
+    const staffSkills = ref([]);
+    const staff = ref({});
+    const roles = ref({});
+    const backend_url = ref("http://13.212.177.124:5000");
 
   axios
     .get(`${backend_url.value}/get_dept_country/dept`)
@@ -46,50 +46,48 @@ export const useConstantStore = defineStore("constant", () => {
       console.log(error.message);
     });
 
-  axios
-    .get(`${backend_url.value}/get_all_role`)
-    .then((response) => {
-      for (let i of response.data.data) {
-        for (let key in i) {
-          roles.value[key] = i[key];
+    axios.get(`${backend_url.value}/get_all_role`)
+        .then((response) => {
+            for (let i of response.data.data) {
+                for (let key in i) {
+                    roles.value[key] = i[key];
+                }
+            }
+        })
+        .catch((error) => {
+            console.log(error.message);
+        })
+
+    function getSkills(roleName) {
+        axios.get(`${backend_url.value}/get_role_skill/` + roleName)
+            .then((response) => {
+                roleSkills.value = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error.message);
+            })
         }
-      }
-    })
-    .catch((error) => {
-      console.log(error.message);
-    });
 
-  function getSkills(roleName) {
-    axios
-      .get(`${backend_url.value}/get_role_skill/` + roleName)
-      .then((response) => {
-        roleSkills.value = response.data.data;
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }
+    function getStaffSkills(staffID) {
+        axios.get(`${backend_url.value}/get_staff_skill/` + staffID)
+            .then((response) => {
+                staffSkills.value = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error.message);
+            })
+    }
 
-  function getStaffSkills(staffID) {
-    axios
-      .get("http://127.0.0.1:5000/get_staff_skill/" + staffID)
-      .then((response) => {
-        staffSkills.value = response.data.data;
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }
 
-  return {
-    hiringDepartment,
-    countries,
-    roleSkills,
-    staffSkills,
-    staff,
-    roles,
-    getSkills,
-    getStaffSkills,
-    backend_url,
-  };
-});
+    return {
+        hiringDepartment,
+        countries,
+        roleSkills,
+        staffSkills,
+        staff,
+        roles,
+        getSkills,
+        getStaffSkills,
+        backend_url,
+    };
+})

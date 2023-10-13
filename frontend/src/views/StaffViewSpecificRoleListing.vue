@@ -69,7 +69,7 @@
                     </div>
                     <p class="ml-4 text-sm" id="matched-skills">
                         <span v-if="matchedSkills.length > 0">{{ matchedSkills.join(', ') }}</span>
-                        <span class="text-grey" v-else>No matching skill found</span>
+                        <span v-else class="text-grey">No matching skill found</span>
                     </p>
                 </div>
                 <div class="mt-2">
@@ -79,7 +79,7 @@
                     </div>
                     <p class="ml-4 text-sm" id="missing-skills">
                         <span v-if="missingSkills.length > 0">{{ missingSkills.join(', ') }}</span>
-                        <span class="text-grey">All skills matched</span>
+                        <span v-else class="text-grey">All skills matched</span>
                     </p>
                 </div>
             </div>
@@ -110,6 +110,7 @@
         staff,
         roleSkills,
         staffSkills,
+        backend_url,
     } = storeToRefs(store);
 
     const rolelistingID = route.params.id;
@@ -118,7 +119,7 @@
 
     onMounted(async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:5000/rolelisting/${rolelistingID}`);
+            const response = await axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`);
             roleDetails.value = response.data.data[rolelistingID];
             roleName.value = roleDetails.value.role_name;
             store.getSkills(roleName.value);
