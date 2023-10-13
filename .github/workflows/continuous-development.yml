@@ -5,10 +5,6 @@ on:
     workflows: ["CI Workflow"]
     types:
       - completed
-  
-  pull_request:
-    branches:
-      - develop
 
 concurrency:
   group: ${{ github.ref }}-cd-workflow
@@ -23,7 +19,7 @@ jobs:
     - name: Login to Docker Hub
       env: 
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_ACCESS_TOKEN}}
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
            
     - name: Build & Push Production Image
