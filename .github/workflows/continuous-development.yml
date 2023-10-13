@@ -8,7 +8,6 @@ on:
   
   pull_request:
     branches:
-      - main
       - develop
 
 concurrency:
@@ -34,7 +33,7 @@ jobs:
 
     - name: Build & Push Test Image
       run: |
-        docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/tests/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp_test:spm-test ./backend
+        docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/test/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp_test:spm-test ./backend
         docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp_test:spm-test
 
   deploy:
