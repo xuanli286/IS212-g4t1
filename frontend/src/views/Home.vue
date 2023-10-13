@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="user">
-      <RoleListingStaff />
+      <RoleListingManagement v-if="user.access_ID > 0"/>
     </div>
     <div v-else>
       <p>No user data available.</p>
@@ -11,12 +11,12 @@
 
 <script>
 import { useUserStore } from '@/store/useUserStore.js';
-import RoleListingStaff from "../views/RoleListingStaff.vue";
+import RoleListingManagement from "../views/RoleListingManagement.vue";
 
 export default {
   name: 'Home',
   components: {
-    RoleListingStaff,
+    RoleListingManagement,
   },
   props: {
   },
