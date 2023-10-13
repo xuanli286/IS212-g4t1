@@ -50,8 +50,6 @@ export default {
     async submitForm(event) {
       event.preventDefault();
       // Gather user input data
-      console.log(this.staffId)
-      console.log(this.password)
       fetch(`${this.backend_url}/staff/${this.staffId}`)
       .then((response) => {
                 if (response.status === 404) {
@@ -60,12 +58,9 @@ export default {
                 return response.json();
               })
               .then((data) => {
-                // console.log(data);
                 if (data.code === 200) {
-                  console.log(data.data[this.staffId])
                   const staffData = data.data[this.staffId]
                   const staffPassword = staffData['staff_password']
-                  console.log(staffPassword)
                   if (this.password == staffPassword)
                   {
                     this.wrongMsg = false
