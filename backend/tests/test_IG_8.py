@@ -98,40 +98,40 @@ def test_user_input_application_deadline_selenium(chrome_driver, url):
 def test_valid_update_role_listing_selenium(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
-    # "role_name": "Consultant"
+    # "role_name": "Call Centre"
     title_select = driver.find_element(By.ID, "title")
     title_select.click()
-    title_option_to_select = driver.find_element(By.XPATH, '//option[text()="Consultant"]')
+    title_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Call Centre"]')))
     title_option_to_select.click()
     # "application_opening": today's date
     current_date = datetime.now().date()
-    current_date_formatted = current_date.strftime("%m-%d-%Y")
+    current_date_formatted = current_date.strftime("%Y-%m-%d")
     application_opening_input = driver.find_element(By.ID, "applicationOpening")
     application_opening_input.clear()
     application_opening_input.send_keys(current_date_formatted)
     # "application_deadline": 1 day after today's date/application_opening
     application_deadline = current_date + timedelta(days=1)
-    application_deadline_formatted = application_deadline.strftime("%m-%d-%Y")
+    application_deadline_formatted = application_deadline.strftime("%Y-%m-%d")
     application_deadline_input = driver.find_element(By.ID, 'applicationDeadline')
     application_deadline_input.clear()
     application_deadline_input.send_keys(application_deadline_formatted)
-    # "manager_ID": 1030
+    # "manager_ID": 140003
     manager_select = driver.find_element(By.ID, "manager")
     manager_select.click()
-    manager_option_to_select = driver.find_element(By.XPATH, '//option[text()="Derek Tan (1030)"]')
+    manager_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Janice Chan (140003)"]')))
     manager_option_to_select.click()
-    # "dept": "Finance"
+    # "dept": "Sales"
     department_select = driver.find_element(By.ID, "department")
     department_select.click()
-    department_option_to_select = driver.find_element(By.XPATH, '//option[text()="Finance"]')
+    department_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Sales"]')))
     department_option_to_select.click()
-    # "country": "Hong Kong"
+    # "country": "Vietnam"
     country_select = driver.find_element(By.ID, "country")
     country_select.click()
-    country_option_to_select = driver.find_element(By.XPATH, '//option[text()="Hong Kong"]')
+    country_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Vietnam"]')))
     country_option_to_select.click()
     # Save
-    save_button = driver.find_element(By.XPATH, '//button[text()="Save Edit"]')
+    save_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//button[text()="Save Edit"]')))
     save_button.click()
     success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//p[text()="Role listing has been updated successfully."]')))
     assert success_message.is_displayed()
@@ -143,10 +143,10 @@ def test_valid_update_role_listing_selenium(chrome_driver, url):
 def test_invalid_update_role_listing_selenium(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
-    # "role_name": "Consultant"
+    # "role_name": "Call Centre"
     title_select = driver.find_element(By.ID, "title")
     title_select.click()
-    title_option_to_select = driver.find_element(By.XPATH, '//option[text()="Consultant"]')
+    title_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Call Centre"]')))
     title_option_to_select.click()
     # "application_opening": today's date
     current_date = datetime.now().date()
@@ -160,23 +160,23 @@ def test_invalid_update_role_listing_selenium(chrome_driver, url):
     application_deadline_input = driver.find_element(By.ID, 'applicationDeadline')
     application_deadline_input.clear()
     application_deadline_input.send_keys(application_deadline_formatted)
-    # "manager_ID": 1030
+    # "manager_ID": 140003
     manager_select = driver.find_element(By.ID, "manager")
     manager_select.click()
-    manager_option_to_select = driver.find_element(By.XPATH, '//option[text()="Derek Tan (1030)"]')
+    manager_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Janice Chan (140003)"]')))
     manager_option_to_select.click()
-    # "dept": "Finance"
+    # "dept": "Sales"
     department_select = driver.find_element(By.ID, "department")
     department_select.click()
-    department_option_to_select = driver.find_element(By.XPATH, '//option[text()="Finance"]')
+    department_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Sales"]')))
     department_option_to_select.click()
-    # "country": "Hong Kong"
+    # "country": "Vietnam"
     country_select = driver.find_element(By.ID, "country")
     country_select.click()
-    country_option_to_select = driver.find_element(By.XPATH, '//option[text()="Hong Kong"]')
+    country_option_to_select = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Vietnam"]')))
     country_option_to_select.click()
     # Save
-    save_button = driver.find_element(By.XPATH, '//button[text()="Save Edit"]')
+    save_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//button[text()="Save Edit"]')))
     save_button.click()
     success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//p[text()="Role Listing exists."]')))
     assert success_message.is_displayed()
@@ -188,46 +188,46 @@ def test_update_role_listing():
 
     updated_data = {
         "role_name": "Account Manager",
-        "application_opening": "2023-09-16",
-        "application_deadline": "2023-10-29",
-        "manager_ID": 140003,
+        "application_opening": "2023-09-20",
+        "application_deadline": "2023-12-30",
+        "manager_ID": 140001,
         "dept": "Consultancy",
-        "country": "Hong Kong",
+        "country": "Vietnam",
     }
 
-    response = requests.put(f'{backend_base_url}/updaterolelisting/1', json=updated_data)
+    response = requests.put(f'{backend_base_url}/updaterolelisting/15', json=updated_data)
     
     assert response.status_code == 200
     
-    updated_role_listing = json.loads(response.content)["data"]["1"]
+    updated_role_listing = json.loads(response.content)["data"]["15"]
     
     assert updated_role_listing["role_name"] == "Account Manager"
-    assert updated_role_listing["application_opening"] == "2023-09-16"
-    assert updated_role_listing["application_deadline"] == "2023-10-29"
+    assert updated_role_listing["application_opening"] == "2023-09-20"
+    assert updated_role_listing["application_deadline"] == "2023-12-30"
     assert updated_role_listing["dept"] == "Consultancy"
-    assert updated_role_listing["country"] == "Hong Kong"
+    assert updated_role_listing["country"] == "Vietnam"
     
     actual_data = {
-        "role_name": "Call Centre",
-        "application_opening": "2023-09-15",
-        "application_deadline": "2023-10-28",
-        "manager_ID": 140003,
-        "dept": "Sales",
-        "country": "Vietnam",
+        "role_name": "Account Manager",
+        "application_opening": "2023-09-21",
+        "application_deadline": "2023-12-31",
+        "manager_ID": 140001,
+        "dept": "Consultancy",
+        "country": "Hong Kong",
     }
     
-    cleaned_response = requests.put(f'{backend_base_url}/updaterolelisting/1', json=actual_data)
+    cleaned_response = requests.put(f'{backend_base_url}/updaterolelisting/15', json=actual_data)
     
     assert cleaned_response.status_code == 200
 
 def test_update_duplicate_role_listing():
     duplicate_update_data = {
-        "role_name": "Call Centre",
-        "application_opening": "2023-09-15",
-        "application_deadline": "2023-10-28",
-        "manager_ID": 140003,
-        "dept": "Sales",
-        "country": "Vietnam",
+        "role_name": "Account Manager",
+        "application_opening": "2023-09-21",
+        "application_deadline": "2023-12-31",
+        "manager_ID": 140001,
+        "dept": "Consultancy",
+        "country": "Hong Kong",
     }
-    response = requests.put(f'{backend_base_url}/updaterolelisting/2', json=duplicate_update_data)
+    response = requests.put(f'{backend_base_url}/updaterolelisting/23', json=duplicate_update_data)
     assert response.status_code == 400

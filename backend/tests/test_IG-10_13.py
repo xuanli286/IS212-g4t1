@@ -4,7 +4,6 @@ import json
 import pytest
 import requests
 
-from g4t1_test import *
 from conftest import *
 from datetime import datetime
 from selenium import webdriver
