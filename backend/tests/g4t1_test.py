@@ -2,14 +2,13 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
-import os
 from os import environ
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("TEST_DB_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -636,95 +635,5 @@ def delete_application(staff_ID, rolelisting_ID):
         ), 404
 
 
-# add an application
-@app.route("/addapplication", methods=['POST'])
-def create_application():
-
-    # this returns in dictionary format
-    application = request.get_json()
-
-    # check if role listing exists
-    condition1 = Application.staff_ID == application["staff_ID"]
-    condition2 = Application.rolelisting_ID == application["rolelisting_ID"]
-    
-    results = Application.query.filter(condition1, condition2).first()
-
-    if results:
-        return jsonify(
-            {
-                "code": 400,
-                "data": application,
-                "message": "Application exists."
-            }
-        ), 400
-
-    # creating the role listing instance
-    new_application = Application(**application)
-
-    try:
-        db.session.add(new_application)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": application,
-                "message": "An error occurred creating the application."
-            }
-        ), 500
-
-    return jsonify(
-        {
-            "code": 201,
-            "data": new_application.json()
-        }
-    ), 201
-
-
-# delete an application
-@app.route("/applications/<staff_ID>/<rolelisting_ID>", methods=['DELETE'])
-def delete_application(staff_ID, rolelisting_ID):
-
-    # Check if the role listing exists in the database
-    application = Application.query.filter_by(staff_ID=staff_ID, rolelisting_ID=rolelisting_ID).first()
-
-    if application:
-        try:
-            db.session.delete(application)
-            db.session.commit()
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "staff_ID": staff_ID,
-                        "rolelisting_ID": rolelisting_ID
-                        },
-                    "message": "Application deleted successfully"
-                }
-            ), 200
-        except Exception as e:
-            return jsonify(
-                {
-                    "code": 500,
-                    "data": {
-                        "staff_ID": staff_ID,
-                        "rolelisting_ID": rolelisting_ID
-                        },
-                    "message": "An error occurred when deleting the application."
-                }
-            ), 500
-    else:
-        return jsonify(
-            {
-                "code": 404,
-                "data": {
-                    "staff_ID": staff_ID,
-                    "rolelisting_ID": rolelisting_ID
-                    },
-                "message": "Application does not exist."
-            }
-        ), 404
-
-
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
