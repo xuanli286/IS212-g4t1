@@ -101,7 +101,7 @@ def test_valid_update_role_listing_selenium(chrome_driver, url):
     # "role_name": "Consultant"
     title_select = driver.find_element(By.ID, "title")
     title_select.click()
-    title_option_to_select = driver.find_element(By.XPATH, '//option[text()="Consultant"]')
+    title_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Call Centre"]')))
     title_option_to_select.click()
     # "application_opening": today's date
     current_date = datetime.now().date()
@@ -118,22 +118,22 @@ def test_valid_update_role_listing_selenium(chrome_driver, url):
     # "manager_ID": 1030
     manager_select = driver.find_element(By.ID, "manager")
     manager_select.click()
-    manager_option_to_select = driver.find_element(By.XPATH, '//option[text()="Derek Tan (1030)"]')
+    manager_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Janice Chan (140003)"]')))
     manager_option_to_select.click()
     # "dept": "Finance"
     department_select = driver.find_element(By.ID, "department")
     department_select.click()
-    department_option_to_select = driver.find_element(By.XPATH, '//option[text()="Finance"]')
+    department_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Sales"]')))
     department_option_to_select.click()
     # "country": "Hong Kong"
     country_select = driver.find_element(By.ID, "country")
     country_select.click()
-    country_option_to_select = driver.find_element(By.XPATH, '//option[text()="Hong Kong"]')
+    country_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Vietnam"]')))
     country_option_to_select.click()
     # Save
-    save_button = driver.find_element(By.XPATH, '//button[text()="Save Edit"]')
+    save_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//button[text()="Save Edit"]')))
     save_button.click()
-    success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//p[text()="Role listing has been updated successfully."]')))
+    success_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//p[text()="Role listing has been updated successfully."]')))
     assert success_message.is_displayed()
 
 
@@ -146,7 +146,7 @@ def test_invalid_update_role_listing_selenium(chrome_driver, url):
     # "role_name": "Consultant"
     title_select = driver.find_element(By.ID, "title")
     title_select.click()
-    title_option_to_select = driver.find_element(By.XPATH, '//option[text()="Consultant"]')
+    title_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Call Centre"]')))
     title_option_to_select.click()
     # "application_opening": today's date
     current_date = datetime.now().date()
@@ -163,22 +163,22 @@ def test_invalid_update_role_listing_selenium(chrome_driver, url):
     # "manager_ID": 1030
     manager_select = driver.find_element(By.ID, "manager")
     manager_select.click()
-    manager_option_to_select = driver.find_element(By.XPATH, '//option[text()="Derek Tan (1030)"]')
+    manager_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Janice Chan (140003)"]')))
     manager_option_to_select.click()
     # "dept": "Finance"
     department_select = driver.find_element(By.ID, "department")
     department_select.click()
-    department_option_to_select = driver.find_element(By.XPATH, '//option[text()="Finance"]')
+    department_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Sales"]')))
     department_option_to_select.click()
     # "country": "Hong Kong"
     country_select = driver.find_element(By.ID, "country")
     country_select.click()
-    country_option_to_select = driver.find_element(By.XPATH, '//option[text()="Hong Kong"]')
+    country_option_to_select = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//option[text()="Vietnam"]')))
     country_option_to_select.click()
     # Save
-    save_button = driver.find_element(By.XPATH, '//button[text()="Save Edit"]')
+    save_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//button[text()="Save Edit"]')))
     save_button.click()
-    success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//p[text()="Role Listing exists."]')))
+    success_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//p[text()="Role Listing exists."]')))
     assert success_message.is_displayed()
 
 

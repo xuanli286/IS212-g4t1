@@ -33,7 +33,7 @@ def test_all_visible_fields_selenium(chrome_driver, url):
     driver.get(url)
     fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
     for field in fields:
-        fieldDisplayed = driver.find_element(By.ID, field)
+        fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
         assert fieldDisplayed.is_displayed()
 
 
@@ -45,7 +45,7 @@ def test_back_button_selenium(chrome_driver, url):
     previous_url = f"{frontend_base_url}/viewrolelistings"
     driver.get(previous_url)
     driver.get(url)
-    back_btn = driver.find_element(By.ID, "back")
+    back_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "back")))
     back_btn.click()
     url_after_click = driver.current_url
     assert url_after_click == previous_url
@@ -57,7 +57,7 @@ def test_back_button_selenium(chrome_driver, url):
 def test_apply_role_button(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
-    apply_btn = driver.find_element(By.ID, "apply")
+    apply_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "apply")))
     assert apply_btn.is_displayed()
 
 
@@ -72,7 +72,7 @@ def test_percentage_match_selenium(chrome_driver, url):
     driver.get(url)
     fields = ["percentage", "matched-skills", "missing-skills"]
     for field in fields:
-        fieldDisplayed = driver.find_element(By.ID, field)
+        fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
         assert fieldDisplayed.is_displayed()
 
 
@@ -103,20 +103,20 @@ def test_all_available_fields():
     manager_ID = str(rolelisting_data["manager_ID"])
     assert manager_ID == "140003"
     # Field: Reporting Manager
-    staff_response = requests.get(f'{backend_base_url}/staff/{manager_ID}')
+    staff_response = requests.get(f'{backend_base_url_production}/staff/{manager_ID}')
     assert staff_response.status_code == 200
     staff_data = json.loads(staff_response.data)["data"][manager_ID]
     assert staff_data["staff_FName"] == "Janice"
     assert staff_data["staff_LName"] == "Chan"
     # Field: Role Description
-    role_description_response = requests.get(f'{backend_base_url}/get_all_role')
+    role_description_response = requests.get(f'{backend_base_url_production}/get_all_role')
     assert role_description_response.status_code == 200
     role_description_data = json.loads(role_description_response.data)["data"]
     for idx in range(len(role_description_data)):
         if role_description_data[idx] == role_name:
             assert(role_description_data[idx][role_name] == "Call Centre Executive is responsible for providing assistance to customers by addressing their queries and requests. He/She advises customers on appropriate products and services based on their needs. He is responsible for the preparation of customer documentation. In the case of complex customer requests, he escalates them to senior officers. He is able to abide by safety and/or security standards in the workplace. The Call Centre Executive  pays strong attention to details to verify and process documentation. He also shows initiative and quick decision-making skills to provide excellent personalised customer services and support. He is comfortable with various stakeholder interactions whilst working in shifts and possesses adequate computer literacy to process customer documentation.")
     # Field: Required Skills
-    role_skill_response = requests.get(f'{backend_base_url}/get_role_skill/{role_name}')
+    role_skill_response = requests.get(f'{backend_base_url_production}/get_role_skill/{role_name}')
     assert role_skill_response.status_code == 200
     role_skill_data = json.loads(role_skill_response.data)["data"]
     assert(role_skill_data == ["Call Centre Management", "Collaboration", "Communication", "Customer Relationship Management", "Digital Fluency", "Problem Solving", "Stakeholder Management", "Technology Application"])
