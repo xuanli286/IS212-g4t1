@@ -2,6 +2,16 @@ import json
 import requests
 
 from conftest import *
+from selenium.webdriver.common.by import By
+from datetime import datetime, timedelta
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+##################### FRONTEND TESTING ####################
+
+
+
+##################### BACKEND TESTING #####################
 
 def test_create_application():
     application_data = {

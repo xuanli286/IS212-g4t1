@@ -53,7 +53,7 @@ const router = createRouter({
       component: StaffViewSpecificRoleListing,
     },
     {
-      path: "/specificrolelisting",
+      path: "/specificrolelisting/:id",
       name: "SpecificRoleListing",
       component: SpecificRoleListing,
     },

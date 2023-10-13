@@ -1,178 +1,3 @@
-<script>
-import axios from "axios";
-import { storeToRefs } from "pinia";
-import { ref } from "vue"; // Import ref from Vue
-import { useUserStore } from "../store/useUserStore";
-import { useConstantStore } from "../store/useConstantStore";
-
-const rolelistingID = 2;
-
-export default {
-  name: "SpecificRoleListing",
-  components: {},
-  props: {},
-  setup() {
-    const backend_url = useConstantStore().backend_url;
-
-    const user = useUserStore().user;
-    const currentUser = ref(user);
-
-    return { backend_url, currentUser };
-  },
-  data() {
-    return {
-      roleName: "",
-      expiryDate: "",
-      managerId: null,
-      managerName: "",
-      department: "",
-      country: "",
-      skills: [],
-      description: "",
-      hrRights: false,
-      staffSkills: [],
-      applicationSuccess: false
-    };
-  },
-  methods: {
-    getRoleListingInfo() {
-      axios
-        .get(`${this.backend_url}/rolelisting/${rolelistingID}`)
-        .then((response) => {
-          // console.log(response.data.data[rolelistingID])
-          this.roleName = response.data.data[rolelistingID]["role_name"];
-          this.expiryDate =
-            response.data.data[rolelistingID]["application_deadline"];
-          this.managerId = response.data.data[rolelistingID]["manager_ID"];
-          this.department = response.data.data[rolelistingID]["dept"];
-          this.country = response.data.data[rolelistingID]["country"];
-
-          // set managerName variable after obtaining managerId
-          this.getStaffName();
-
-          // set skills variable after obtaining roleName
-          this.getRoleSkills();
-
-          // set description variable after obtaining roleName
-          this.getRoleDescription();
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    getStaffName() {
-      axios
-        .get(`${this.backend_url}/staff/${this.managerId}`)
-        .then((response) => {
-          const managerData = response.data.data[this.managerId];
-          if (managerData) {
-            this.managerName =
-              managerData["staff_FName"] + " " + managerData["staff_LName"];
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    getRoleSkills() {
-      axios
-        .get(`${this.backend_url}/get_role_skill/${this.roleName}`)
-        .then((response) => {
-          const roleSkillsData = response.data.data;
-          console.log(roleSkillsData);
-          if (roleSkillsData) {
-            this.skills = roleSkillsData;
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    openApply() {
-      document
-        .getElementById("authentication-modal")
-        .classList.remove("hidden");
-      console.log(this.currentUser);
-      console.log(this.currentUser.access_ID);
-      console.log(this.staffSkills);
-    },
-    closeApply() {
-      document.getElementById("authentication-modal").classList.add("hidden");
-    },
-    getRoleDescription() {
-      axios
-        .get(`${this.backend_url}/get_all_role`)
-        .then((response) => {
-          const roleDescriptionsData = response.data.data;
-          for (const role of roleDescriptionsData) {
-            for (let rName in role) {
-              if (rName == this.roleName) {
-                this.description = role[this.roleName];
-              }
-            }
-          }
-          // const roleDescription = response.data.data[$roleName];
-          // console.log(roleDescription)
-          // if (roleDescription) {
-          //   this.description = roleDescription;
-          // }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    },
-    submitApplication() {
-      console.log("Hello");
-      const body = {
-        staff_ID: this.currentUser.staff_ID,
-        rolelisting_ID: rolelistingID,
-        application_date: new Date().toISOString().slice(0, 10),
-        percentage_match: this.getSkillPercentage()
-      };
-      console.log(body);
-      axios
-        .post(`${this.backend_url}/addapplication`, body)
-        .then((response) => {
-          console.log(response);
-          this.applicationSuccess = true;
-        })
-        .catch((error) => {
-          console.log(error.message);
-          this.applicationSuccess = false;
-        });
-
-      document.getElementById("confirm-modal").classList.remove("hidden");
-    },
-    closeConfirm() {
-      document.getElementById("confirm-modal").classList.add("hidden");
-    },
-    getSkillPercentage() {
-      let match = 0;
-      for (const skill of this.staffSkills) {
-        if (this.skills.includes(skill)) {
-          match++;
-        }
-      }
-      return (match / this.skills.length) * 100;
-    },
-  },
-  created() {
-    this.getRoleListingInfo();
-    if (this.currentUser.access_ID == 2) {
-      this.hrRights = true;
-    }
-    axios
-      .get(`${this.backend_url}/get_staff_skill/${this.currentUser.staff_ID}`)
-      .then((response) => {
-        this.staffSkills = response.data.data;
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  },
-};
-</script>
-
 <template>
   <div class="bg-beige px-10 py-5">
     <div class="flex items-center justify-between">
@@ -416,7 +241,7 @@ export default {
                         <p v-else
                           class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
                         >
-                          There was an error with you application. You may only apply for a role once. If you think this is an error, please contact the Human Resource team.
+                          There was an error with your application. You may only apply for a role once. If you think this is an error, please contact the Human Resource team.
                         </p>
                       </div>
                       <!-- Modal footer -->
@@ -431,54 +256,94 @@ export default {
           </div>
         </div>
       </div>
+      <Button id="edit" class="ml-auto" @click="editRole">
+        <template v-slot:icon>
+          <img class="mr-1" src="@/assets/icons/edit.svg" alt="">
+        </template>
+        <template v-slot:text>
+          Edit Role Listing
+        </template>
+      </Button>
     </div>
-
-    <div class="flex items-center flex-nowrap pl-8 text-grey">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-4 h-4"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <p class="font-sans pl-2 text-grey text-bold">Expires On:</p>
-      <p class="font-sans pl-2 text-grey pr-8">{{ expiryDate }}</p>
-    </div>
-
-    <div class="mt-8 container mx-auto flex items-center justify-between">
+    <div class="grid grid-cols-3 mt-10">
       <div>
-        <p class="text-bold">Reporting Manager</p>
-        <p>{{ managerName }}</p>
+        <p class="font-bold">Reporting Manager</p>
+        <p id="manager">{{ staff[roleDetails.manager_ID] }}</p>
       </div>
-      <div>
-        <p class="text-bold">Hiring Department</p>
-        <p>{{ department }}</p>
+      <div class="mx-auto">
+        <p class="font-bold">Hiring Department</p>
+        <p id="hiring-department">{{ roleDetails.dept }}</p>
       </div>
-      <div>
-        <p class="text-bold">Country</p>
-        <p>{{ country }}</p>
+      <div class="ml-auto">
+        <p class="font-bold">Country</p>
+        <p id="country">{{ roleDetails.country }}</p>
       </div>
     </div>
-
-    <div class="mt-16 p-10">
-      <p class="text-bold">Description</p>
-      <p class="pr-8">{{ description }}</p>
-    </div>
-
-    <div class="mt-1 p-10">
-      <p class="text-bold">Required Skills</p>
-      <ul class="list-disc pl-4">
-        <li v-for="skill in skills" :key="skill">{{ skill }}</li>
-      </ul>
+    <div class="grid grid-cols-2 gap-20 mt-10">
+      <div>
+        <p class="font-bold">Description</p>
+        <p class="text-justify" id="role-description">{{ roles[roleName] }}</p>
+      </div>
+      <div>
+        <p class="font-bold">Required Skills</p>
+        <ul id="required-skills" class="list-disc ml-6" v-for="skill of roleSkills" :key="skill">
+          <li>
+            {{ skill }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
-<link rel="stylesheet" href="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.min.css" />
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useConstantStore } from "@/store/useConstantStore";
+import { useUserStore } from "@/store/useUserStore";
+import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
+import axios from "axios";
+import Button from "@/components/Button.vue";
+import router from "@/router";
+
+const route = useRoute();
+
+const userStore = useUserStore();
+const {
+  user,
+} = storeToRefs(userStore);
+
+const store = useConstantStore();
+const {
+  roles,
+  staff,
+  roleSkills,
+  backend_url,
+} = storeToRefs(store);
+
+const roleName = ref("");
+const roleDetails = ref({});
+
+const rolelistingID = route.params.id;
+
+onMounted(async () => {
+  try {
+    const response = await axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`);
+    roleDetails.value = response.data.data[rolelistingID];
+    roleName.value = roleDetails.value.role_name;
+    store.getSkills(roleName.value);
+    store.getStaffSkills(user.value.staff_ID);
+  }
+  catch (error) {
+    console.log(error.message);
+  }
+})
+
+function back() {
+  window.history.back();
+}
+
+function editRole() {
+  router.push(`/editrolelisting/${rolelistingID}`);
+}
+</script>

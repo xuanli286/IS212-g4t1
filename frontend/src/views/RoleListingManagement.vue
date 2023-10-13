@@ -2,7 +2,8 @@
   import axios from "axios";
   import { useRoleListingStore } from '@/store/useRoleListingStore';
   import { useConstantStore } from '@/store/useConstantStore';
-  
+  import router from "@/router";
+
   export default {
   data() {
     return {
@@ -56,6 +57,7 @@
     },
     updateRoleListingId(id) {
       useRoleListingStore().setRoleListingId(id);
+      router.push('/specificrolelisting/' + id);
     },
     getManagerName(id) {
       try {
@@ -117,24 +119,22 @@
         <div class="font-bold">No listings available!</div>
         <div class="grow"></div>
       </li>
-      <li v-else v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
-        <router-link to="/specificrolelisting" @click= updateRoleListingId(id)>
-          <div class="flex-none h-100">
-            <div class="role-title text-yellow text-xl"> {{listing.role_name}} </div>
-            <div class="role-manager text-base"> Reporting Manager: {{getManagerName(listing.manager_ID)}} </div>
-            <div class="flex flex-row text-xs">
-              <div class="role-deadline text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
-              <div class="flex items-center mx-2">
-                <span class="bg-black h-1 w-1 rounded-full"></span>
-              </div>
-              <div class="role-applicants font-bold text-green">
-                {{applications[id]}}
-                <span v-if="applications[id] == 1"> applicant </span>
-                <span v-else> applicants </span>
-              </div>
+      <li v-else v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50"  @click= "updateRoleListingId(id)">
+        <div class="flex-none h-100">
+          <div class="role-title text-yellow text-xl"> {{listing.role_name}} </div>
+          <div class="role-manager text-base"> Reporting Manager: {{getManagerName(listing.manager_ID)}} </div>
+          <div class="flex flex-row text-xs">
+            <div class="role-deadline text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
+            <div class="flex items-center mx-2">
+              <span class="bg-black h-1 w-1 rounded-full"></span>
+            </div>
+            <div class="role-applicants font-bold text-green">
+              {{applications[id]}}
+              <span v-if="applications[id] == 1"> applicant </span>
+              <span v-else> applicants </span>
             </div>
           </div>
-        </router-link>
+        </div>
         <div class="grow"></div>
         <div>
           <div class="flex flex-row">
@@ -151,7 +151,6 @@
           </div>
         </div>
       </li>
- 
     </ul>
   </div>
 </template>
