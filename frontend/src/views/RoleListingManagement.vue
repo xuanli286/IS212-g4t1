@@ -1,99 +1,99 @@
-<script setup>
-import axios from "axios";
-import { ref } from "vue";
-import { useRoleListingStore } from '@/store/useRoleListingStore';
-import { storeToRefs } from 'pinia';
-import { useConstantStore } from '@/store/useConstantStore';
-import { useRoute } from 'vue-router';
-import router from '@/router';
+<script>
+  import axios from "axios";
+  import { useRoleListingStore } from '@/store/useRoleListingStore';
+  import { useConstantStore } from '@/store/useConstantStore';
+  import router from "@/router";
 
-const constStore = useConstantStore();
-const { backend_url } = storeToRefs(constStore);
-const roleListingStore = useRoleListingStore();
-const roleListings = ref({})
-const staffNames = ref({})
-const route = useRoute();
+  export default {
+  data() {
+    return {
+      roleListings: {},
+      staffNames: {},
+      applications: {}
+    };
+  },
+  methods: {
+    async fetchData() {
+      const constStore = useConstantStore();
+      const { backend_url } = constStore;
 
-axios
-  .get(`${backend_url.value}/openrolelisting`)
-  .then((response) => {
-    let receivedListings = response.data.data.rolelisting
-    for (let listing of receivedListings) {
-      for (let key in listing) {
-        roleListings.value[key] = listing[key]
+        const openResponse = 
+          await axios.get(`${backend_url}/openrolelisting`)
+          .catch(() => {
+            return {data: {data: {}}}
+          });
+        const closeResponse = 
+          await axios.get(`${backend_url}/closerolelisting`)
+          .catch(() => {
+            return {data: {data: {}}}
+          });
+        const staffResponse = await axios.get(`${backend_url}/staff`);
+
+        this.roleListings = this.processListings(openResponse.data.data.rolelisting.concat(closeResponse.data.data.rolelisting));
+        for(let key of Object.keys(this.roleListings)){
+          this.applications[key] = 
+            await axios.get(`${backend_url}/applications/${key}`)
+            .then((response) => {
+              return response.data.data.length
+            })
+            .catch(() => {
+              return 0
+            })
+        }
+        this.staffNames = this.processStaff(staffResponse.data.data.staff);
+
+    },
+    checkOpen(listing) {
+      const today = new Date();
+      const deadline = new Date(listing.application_deadline);
+      return deadline > today;
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.toLocaleString('default', { month: 'long' });
+      const year = date.getFullYear();
+      return `${day} ${month} ${year}`;
+    },
+    updateRoleListingId(id) {
+      useRoleListingStore().setRoleListingId(id);
+      router.push('/specificrolelisting/' + id);
+    },
+    getManagerName(id) {
+      try {
+        const FName = this.staffNames[id].split(" ")[0];
+        const LName = this.staffNames[id].split(" ")[1][0];
+        return `${FName} ${LName}.`;
+      } catch (error) {
+        return "";
       }
-    }
-  })
-  .catch(error => {
-    if (error.response) {
-      if (error.response.status === 404) {
-        console.log("No open listings at this moment.");
+    },
+    processListings(listings) {
+      const processedListings = {};
+      for (const listing of listings) {
+        for (const key in listing) {
+          processedListings[key] = listing[key];
+        }
       }
-    }
-  })
-
-axios
-  .get(`${backend_url.value}/closerolelisting`)
-  .then((response) => {
-    let receivedListings = response.data.data.rolelisting
-    for (let listing of receivedListings) {
-      for (let key in listing) {
-        roleListings.value[key] = listing[key]
+      return processedListings;
+    },
+    processStaff(staffData) {
+      const processedStaff = {};
+      for (const staff of staffData) {
+        for (const key in staff) {
+          if (staff[key]) {
+            processedStaff[key] = staff[key]['staff_FName'] + " " + staff[key]['staff_LName'];
+          }
+        }
       }
-    }
-  })
-  .catch(error => {
-    if (error.response) {
-      if (error.response.status === 404) {
-        console.log("No closed listings at this moment.");
-      }
-    }
-  })
+      return processedStaff;
+    },
+  },
+  created() {
+    this.fetchData(); 
+  },
 
-axios
-  .get(`${backend_url.value}/staff`)
-  .then((response) => {
-    let allStaff = response.data.data.staff
-    for (let staff of allStaff) {
-      for (let key in staff) {
-        staffNames.value[key] = staff[key]
-      }
-    }
-  })
-
-function checkOpen(listing) {
-  let today = new Date();
-  let deadline = new Date(listing.application_deadline)
-  if (deadline > today) {
-    return true
-  }
-
-  return false
-}
-
-function formatDate(dateString) {
-  let date = new Date(dateString)
-  let day = date.getDate()
-  let month = date.toLocaleString('default', { month: 'long' });
-  let year = date.getFullYear()
-  return `${day} ${month} ${year}`
-}
-
-const updateRoleListingId = (id) => {
-  roleListingStore.setRoleListingId(id)
-  router.push('/specificrolelisting/' + id);
-}
-
-const getManagerName = (id) => {
-  try {
-    var FName = staffNames.value[id]["staff_FName"]
-    var LName = staffNames.value[id]["staff_LName"][0]
-  } catch (error) {
-
-  }
-  return `${FName} ${LName}.`
-}
-
+};
 </script>
 
 <template>
@@ -105,13 +105,11 @@ const getManagerName = (id) => {
         <div class="grow"></div>
       </div>
       <div class="flex items-center">
-        <router-link id="addRoleListingButton" to="/addrolelisting"
-          class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            class="w-6 h-6 me-2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div class="my-auto">Add Role Listing</div>
+        <router-link id="addRoleListingButton" to="/addrolelisting" class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm" >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div class="my-auto">Add Role Listing</div>
         </router-link>
       </div>
     </div>
@@ -121,25 +119,27 @@ const getManagerName = (id) => {
         <div class="font-bold">No listings available!</div>
         <div class="grow"></div>
       </li>
-      <li v-else v-for="(listing, id) in roleListings" :key="id"
-        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50" @click="updateRoleListingId(id)">
+      <li v-else v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50"  @click= "updateRoleListingId(id)">
         <div class="flex-none h-100">
-          <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
-          <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
+          <div class="role-title text-yellow text-xl"> {{listing.role_name}} </div>
+          <div class="role-manager text-base"> Reporting Manager: {{getManagerName(listing.manager_ID)}} </div>
           <div class="flex flex-row text-xs">
-            <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
+            <div class="role-deadline text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
             <div class="flex items-center mx-2">
               <span class="bg-black h-1 w-1 rounded-full"></span>
             </div>
-            <div class="role-applicants font-bold text-green"> 11 applicants </div>
+            <div class="role-applicants font-bold text-green">
+              {{applications[id]}}
+              <span v-if="applications[id] == 1"> applicant </span>
+              <span v-else> applicants </span>
+            </div>
           </div>
         </div>
         <div class="grow"></div>
         <div>
           <div class="flex flex-row">
             <div class="grow"></div>
-            <div :class="{ 'bg-green': checkOpen(listing), 'bg-red': !checkOpen(listing) }"
-              class="role-status me-5 text-xs px-4 py-1 rounded-full text-white">
+            <div :class="{'bg-green': checkOpen(listing), 'bg-red': !checkOpen(listing)}" class="role-status me-5 text-xs px-4 py-1 rounded-full text-white">  
               <span v-if="checkOpen(listing)">Open</span>
               <span v-else>Closed</span>
             </div>
@@ -151,7 +151,6 @@ const getManagerName = (id) => {
           </div>
         </div>
       </li>
-
     </ul>
   </div>
 </template>

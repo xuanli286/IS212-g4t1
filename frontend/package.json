@@ -5,7 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "production": "vue-cli-service serve --mode production",
+    "test-scripts": "pytest ../backend/tests",
+    "test": "start-server-and-test serve 8080 test-scripts"
   },
   "dependencies": {
     "axios": "^1.5.0",
@@ -25,6 +28,7 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "start-server-and-test": "^2.0.1",
     "tailwindcss": "^3.3.3"
   },
   "eslintConfig": {
