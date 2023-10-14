@@ -3,7 +3,8 @@ name: CI Workflow
 
 on:
   pull_request:
-    - '*'
+    branches:
+      - '*'
 
 concurrency:
   group: ${{ github.ref }}-ci-workflow
