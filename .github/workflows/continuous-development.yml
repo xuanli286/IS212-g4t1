@@ -1,8 +1,8 @@
-name: CD Workflow
+name: Continuous Development Workflow
 
 on:
   workflow_run:
-    workflows: ["CI Workflow"]
+    workflows: ["Continuous Integration Workflow"]
     types:
       - completed
 

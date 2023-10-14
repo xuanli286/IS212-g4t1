@@ -1,5 +1,6 @@
 ---
-name: CI Workflow
+name: Continuous Integration Workflow
+
 
 on:
   pull_request:
