@@ -6,13 +6,9 @@ on:
     types:
       - completed
 
-  pull_request:
-    branches: ["develop"]
-      
 jobs:
 
   build:
-    needs: CI Workflow
     runs-on: ubuntu-latest
 
     steps:

@@ -4,8 +4,8 @@ name: CI Workflow
 on:
   pull_request:
 
-concurrency:
-  group: ${{ github.ref }}-ci-workflow
+# concurrency:
+#   group: ${{ github.ref }}-ci-workflow
 
 jobs:
   # build:
