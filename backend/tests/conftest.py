@@ -1,23 +1,34 @@
+from selenium import webdriver
+import chromedriver_autoinstaller
 import pytest
-import os
-import sys
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from g4t1_test import app, db
+backend_base_url = "http://13.212.177.124:5001"
+backend_base_url_production = "http://13.212.177.124:5000" # ONLY USE FOR GET REQUEST
+frontend_base_url = "http://localhost:8080"
 
 @pytest.fixture
-def client():
-    app.config['TESTING'] = True
+def chrome_driver():
+    
+    # Install and configure Chrome WebDriver
+    chromedriver_autoinstaller.install()
+    chrome_options = webdriver.ChromeOptions()
+    
+    options = [
+        "--window-size=1200,1200",
+        "--ignore-certificate-errors",
+        "--headless",  # Enable headless mode
+        "--disable-gpu",
+        "--no-sandbox",
+        "--disable-dev-shm-usage"
+    ]
 
-    # Create the test database
-    with app.app_context():
-        db.create_all()
+    for option in options:
+        chrome_options.add_argument(option)
+        
+    # Create and return the WebDriver instance
+    driver = webdriver.Chrome(options=chrome_options)
+    yield driver
+    
+    # Clean up resources by quitting the WebDriver
+    driver.quit()
 
-    # Create a test client for the application
-    with app.test_client() as client:
-        yield client
-
-    # Drop the test database after the tests are finished
-    with app.app_context():
-        db.drop_all()
