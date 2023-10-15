@@ -2,17 +2,14 @@ name: CD Workflow
 
 on:
   workflow_run:
-    workflows: ["CI Workflow"]
+    workflows: [CI Workflow]
     types:
       - completed
+    branches: [develop] # run on develop branch only
 
-  pull_request:
-    branches: ["develop"]
-      
 jobs:
 
   build:
-    needs: CI Workflow
     runs-on: ubuntu-latest
 
     steps:

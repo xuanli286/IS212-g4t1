@@ -1,8 +1,11 @@
 ---
 name: CI Workflow
 
+
 on:
   pull_request:
+    branches:
+      - '**'
 
 concurrency:
   group: ${{ github.ref }}-ci-workflow
@@ -81,4 +84,3 @@ jobs:
         run: |
           cd frontend
           npm run test
-...
