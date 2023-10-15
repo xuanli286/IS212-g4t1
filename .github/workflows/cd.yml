@@ -5,6 +5,7 @@ on:
     workflows: [CI Workflow]
     types:
       - completed
+    branches: [develop] # run only on pull request on develop branch
 
 jobs:
 
