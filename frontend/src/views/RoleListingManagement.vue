@@ -1,10 +1,10 @@
 <script>
-  import axios from "axios";
-  import { useRoleListingStore } from '@/store/useRoleListingStore';
-  import { useConstantStore } from '@/store/useConstantStore';
-  import router from "@/router";
+import axios from "axios";
+import { useRoleListingStore } from '@/store/useRoleListingStore';
+import { useConstantStore } from '@/store/useConstantStore';
+import router from "@/router";
 
-  export default {
+export default {
   data() {
     return {
       roleListings: {},
@@ -17,30 +17,30 @@
       const constStore = useConstantStore();
       const { backend_url } = constStore;
 
-        const openResponse = 
-          await axios.get(`${backend_url}/openrolelisting`)
+      const openResponse =
+        await axios.get(`${backend_url}/openrolelisting`)
           .catch(() => {
-            return {data: {data: {}}}
+            return { data: { data: {} } }
           });
-        const closeResponse = 
-          await axios.get(`${backend_url}/closerolelisting`)
+      const closeResponse =
+        await axios.get(`${backend_url}/closerolelisting`)
           .catch(() => {
-            return {data: {data: {}}}
+            return { data: { data: {} } }
           });
-        const staffResponse = await axios.get(`${backend_url}/staff`);
+      const staffResponse = await axios.get(`${backend_url}/staff`);
 
-        this.roleListings = this.processListings(openResponse.data.data.rolelisting.concat(closeResponse.data.data.rolelisting));
-        for(let key of Object.keys(this.roleListings)){
-          this.applications[key] = 
-            await axios.get(`${backend_url}/applications/${key}`)
+      this.roleListings = this.processListings(openResponse.data.data.rolelisting.concat(closeResponse.data.data.rolelisting));
+      for (let key of Object.keys(this.roleListings)) {
+        this.applications[key] =
+          await axios.get(`${backend_url}/applications/${key}`)
             .then((response) => {
               return response.data.data.length
             })
             .catch(() => {
               return 0
             })
-        }
-        this.staffNames = this.processStaff(staffResponse.data.data.staff);
+      }
+      this.staffNames = this.processStaff(staffResponse.data.data.staff);
 
     },
     checkOpen(listing) {
@@ -54,10 +54,6 @@
       const month = date.toLocaleString('default', { month: 'long' });
       const year = date.getFullYear();
       return `${day} ${month} ${year}`;
-    },
-    updateRoleListingId(id) {
-      useRoleListingStore().setRoleListingId(id);
-      router.push('/specificrolelisting/' + id);
     },
     getManagerName(id) {
       try {
@@ -88,9 +84,17 @@
       }
       return processedStaff;
     },
+    viewListing(id) {
+      useRoleListingStore().setRoleListingId(id);
+      router.push('/specificrolelisting/' + id);
+    },
+    viewApplicants(id) {
+      useRoleListingStore().setRoleListingId(id);
+      router.push('/applicants/' + id);
+    },
   },
   created() {
-    this.fetchData(); 
+    this.fetchData();
   },
 
 };
@@ -105,11 +109,13 @@
         <div class="grow"></div>
       </div>
       <div class="flex items-center">
-        <router-link id="addRoleListingButton" to="/addrolelisting" class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm" >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 me-2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div class="my-auto">Add Role Listing</div>
+        <router-link id="addRoleListingButton" to="/addrolelisting"
+          class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="w-6 h-6 me-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div class="my-auto">Add Role Listing</div>
         </router-link>
       </div>
     </div>
@@ -119,17 +125,19 @@
         <div class="font-bold">No listings available!</div>
         <div class="grow"></div>
       </li>
-      <li v-else v-for="(listing, id) in roleListings" :key="id" class="rolelisting-panel flex border-t py-5 hover:bg-grey-50"  @click= "updateRoleListingId(id)">
+      <li v-else v-for="(listing, id) in roleListings" :key="id"
+        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50" @click="viewListing(id)">
         <div class="flex-none h-100">
-          <div class="role-title text-yellow text-xl"> {{listing.role_name}} </div>
-          <div class="role-manager text-base"> Reporting Manager: {{getManagerName(listing.manager_ID)}} </div>
+          <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
+          <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
           <div class="flex flex-row text-xs">
-            <div class="role-deadline text-grey"> Apply by {{formatDate(listing.application_deadline)}}</div>
+            <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
             <div class="flex items-center mx-2">
               <span class="bg-black h-1 w-1 rounded-full"></span>
             </div>
-            <div class="role-applicants font-bold text-green">
-              {{applications[id]}}
+            <div id="numberApplicants" class="role-applicants font-bold text-green hover:underline"
+              @click.stop="viewApplicants(id)">
+              {{ applications[id] }}
               <span v-if="applications[id] == 1"> applicant </span>
               <span v-else> applicants </span>
             </div>
@@ -139,7 +147,8 @@
         <div>
           <div class="flex flex-row">
             <div class="grow"></div>
-            <div :class="{'bg-green': checkOpen(listing), 'bg-red': !checkOpen(listing)}" class="role-status me-5 text-xs px-4 py-1 rounded-full text-white">  
+            <div :class="{ 'bg-green': checkOpen(listing), 'bg-red': !checkOpen(listing) }"
+              class="role-status me-5 text-xs px-4 py-1 rounded-full text-white">
               <span v-if="checkOpen(listing)">Open</span>
               <span v-else>Closed</span>
             </div>
