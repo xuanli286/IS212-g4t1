@@ -57,7 +57,7 @@ export default {
     },
     updateRoleListingId(id) {
       useRoleListingStore().setRoleListingId(id);
-      router.push('/specificrolelisting/' + id);
+      router.push('/viewspecificrolelisting/' + id);
     },
     getManagerName(id) {
       try {
