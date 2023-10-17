@@ -14,7 +14,7 @@
                     </p>
                 </div>
             </div>
-            <Button id="apply" class="ml-auto" @click="openApply">
+            <Button id="applyButton" class="ml-auto" @click="openApply">
                 <template v-slot:icon>
                     <img class="mr-1" src="@/assets/icons/attachdocument.svg" alt="">
                 </template>
@@ -39,7 +39,7 @@
               <button
                 type="button"
                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                @click="closeApply" id="applyButton"
+                @click="closeApply" 
               >
                 <svg
                   class="w-5 h-5"

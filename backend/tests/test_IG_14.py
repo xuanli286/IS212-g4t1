@@ -9,34 +9,52 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}'
+    return f'{frontend_base_url}/'
 
 ##################### FRONTEND TESTING ####################
+"""
+    Check if user can submit application for a role listing successfully
+"""
 def test_successful_application_selenium(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
 
-    staff_id = driver.find_element(By.ID, "staffID")
-    staff_id.send_keys("140002")
+    user_login(driver)
 
-    password = driver.find_element(By.ID, "password")
-    password.send_keys("susan@123")
-
-    login_button = driver.find_element(By.ID, "login")
-    login_button.click()
-
-    role_listing_button = driver.find_element(By.ID, "rolelisting-1")
+    role_listing_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "rolelisting-1")))
     role_listing_button.click()
 
-    requests.delete(f'{backend_base_url}/deleteapplications/140002/1')
-    apply_button = driver.find_element(By.ID, "applyButton")
+    requests.delete(f'{backend_base_url_production}/deleteapplications/140002/1')
+    
+    apply_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
     apply_button.click()
-    submit_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "submitButton")))
+    submit_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "submitButton")))
     submit_button.click()
-    success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "successMessage")))
+    success_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "successMessage")))
+    
+    requests.delete(f'{backend_base_url_production}/deleteapplications/140002/1')
     assert success_message.is_displayed()
 
+"""
+    Check if user can submit application for a role listing unsuccessfully
+"""
+def test_unsuccessful_application_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
 
+    user_login(driver)
+
+    role_listing_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "rolelisting-2")))
+    role_listing_button.click()
+    
+    apply_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
+    apply_button.click()
+    submit_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "submitButton")))
+    submit_button.click()
+    error_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "unsuccessfulMessage")))
+    
+    assert error_message.is_displayed()
+    
 ##################### BACKEND TESTING #####################
 
 def test_create_application():
