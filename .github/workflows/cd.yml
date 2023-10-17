@@ -10,26 +10,26 @@ on:
 
 jobs:
   build:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-  if: ${{ github.event.workflow_run.conclusion == 'success' }}
-  steps:
-  - uses: actions/checkout@v3
-  - name: Login to Docker Hub
-    env: 
-      DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-      DOCKER_PASSWORD: ${{secrets.DOCKER_ACCESS_TOKEN}}
-    run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          
-  - name: Build & Push Production Image
-    run: |
-      docker build --build-arg DB_URL=${{secrets.DB_URL}} -f ./backend/production/prod.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod ./backend
-      docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to Docker Hub
+      env: 
+        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_ACCESS_TOKEN}}
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            
+    - name: Build & Push Production Image
+      run: |
+        docker build --build-arg DB_URL=${{secrets.DB_URL}} -f ./backend/production/prod.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod ./backend
+        docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod
 
-  - name: Build & Push Test Image
-    run: |
-      docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/test/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test ./backend
-      docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test
+    - name: Build & Push Test Image
+      run: |
+        docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/test/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test ./backend
+        docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test
     
   
   deploy:
