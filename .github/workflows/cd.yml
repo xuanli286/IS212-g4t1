@@ -5,7 +5,7 @@ on:
     workflows: [CI Workflow]
     types:
       - completed
-    branches: [develop]
+    # branches: [develop]
 
 
 jobs:
