@@ -39,7 +39,7 @@
               <button
                 type="button"
                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                @click="closeApply"
+                @click="closeApply" id="applyButton"
               >
                 <svg
                   class="w-5 h-5"
@@ -145,7 +145,7 @@
                   Cancel
                 </button>
                 <button
-                  @click="submitApplication"
+                  @click="submitApplication" id="submitButton"
                   class="text-white bg-yellow border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded-md text-md"
                 >
                   Submit
@@ -185,10 +185,10 @@
                             />
                           </svg>
                         </button>
-                        <span v-if="applicationSuccess" class="text-green relative font-serif text-lg"
+                        <span v-if="applicationSuccess" class="text-green relative font-serif text-lg" id="successMessage"
                           >Role Applied Successfully!</span
                         >
-                        <span v-else class="text-red relative font-serif text-lg"
+                        <span v-else class="text-red relative font-serif text-lg" id="unsuccessfulMessage"
                           >Application Unsuccessful</span
                         >
                       </div>

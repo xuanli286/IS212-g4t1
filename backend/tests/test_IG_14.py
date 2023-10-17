@@ -7,8 +7,21 @@ from datetime import datetime, timedelta
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-##################### FRONTEND TESTING ####################
+@pytest.fixture
+def url():
+    return f'{frontend_base_url}/viewspecificrolelisting/'
 
+##################### FRONTEND TESTING ####################
+def test_successful_application_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url + "1")
+    requests.delete(f'{backend_base_url}/deleteapplications/140002/1')
+    apply_button = driver.find_element(By.ID, "applyButton")
+    apply_button.click()
+    submit_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "submitButton")))
+    submit_button.click()
+    success_message = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "successMessage")))
+    assert success_message.is_displayed()
 
 
 ##################### BACKEND TESTING #####################
