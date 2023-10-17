@@ -2,7 +2,7 @@
   <div>
     <div class="mx-64 py-20">
       <img id="back" src="@/assets/icons/back.svg" class="cursor-pointer" @click=back()>
-      <h1 class="text-xl font-serif text-center">Applicants</h1>
+      <h1 class="text-xl font-serif text-center">Applicants for {{ roleName }} ({{ department }})</h1>
     </div>
 
     <ul class="mx-64 min-w-fit applications-container">
@@ -49,11 +49,21 @@ const {
 
 const applications = ref({});
 const rolelistingID = route.params.id;
+var roleName = ref("");
+var department = ref("");
 
 onMounted(async () => {
   try {
     const response = await axios.get(`${backend_url.value}/applications/${rolelistingID}`);
     applications.value = response.data.data;
+
+    // get role name
+    const response_rolename = await axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`);
+    roleName.value = response_rolename.data.data[rolelistingID]["role_name"];
+
+    // get department
+    const response_dept = await axios.get(`${backend_url.value}/rolelisting/${rolelistingID}`);
+    department.value = response_rolename.data.data[rolelistingID]["dept"];
   }
   catch (error) {
     console.log(error.message);
