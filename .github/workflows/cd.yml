@@ -44,7 +44,7 @@ jobs:
       run: mkdir -p ~/.ssh
 
     - name: Fetch custom known_hosts from Github Secret
-      run: echo "${{ secrets. KNOWN_HOSTS_SECRET }}" > ~/.ssh/known_hosts
+      run: echo "${{ secrets.KNOWN_HOSTS_SECRET }}" > ~/.ssh/known_hosts
 
     - name: Set permissions for private key
       run: |
