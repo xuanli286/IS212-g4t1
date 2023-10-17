@@ -48,5 +48,5 @@ jobs:
 
     - name: Set permissions for private key
       run: |
-        echo: "${{ secrets.EC2_SSH_KEY }}" > g4t1_sbrp.pem
+        echo "${{ secrets.EC2_SSH_KEY }}" > g4t1_sbrp.pem
         chmod 400 g4t1_sbrp.pem
