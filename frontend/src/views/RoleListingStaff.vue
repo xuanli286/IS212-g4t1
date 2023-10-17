@@ -95,7 +95,7 @@ export default {
 <template>
   <div class="bg-beige px-10 py-5">
     <div>
-      <h1 class="text-xl font-serif text-center py-20">Find Your Next Role With Us</h1>
+      <h1 class="text-xl font-serif text-center py-20" id="title">Find Your Next Role With Us</h1>
     </div>
 
     <ul class="mx-64 min-w-fit rolelisting-container">

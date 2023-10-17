@@ -28,6 +28,7 @@ const selectedCountry = ref("");
 const skills = ref([]);
 const managerID = ref([]);
 const errorMessage = ref("");
+const roleListingId = ref("")
 
 const today = new Date();
 
@@ -117,6 +118,9 @@ function addRoleListing() {
         .then((response) => {
           isOpen.value = true;
           isSuccess.value = true;
+          for (const key in response.data) {
+              roleListingId = key;
+          }
         })
         .catch((error) => {
           errorMessage.value = error.response.data.message;
@@ -177,6 +181,7 @@ function updateSkills() {
             class="mt-1 p-2 rounded-md w-full"
             v-model="selectedTitle"
             @change="updateSkills"
+            id="title"
           >
             <option v-for="(description, role) in roles" :key="description">
               {{ role }}
@@ -216,7 +221,7 @@ function updateSkills() {
       <div class="grid grid-cols-3 pt-5 gap-28">
         <div>
           <p class="font-bold">Hiring Department</p>
-          <select class="mt-1 p-2 rounded-md w-full" v-model="selectedDept">
+          <select class="mt-1 p-2 rounded-md w-full" v-model="selectedDept" id="department">
             <option v-for="dept of hiringDepartment" :key="dept">
               {{ dept }}
             </option>
@@ -224,7 +229,7 @@ function updateSkills() {
         </div>
         <div>
           <p class="font-bold">Country</p>
-          <select class="mt-1 p-2 rounded-md w-full" v-model="selectedCountry">
+          <select class="mt-1 p-2 rounded-md w-full" v-model="selectedCountry" id="country">
             <option v-for="country of countries" :key="country">
               {{ country }}
             </option>
@@ -264,10 +269,14 @@ function updateSkills() {
       <template v-slot:text>Add Role Listing</template>
     </Button>
 
+    <div id="roleListingId" style="display: none;">
+        {{ roleListingId }}
+    </div>
+
     <Modal v-if="isOpen" :isSuccess="isSuccess">
       <template v-slot:text>
-        <p v-if="isSuccess">Role listing has been added successfully.</p>
-        <p v-else>{{ errorMessage }}</p>
+        <p v-if="isSuccess" id="successMessage">Role listing has been added successfully.</p>
+        <p v-else id="errorMessage">{{ errorMessage }}</p>
       </template>
     </Modal>
   </div>
