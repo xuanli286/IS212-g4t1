@@ -7,6 +7,9 @@ from selenium.webdriver.support.ui import Select
 
 ##################### FRONTEND TESTING ####################
 
+"""
+    Check if manager dropdown has all elements as expected
+"""
 @pytest.fixture
 def url():
     return f'{frontend_base_url}/addrolelisting'
