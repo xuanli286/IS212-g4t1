@@ -50,3 +50,8 @@ jobs:
       run: |
         echo "${{ secrets.EC2_SSH_KEY }}" > g4t1_sbrp.pem
         chmod 400 g4t1_sbrp.pem
+
+    - name: Pull Docker Image
+      run: |
+        ssh -o UserKnownHostsFile=~/.ssh/known_hosts - i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/g4t1_sbrp:spm-prod'
+        ssh -o UserKnownHostsFile=~/.ssh/known_hosts - i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker pull ${{ secrets.DOCKER_USERNAME }}/g4t1_sbrp:spm-test'
