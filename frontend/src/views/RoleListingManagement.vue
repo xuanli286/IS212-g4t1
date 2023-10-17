@@ -36,7 +36,7 @@ export default {
             .then((response) => {
               return response.data.data.length
             })
-            .catch(() => {
+            .catch((error) => {
               return 0
             })
       }
@@ -126,7 +126,7 @@ export default {
         <div class="grow"></div>
       </li>
       <li v-else v-for="(listing, id) in roleListings" :key="id"
-        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50" @click="viewListing(id)">
+        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50 cursor-pointer" @click="viewListing(id)">
         <div class="flex-none h-100">
           <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
           <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
@@ -135,7 +135,7 @@ export default {
             <div class="flex items-center mx-2">
               <span class="bg-black h-1 w-1 rounded-full"></span>
             </div>
-            <div id="numberApplicants" class="role-applicants font-bold text-green hover:underline"
+            <div id="numberApplicants" class="role-applicants font-bold text-green hover:underline cursor-pointer"
               @click.stop="viewApplicants(id)">
               {{ applications[id] }}
               <span v-if="applications[id] == 1"> applicant </span>
