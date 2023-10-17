@@ -507,6 +507,7 @@ def delete_rolelisting(rolelisting_ID):
             }
         ), 404
 
+
 # get all applications from a rolelisting_ID
 # or choose to get 1 application from a rolelisting_ID by passing the staff_ID in params
 #   e.g., /applications/1?staff_ID=1030
