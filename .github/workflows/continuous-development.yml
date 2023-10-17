@@ -1,65 +1,65 @@
-name: CD Workflow
+# name: CD Workflow
 
-on:
-  workflow_run:
-    workflows: [CI Workflow]
-    types:
-      - completed
-    branches: [develop] # run on develop branch only
+# on:
+#   workflow_run:
+#     workflows: [CI Workflow]
+#     types:
+#       - completed
+#     branches: [develop] # run on develop branch only
 
-jobs:
+# jobs:
 
-  build:
-    runs-on: ubuntu-latest
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Login to Docker Hub
-      env: 
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_ACCESS_TOKEN}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Login to Docker Hub
+#       env: 
+#         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+#         DOCKER_PASSWORD: ${{secrets.DOCKER_ACCESS_TOKEN}}
+#       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
            
-    - name: Build & Push Production Image
-      run: |
-        docker build --build-arg DB_URL=${{secrets.DB_URL}} -f ./backend/production/prod.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod ./backend
-        docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod
+#     - name: Build & Push Production Image
+#       run: |
+#         docker build --build-arg DB_URL=${{secrets.DB_URL}} -f ./backend/production/prod.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod ./backend
+#         docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod
 
-    - name: Build & Push Test Image
-      run: |
-        docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/test/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test ./backend
-        docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test
+#     - name: Build & Push Test Image
+#       run: |
+#         docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/test/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test ./backend
+#         docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+#   deploy:
+#     needs: build
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v3
 
-    - name: Create ~/.ssh directory
-      run: mkdir -p ~/.ssh
+#     - name: Create ~/.ssh directory
+#       run: mkdir -p ~/.ssh
 
-    - name: Fetch custom known_hosts from GitHub secret
-      run: echo "${{ secrets.KNOWN_HOSTS_SECRET }}" > ~/.ssh/known_hosts
+#     - name: Fetch custom known_hosts from GitHub secret
+#       run: echo "${{ secrets.KNOWN_HOSTS_SECRET }}" > ~/.ssh/known_hosts
 
-    - name: Set permissions for private key
-      run: |
-        echo "${{secrets.EC2_SSH_KEY}}" > g4t1_sbrp.pem
-        chmod 400 g4t1_sbrp.pem
+#     - name: Set permissions for private key
+#       run: |
+#         echo "${{secrets.EC2_SSH_KEY}}" > g4t1_sbrp.pem
+#         chmod 400 g4t1_sbrp.pem
     
-    - name: Pull Docker Image
-      run: | 
-        ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker pull ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod'
-        ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker pull ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test'
+#     - name: Pull Docker Image
+#       run: | 
+#         ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker pull ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod'
+#         ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker pull ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test'
 
-    - name: Delete Old docker container
-      run: |
-        ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker rm -f g4t1sbrp-prod-container || true'
-        ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker rm -f g4t1sbrp-test-container || true'
+#     - name: Delete Old docker container
+#       run: |
+#         ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker rm -f g4t1sbrp-prod-container || true'
+#         ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker rm -f g4t1sbrp-test-container || true'
 
-    - name: Run Docker Container
-      run: |
-        ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker run -d -p 5000:5000 --name g4t1sbrp-prod-container -e DB_URL=${{secrets.DB_URL}} ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod'
-        ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker run -d -p 5001:5001 --name g4t1sbrp-test-container -e TEST_DB_URL=${{secrets.TEST_DB_URL}} ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test'
+#     - name: Run Docker Container
+#       run: |
+#         ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker run -d -p 5000:5000 --name g4t1sbrp-prod-container -e DB_URL=${{secrets.DB_URL}} ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod'
+#         ssh -o UserKnownHostsFile=~/.ssh/known_hosts -i g4t1_sbrp.pem ubuntu@${{ secrets.DEPLOYMENT_SERVER_HOSTNAME }} 'sudo docker run -d -p 5001:5001 --name g4t1sbrp-test-container -e TEST_DB_URL=${{secrets.TEST_DB_URL}} ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test'
