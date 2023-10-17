@@ -2,7 +2,8 @@
   <div>
     <div class="mx-64 py-20">
       <img id="back" src="@/assets/icons/back.svg" class="cursor-pointer" @click=back()>
-      <h1 class="text-xl font-serif text-center">Applicants for {{ roleName }} ({{ department }})</h1>
+      <h1 v-if="Object.keys(applications).length == 0" class="text-xl font-serif text-center">Applications</h1>
+      <h1 v-else class="text-xl font-serif text-center">Applications for {{ roleName }} ({{ department }})</h1>
     </div>
 
     <ul class="mx-64 min-w-fit applications-container">
