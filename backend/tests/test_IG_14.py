@@ -9,12 +9,25 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/viewspecificrolelisting/'
+    return f'{frontend_base_url}'
 
 ##################### FRONTEND TESTING ####################
 def test_successful_application_selenium(chrome_driver, url):
     driver = chrome_driver
-    driver.get(url + "1")
+    driver.get(url)
+
+    staff_id = driver.find_element(By.ID, "staffID")
+    staff_id.send_keys("140002")
+
+    password = driver.find_element(By.ID, "password")
+    password.send_keys("susan@123")
+
+    login_button = driver.find_element(By.ID, "login")
+    login_button.click()
+
+    role_listing_button = driver.find_element(By.ID, "rolelisting-1")
+    role_listing_button.click()
+
     requests.delete(f'{backend_base_url}/deleteapplications/140002/1')
     apply_button = driver.find_element(By.ID, "applyButton")
     apply_button.click()

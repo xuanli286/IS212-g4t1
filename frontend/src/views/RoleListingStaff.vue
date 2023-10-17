@@ -110,7 +110,7 @@ export default {
         <div class="grow"></div>
       </li>
       <li v-else v-for="(listing, id) in roleListings" :key="id"
-        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
+        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50" :id="'rolelisting-' + id">
         <router-link :to="'/viewspecificrolelisting/' + id" @click=updateRoleListingId(id)>
           <div class="flex-none h-100">
             <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
