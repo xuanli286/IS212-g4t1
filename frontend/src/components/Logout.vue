@@ -25,15 +25,29 @@
 
 <template>
 <div class="bg-white font-serif">
-    <div class="flex py-3">
-        <img class="w-16" src="@/assets/logo.png" alt="">
-        <div class="flex ml-auto items-center relative">
-            <img src="@/assets/hr_staff.svg" alt="">
-            <div class="ml-2">
-                <p class="text-base">{{ user.staff_FName + " " + user.staff_LName }}</p>
-                <p class="text-xs">{{ access[user.access_ID] }}</p>
+    <div class="grid grid-cols-3 py-3 items-center">
+        <div>
+            <img class="w-16" src="@/assets/logo.png" alt="">
+        </div>
+        <div class="mx-auto text-lg">
+            <router-link :class="$route.name === 'Home' ? 'font-semibold text-yellow' : ''" to="/home">
+                View
+            </router-link>
+            <router-link class="ml-12" v-if="user.access_ID == 4" :class="$route.name === 'Role Listing Management' ? 'font-semibold text-yellow' : ''" to="/rolelistingmanagement">
+                Manage
+            </router-link>
+        </div>
+        <div class="ml-auto">
+            <div class="flex ml-auto items-center relative">
+                <img v-if="user.access_ID == 4" src="@/assets/hr_staff.svg" alt="">
+                <img v-else-if="user.access_ID == 3" src="@/assets/manager.svg" alt="">
+                <img v-else src="@/assets/staff.svg" alt="">
+                <div class="ml-2">
+                    <p class="text-base">{{ user.staff_FName + " " + user.staff_LName }}</p>
+                    <p class="text-xs">{{ access[user.access_ID] }}</p>
+                </div>
+                <img class="ml-3 cursor-pointer" src="@/assets/icons/dropdown.svg" alt="" @click="expandDropdown">
             </div>
-            <img class="ml-3 cursor-pointer" src="@/assets/icons/dropdown.svg" alt="" @click="expandDropdown">
         </div>
     </div>
     <div v-if="isExpand" class="absolute right-0 mr-10 bg-grey-50 text-sm cursor-pointer">
