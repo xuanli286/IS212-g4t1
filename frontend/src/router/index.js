@@ -10,6 +10,7 @@ import StaffViewSpecificRoleListing from "@/views/StaffViewSpecificRoleListing.v
 import SpecificRoleListing from "../views/SpecificRoleListing.vue";
 import RoleListingStaff from "../views/RoleListingStaff.vue";
 import ViewAllApplicants from "../views/ViewAllApplicants.vue";
+import ViewSpecificApplication from "../views/SpecificApplication.vue";
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -67,6 +68,11 @@ const router = createRouter({
       path: "/applicants/:id",
       name: "View All Applicants",
       component: ViewAllApplicants,
+    },
+    {
+      path: "/application/:id",
+      name: "View Specific Application",
+      component: ViewSpecificApplication,
     },
   ],
 });
