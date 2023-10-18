@@ -379,7 +379,7 @@
         staff_ID: user.value.staff_ID,
         rolelisting_ID: rolelistingID,
         application_date: new Date().toISOString().slice(0, 10),
-        percentage_match: getSkillPercentage(),
+        percentage_match: getSkillPercentage().toFixed(2),
       };
       console.log(body);
       axios
