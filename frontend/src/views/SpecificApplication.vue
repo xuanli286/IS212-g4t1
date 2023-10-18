@@ -21,21 +21,28 @@
       </div>
     </div>
 
-    <div class="mt-10 px-10 text-l font-bold">
-      <p class="text-yellow">Full Name</p>
-      <p>{{ staffDetails.staff_FName }} {{ staffDetails.staff_LName }}</p>
-    </div>
-
-    <div class="grid grid-cols-3 mt-10 px-10">
+    <div class="grid grid-rows-2 grid-cols-3 mt-10 px-10 gap-y-10">
+      <div>
+        <p class="font-bold text-yellow">Full Name</p>
+        <p>{{ staffDetails.staff_FName }} {{ staffDetails.staff_LName }}</p>
+      </div>
+      <div>
+        <p class="font-bold text-yellow">Staff ID</p>
+        <p>{{ applicantID }}</p>
+      </div>
+      <div>
+        <p class="font-bold text-yellow">Skill Match</p>
+        <p>{{ specificApplication.percentage_match }}%</p>
+      </div>
       <div>
         <p class="font-bold text-yellow">Email</p>
         <p id="email">{{ staffDetails.email }}</p>
       </div>
-      <div class="mx-auto">
-        <p class="font-bold text-yellow">Hiring Department</p>
+      <div>
+        <p class="font-bold text-yellow">Department</p>
         <p id="hiring-department">{{ staffDetails.dept }}</p>
       </div>
-      <div class="ml-auto">
+      <div>
         <p class="font-bold text-yellow">Country</p>
         <p id="country">{{ staffDetails.country }}</p>
       </div>
@@ -47,8 +54,9 @@
         <p class="font-bold text-yellow ml-1">Skills Match</p>
       </div>
       <div class="ml-8">
-        <p class="mt-2 font-serif text-green text-sm" id="percentage">{{
-          specificApplication.percentage_match }}% skills match</p>
+        <p class="mt-2 font-serif text-green text-sm" id="">{{ matchedSkills.length }}/{{ roleSkills.length }}
+          skills
+          matched</p>
         <div class="flex gap-1">
           <img v-for="skill of matchedSkills.length" :key="skill" src="@/assets/matchedSkill.svg" alt="">
           <img v-for="skill of missingSkills.length" :key="skill" src="@/assets/unmatchedSkill.svg" alt="">
@@ -75,9 +83,9 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
