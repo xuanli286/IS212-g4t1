@@ -98,45 +98,78 @@ export default {
       <h1 class="text-xl font-serif text-center py-20" id="title">Find Your Next Role With Us</h1>
     </div>
 
-    <ul class="mx-64 min-w-fit rolelisting-container">
-      <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center">
-        <div class="grow"></div>
-        <div class="font-bold">No listings available!</div>
-        <div class="grow"></div>
-      </li>
-      <li v-else v-for="(listing, id) in roleListings" :key="id"
-        class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
-        <router-link :to="'/viewspecificrolelisting/' + id" @click=updateRoleListingId(id) :id="'rolelisting-' + id">
-          <div class="flex-none h-100">
-            <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
-            <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
-            <div class="flex flex-row text-xs">
-              <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
-              <div class="flex items-center mx-2">
-                <span class="bg-black h-1 w-1 rounded-full"></span>
-              </div>
-              <div class="role-applicants font-bold text-green">
-                {{ applications[id] }}
-                <span v-if="applications[id] == 1"> applicant </span>
-                <span v-else> applicants </span>
-              </div>
-            </div>
-          </div>
-        </router-link>
-        <div class="grow"></div>
-        <div>
-          <div class="flex flex-row">
-            <div class="grow"></div>
-          </div>
-          <div class="flex flex-row items-center text-yellow pt-3">
-            <div class="font-bold">{{ listing.dept }}</div>
-            <div class="role-department flex bg-yellow mx-2 h-1 w-1 rounded-full"> </div>
-            <div class="role-country">{{ listing.country }}</div>
+    <!-- card starts here -->
+    <div class="flex flex-row">
+      <div class="p-10 me-5 bg-white rounded-xl w-1/3">
+        <div class="font-serif text-green text-xl">Filter</div>
+        <select class="mt-7 p-2 rounded-md w-full outline outline-1 " id="country">
+            <option selected disabled> Country </option>
+            <option> All </option>
+            <option> All </option>
+            <option> All </option>
+            <option> All </option>
+        </select>
+        <select class="mt-7 p-2 rounded-md w-full outline outline-1" id="department">
+            <option selected disabled> Hiring Department </option>
+            <option> All </option>
+            <option> All </option>
+            <option> All </option>
+        </select>
+
+        <div class="my-10 flex flex-col">
+          <span>REQUIRED SKILLS</span> 
+          <div>
+            <input id="default-checkbox" type="checkbox" value="Check" class="w-4 h-4 bg-gray-100 border-gray-300 rounded"> <span class="w-4 h-4">Check</span>
           </div>
         </div>
-      </li>
 
-    </ul>
+        <button type="button" class="w-full outline outline-yellow-1 py-2 px-5 rounded-lg text-sm text-yellow font-serif btn hover:bg-yellow hover:text-white focus:ring-4 focus:ring-yellow-300">
+          Clear All Filters
+        </button>
+      </div>
+
+      <!-- card ends here -->
+      <div class="w-full">
+        <ul class="rolelisting-container">
+          <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center">
+            <div class="grow"></div>
+            <div class="font-bold">No listings available!</div>
+            <div class="grow"></div>
+          </li>
+          <li v-else v-for="(listing, id) in roleListings" :key="id"
+            class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
+            <router-link :to="'/viewspecificrolelisting/' + id" @click=updateRoleListingId(id) :id="'rolelisting-' + id">
+              <div class="flex-none h-100">
+                <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
+                <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
+                <div class="flex flex-row text-xs">
+                  <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
+                  <div class="flex items-center mx-2">
+                    <span class="bg-black h-1 w-1 rounded-full"></span>
+                  </div>
+                  <div class="role-applicants font-bold text-green">
+                    {{ applications[id] }}
+                    <span v-if="applications[id] == 1"> applicant </span>
+                    <span v-else> applicants </span>
+                  </div>
+                </div>
+              </div>
+            </router-link>
+            <div class="grow"></div>
+            <div>
+              <div class="flex flex-row">
+                <div class="grow"></div>
+              </div>
+              <div class="flex flex-row items-center text-yellow pt-3">
+                <div class="font-bold">{{ listing.dept }}</div>
+                <div class="role-department flex bg-yellow mx-2 h-1 w-1 rounded-full"> </div>
+                <div class="role-country">{{ listing.country }}</div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
