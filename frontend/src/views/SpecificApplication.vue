@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="mt-10 rounded-lg bg-white p-5">
+    <div class="mx-10 mt-10 rounded-lg bg-white p-5">
       <div class="flex items-center">
         <img src="@/assets/icons/puzzle.svg" alt="">
         <p class="font-bold text-yellow ml-1">Skills Match</p>
