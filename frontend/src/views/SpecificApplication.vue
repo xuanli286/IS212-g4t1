@@ -21,20 +21,61 @@
       </div>
     </div>
 
+    <div class="mt-10 px-10 text-l font-bold">
+      <p class="text-yellow">Full Name</p>
+      <p>{{ staffDetails.staff_FName }} {{ staffDetails.staff_LName }}</p>
+    </div>
+
     <div class="grid grid-cols-3 mt-10 px-10">
       <div>
-        <p class="font-bold">Email</p>
+        <p class="font-bold text-yellow">Email</p>
         <p id="email">{{ staffDetails.email }}</p>
       </div>
       <div class="mx-auto">
-        <p class="font-bold">Hiring Department</p>
+        <p class="font-bold text-yellow">Hiring Department</p>
         <p id="hiring-department">{{ staffDetails.dept }}</p>
       </div>
       <div class="ml-auto">
-        <p class="font-bold">Country</p>
+        <p class="font-bold text-yellow">Country</p>
         <p id="country">{{ staffDetails.country }}</p>
       </div>
     </div>
+
+    <div class="mt-10 rounded-lg bg-white p-5">
+      <div class="flex items-center">
+        <img src="@/assets/icons/puzzle.svg" alt="">
+        <p class="font-bold text-yellow ml-1">Skills Match</p>
+      </div>
+      <div class="ml-8">
+        <p class="mt-2 font-serif text-green text-sm" id="percentage">{{
+          specificApplication.percentage_match }}% skills match</p>
+        <div class="flex gap-1">
+          <img v-for="skill of matchedSkills.length" :key="skill" src="@/assets/matchedSkill.svg" alt="">
+          <img v-for="skill of missingSkills.length" :key="skill" src="@/assets/unmatchedSkill.svg" alt="">
+        </div>
+        <div class="mt-2">
+          <div class="flex items-center">
+            <img src="@/assets/icons/check.svg" alt="">
+            <p class="font-bold text-sm ml-1">{{ matchedSkills.length }} skills on your profile</p>
+          </div>
+          <p class="ml-4 text-sm" id="matched-skills">
+            <span v-if="matchedSkills.length > 0">{{ matchedSkills.join(', ') }}</span>
+            <span v-else class="text-grey">No matching skill found</span>
+          </p>
+        </div>
+        <div class="mt-2">
+          <div class="flex items-center">
+            <img src="@/assets/icons/exclamation.svg" alt="">
+            <p class="font-bold text-sm ml-1">{{ missingSkills.length }} skills missing on your profile</p>
+          </div>
+          <p class="ml-4 text-sm" id="missing-skills">
+            <span v-if="missingSkills.length > 0">{{ missingSkills.join(', ') }}</span>
+            <span v-else class="text-grey">All skills matched</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -57,10 +98,6 @@ const {
 
 const store = useConstantStore();
 const {
-  roles,
-  staff,
-  roleSkills,
-  staffSkills,
   backend_url,
 } = storeToRefs(store);
 
@@ -72,6 +109,8 @@ var department = ref("");
 const applications = ref([]);
 var specificApplication = ref([]);
 const staffDetails = ref({});
+const staffSkills = ref([]);
+const roleSkills = ref([]);
 
 const rolelistingID = route.params.id;
 
@@ -99,13 +138,43 @@ onMounted(async () => {
     // get staff details
     const response_staff = await axios.get(`${backend_url.value}/staff/${applicantID}`);
     staffDetails.value = response_staff.data.data[applicantID];
-    console.log(staffDetails.value);
+
+    // get staff skills
+    const response_staffskills = await axios.get(`${backend_url.value}/get_staff_skill/${applicantID}`);
+    staffSkills.value = response_staffskills.data.data;
+    console.log(staffSkills.value);
+
+    // get role skills
+    const response_roleskills = await axios.get(`${backend_url.value}/get_role_skill/${roleName.value}`);
+    roleSkills.value = response_roleskills.data.data;
+    console.log(roleSkills.value);
 
   }
   catch (error) {
     console.log(error.message);
   }
 })
+
+// skills handling
+const matchedSkills = computed(() => {
+  const matched = [];
+  for (let skill of roleSkills.value) {
+    if (staffSkills.value.indexOf(skill) !== -1) {
+      matched.push(skill);
+    }
+  }
+  return matched;
+});
+
+const missingSkills = computed(() => {
+  const missing = [];
+  for (let skill of roleSkills.value) {
+    if (staffSkills.value.indexOf(skill) === -1) {
+      missing.push(skill);
+    }
+  }
+  return missing;
+});
 
 function formatDate(dateString) {
   const date = new Date(dateString);
