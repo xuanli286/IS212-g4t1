@@ -10,13 +10,14 @@ export default {
       roleListings: {},
       staffNames: {},
       applications: {},
-      countries: []
+      countries: [],
+      hiringDepartments: []
     };
   },
   methods: {
     async fetchData() {
       const constStore = useConstantStore();
-      const { backend_url, countries } = constStore;
+      const { backend_url, countries, hiringDepartment } = constStore;
 
       const openResponse =
         await axios.get(`${backend_url}/openrolelisting`)
@@ -39,6 +40,8 @@ export default {
       this.staffNames = this.processStaff(staffResponse.data.data.staff);
 
       this.countries = countries
+
+      this.hiringDepartments = hiringDepartment
 
     },
     checkOpen(listing) {
@@ -111,6 +114,7 @@ export default {
         </select>
         <select class="mt-7 p-2 rounded-md w-full outline outline-1" id="department">
             <option selected disabled> Hiring Department </option>
+            <option v-for="dept of hiringDepartments" > {{ dept }}</option>
         </select>
 
         <div class="my-10 flex flex-col">
