@@ -4,6 +4,7 @@ from flask_cors import CORS
 from datetime import datetime
 from os import environ
 from dotenv import load_dotenv
+from sqlalchemy import desc
 
 load_dotenv()
 
@@ -508,6 +509,7 @@ def delete_rolelisting(rolelisting_ID):
         ), 404
 
 
+
 # get all applications from a rolelisting_ID
 # or choose to get 1 application from a rolelisting_ID by passing the staff_ID in params
 #   e.g., /applications/1?staff_ID=1030
@@ -517,10 +519,10 @@ def get_all_applications_for_a_rolelisting(rolelisting_ID):
     staff_ID = request.args.get('staff_ID')
 
     if staff_ID:
-        results = Application.query.filter_by(rolelisting_ID=rolelisting_ID, staff_ID=staff_ID).first()
+        results = Application.query.filter_by(rolelisting_ID=rolelisting_ID, staff_ID=staff_ID).order_by(Application.application_date, desc(Application.percentage_match)).first()
 
     else:
-        results = Application.query.filter_by(rolelisting_ID=rolelisting_ID).all()
+        results = Application.query.filter_by(rolelisting_ID=rolelisting_ID).order_by(Application.application_date, desc(Application.percentage_match)).all()
 
     if results:
 
