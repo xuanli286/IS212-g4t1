@@ -9,13 +9,14 @@ export default {
     return {
       roleListings: {},
       staffNames: {},
-      applications: {}
+      applications: {},
+      countries: []
     };
   },
   methods: {
     async fetchData() {
       const constStore = useConstantStore();
-      const { backend_url } = constStore;
+      const { backend_url, countries } = constStore;
 
       const openResponse =
         await axios.get(`${backend_url}/openrolelisting`)
@@ -36,6 +37,8 @@ export default {
             })
       }
       this.staffNames = this.processStaff(staffResponse.data.data.staff);
+
+      this.countries = countries
 
     },
     checkOpen(listing) {
@@ -82,15 +85,6 @@ export default {
         }
       }
       return processedStaff;
-    },
-    getCountries(){
-      const countries = [];
-      for (const listing of Object.values(this.roleListings)) {
-        if (!countries.includes(listing.country)) {
-          countries.push(listing.country);
-        }
-      }
-      return countries;
     }
   },
   created() {
@@ -113,7 +107,7 @@ export default {
         <div class="font-serif text-green text-xl">Filter</div>
         <select class="mt-7 p-2 rounded-md w-full outline outline-1 " v-model="" id="country">
             <option selected disabled> Country </option>
-            <option v-for="country of getCountries()" > {{ country }}</option>
+            <option v-for="country of countries" > {{ country }}</option>
         </select>
         <select class="mt-7 p-2 rounded-md w-full outline outline-1" id="department">
             <option selected disabled> Hiring Department </option>
