@@ -83,6 +83,15 @@ export default {
       }
       return processedStaff;
     },
+    getCountries(){
+      const countries = [];
+      for (const listing of Object.values(this.roleListings)) {
+        if (!countries.includes(listing.country)) {
+          countries.push(listing.country);
+        }
+      }
+      return countries;
+    }
   },
   created() {
     this.fetchData();
@@ -102,18 +111,12 @@ export default {
     <div class="flex flex-row">
       <div class="p-10 me-5 bg-white rounded-xl w-1/3">
         <div class="font-serif text-green text-xl">Filter</div>
-        <select class="mt-7 p-2 rounded-md w-full outline outline-1 " id="country">
+        <select class="mt-7 p-2 rounded-md w-full outline outline-1 " v-model="" id="country">
             <option selected disabled> Country </option>
-            <option> All </option>
-            <option> All </option>
-            <option> All </option>
-            <option> All </option>
+            <option v-for="country of getCountries()" > {{ country }}</option>
         </select>
         <select class="mt-7 p-2 rounded-md w-full outline outline-1" id="department">
             <option selected disabled> Hiring Department </option>
-            <option> All </option>
-            <option> All </option>
-            <option> All </option>
         </select>
 
         <div class="my-10 flex flex-col">
