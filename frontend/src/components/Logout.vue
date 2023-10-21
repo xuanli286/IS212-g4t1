@@ -21,6 +21,10 @@
         router.push({name: 'Login'});
         user.value = null;
     }
+
+    function skillProfile() {
+        router.push("/skillprofile")
+    }
 </script>
 
 <template>
@@ -46,12 +50,12 @@
                     <p class="text-base">{{ user.staff_FName + " " + user.staff_LName }}</p>
                     <p class="text-xs">{{ access[user.access_ID] }}</p>
                 </div>
-                <img class="ml-3 cursor-pointer" src="@/assets/icons/dropdown.svg" alt="" @click="expandDropdown">
+                <img id="dropdown" class="ml-3 cursor-pointer" src="@/assets/icons/dropdown.svg" alt="" @click="expandDropdown">
             </div>
         </div>
     </div>
     <div v-if="isExpand" class="absolute right-0 mr-10 bg-grey-50 text-sm cursor-pointer">
-        <div class="flex w-36 p-3 rounded-md hover:bg-grey">
+        <div id="skillprofile" class="flex w-36 p-3 rounded-md hover:bg-grey" @click="skillProfile">
             <img class="mr-2" src="@/assets/icons/folder.svg" alt="">
             <p>My Skill Profile</p>
         </div>
