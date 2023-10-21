@@ -21,14 +21,15 @@ rolelisting_ID = "4"
     Check if unique Role Title, Role Description, Hiring Department, Required Skills Set, Application Deadline, 
     Reporting Manager, and the Geographic Location of the role are displayed for staff to view
 """
-# def test_all_visible_fields_selenium(chrome_driver, url):
-#     driver = chrome_driver
-#     driver.get(url)
-#     fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
-#     for field in fields:
-#         fieldDisplayed = driver.find_element(By.ID, field)
-#         time.sleep(2)
-#         assert fieldDisplayed.is_displayed()
+def test_all_visible_fields_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
+    for field in fields:
+        fieldDisplayed = driver.find_element(By.ID, field)
+        time.sleep(2)
+        assert fieldDisplayed.is_displayed()
 
 
 """
