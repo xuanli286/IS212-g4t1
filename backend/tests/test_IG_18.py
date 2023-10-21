@@ -12,8 +12,6 @@ import math
 def url():
     return f'{frontend_base_url}/candidates'
 
-##################### FRONTEND TESTING #####################
-
 """
     Check that left buttons should be disabled and input value should be 1 when on first page
 """
@@ -65,8 +63,60 @@ def test_max_page(chrome_driver, url):
 
     driver.close()
 
+"""
+    Check that user with Manager access can access Candidates on nav bar 
+    and  be directed to candidates page when clicked
 
-##################### BACKEND TESTING #####################
+"""
+
+def test_mgr_access_candidate_page(chrome_driver):
+
+    driver = chrome_driver
+    driver.get(frontend_base_url)
+    driver.maximize_window()
+
+    manager_login(driver)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
+    )
+
+    candidate_link = driver.find_element(By.CLASS_NAME, "candidates")
+    candidate_link.click()
+
+    assert candidate_link.is_displayed()
+    assert candidate_link.text == "Candidates"
+    assert '/candidates' in driver.current_url
+    driver.close()
+    
+
+"""
+    Check that user with HR access can access Candidates on nav bar 
+    and  be directed to candidates page when clicked
+
+"""
+
+def test_hr_access_candidate_page(chrome_driver):
+
+    driver = chrome_driver
+    driver.get(frontend_base_url)
+    driver.maximize_window()
+
+    hr_login(driver)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
+    )
+
+    candidate_link = driver.find_element(By.CLASS_NAME, "candidates")
+    candidate_link.click()
+
+    assert candidate_link.is_displayed()
+    assert candidate_link.text == "Candidates"
+    assert '/candidates' in driver.current_url
+    driver.close()
+
+
 """
     Check if number of staffs shown on frontend is equivalent to
     the number of staffs actually on backend
