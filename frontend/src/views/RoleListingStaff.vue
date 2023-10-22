@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useRoleListingStore } from '@/store/useRoleListingStore';
 import { useConstantStore } from '@/store/useConstantStore';
+import { useUserStore } from '@/store/useUserStore';
 import router from "@/router";
 
 export default {
@@ -11,13 +12,17 @@ export default {
       staffNames: {},
       applications: {},
       countries: [],
-      hiringDepartments: []
+      hiringDepartments: [],
+      selectedCountry: "",
+      staffId: {},
     };
   },
   methods: {
     async fetchData() {
       const constStore = useConstantStore();
       const { backend_url, countries, hiringDepartment } = constStore;
+      const userStore = useUserStore();
+      const { user } = userStore;
 
       const openResponse =
         await axios.get(`${backend_url}/openrolelisting`)
@@ -25,6 +30,9 @@ export default {
             return { data: { data: {} } }
           });
       const staffResponse = await axios.get(`${backend_url}/staff`);
+
+      const skillResponse = await axios.get(`${backend_url}/get_staff_skill/${user.staff_ID}`)
+      this.userSkills = skillResponse.data.data
 
       this.roleListings = this.processListings(openResponse.data.data.rolelisting);
       for (let key of Object.keys(this.roleListings)) {
@@ -42,6 +50,8 @@ export default {
       this.countries = countries
 
       this.hiringDepartments = hiringDepartment
+
+
 
     },
     checkOpen(listing) {
@@ -100,6 +110,7 @@ export default {
 
 <template>
   <div class="bg-beige px-10 py-5">
+    {{ userSkills }}
     <div>
       <h1 class="text-xl font-serif text-center py-20" id="title">Find Your Next Role With Us</h1>
     </div>
@@ -108,7 +119,7 @@ export default {
     <div class="flex flex-row">
       <div class="p-10 me-5 bg-white rounded-xl w-1/3">
         <div class="font-serif text-green text-xl">Filter</div>
-        <select class="mt-7 p-2 rounded-md w-full outline outline-1 " v-model="" id="country">
+        <select class="mt-7 p-2 rounded-md w-full outline outline-1 " id="country">
             <option selected disabled> Country </option>
             <option v-for="country of countries" > {{ country }}</option>
         </select>
