@@ -100,12 +100,22 @@ export default {
       }
       return processedStaff;
     },
-    updateFilter(listings){
-      listings = this.roleListings
-      const filteredListings = {}
-      for (const key in listings){
-        if(listings[key].country == this.selectedCountry){
-          filteredListings[key] = listings[key]
+    async updateFilter(){
+      var filteredListings = {}
+      const backend_url = useConstantStore().backend_url;
+      var listings =
+        await axios.get(`${backend_url}/openrolelisting`)
+        .then((response) => {
+          return response.data.data.rolelisting
+        })
+        .catch(() => {
+          return []
+        });
+      
+      for(let listing of listings){
+        let listingId = Object.keys(listing)[0]
+        if(listing[listingId].country == this.selectedCountry){
+          filteredListings[listingId] = listing[listingId]
         }
       }
       this.roleListings = filteredListings
@@ -131,7 +141,7 @@ export default {
       <div class="p-10 me-5 bg-white rounded-xl w-1/3">
         <div class="font-serif text-green text-xl">Filter</div>
         <div>{{ selectedCountry }}</div>
-        <select class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter" v-model="selectedCountry" id="country">
+        <select class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter()" v-model="selectedCountry" id="country">
             <option selected disabled> Country </option>
             <option v-for="country of countries" :value=country> {{ country }}</option>
         </select>
