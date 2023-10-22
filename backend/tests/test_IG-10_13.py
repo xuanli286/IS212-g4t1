@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/viewspecificrolelisting/4'
+    return f'{frontend_base_url}/'
 
 rolelisting_ID = "4"
 
@@ -21,38 +21,46 @@ rolelisting_ID = "4"
     Check if unique Role Title, Role Description, Hiring Department, Required Skills Set, Application Deadline, 
     Reporting Manager, and the Geographic Location of the role are displayed for staff to view
 """
-# def test_all_visible_fields_selenium(chrome_driver, url):
-#     driver = chrome_driver
-#     driver.get(url)
-#     fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
-#     for field in fields:
-#         fieldDisplayed = driver.find_element(By.ID, field)
-#         time.sleep(2)
-#         assert fieldDisplayed.is_displayed()
+def test_all_visible_fields_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelisting_element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, f'rolelisting-{rolelisting_ID}')))
+    rolelisting_element.click()
+    fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
+    for field in fields:
+        fieldDisplayed = driver.find_element(By.ID, field)
+        time.sleep(2)
+        assert fieldDisplayed.is_displayed()
 
 
 """
     Check navigation back to the list of open role listings
 """
-# def test_back_button_selenium(chrome_driver, url):
-#     driver = chrome_driver
-#     previous_url = f"{frontend_base_url}/viewrolelistings"
-#     driver.get(previous_url)
-#     driver.get(url)
-#     back_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "back")))
-#     back_btn.click()
-#     url_after_click = driver.current_url
-#     assert url_after_click == previous_url
+def test_back_button_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelisting_element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, f'rolelisting-{rolelisting_ID}')))
+    rolelisting_element.click()
+    previous_url = f"{frontend_base_url}/home"
+    back_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "back")))
+    back_btn.click()
+    url_after_click = driver.current_url
+    assert url_after_click == previous_url
 
 
 """
     Check for button to apply role
 """
-# def test_apply_role_button(chrome_driver, url):
-#     driver = chrome_driver
-#     driver.get(url)
-#     apply_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "apply")))
-#     assert apply_btn.is_displayed()
+def test_apply_role_button(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelisting_element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, f'rolelisting-{rolelisting_ID}')))
+    rolelisting_element.click()
+    apply_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
+    assert apply_btn.is_displayed()
 
 
 """
@@ -61,13 +69,16 @@ rolelisting_ID = "4"
         list of matched and missing skills
     are displayed
 """
-# def test_percentage_match_selenium(chrome_driver, url): 
-#     driver = chrome_driver
-#     driver.get(url)
-#     fields = ["percentage", "matched-skills", "missing-skills"]
-#     for field in fields:
-#         fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
-#         assert fieldDisplayed.is_displayed()
+def test_percentage_match_selenium(chrome_driver, url): 
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelisting_element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, f'rolelisting-{rolelisting_ID}')))
+    rolelisting_element.click()
+    fields = ["percentage", "matched-skills", "missing-skills"]
+    for field in fields:
+        fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
+        assert fieldDisplayed.is_displayed()
 
 
 """
