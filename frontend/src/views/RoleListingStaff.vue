@@ -4,6 +4,7 @@ import { useRoleListingStore } from '@/store/useRoleListingStore';
 import { useConstantStore } from '@/store/useConstantStore';
 import { useUserStore } from '@/store/useUserStore';
 import router from "@/router";
+import { isSubset } from "@/utils/isSubset";
 
 export default {
   data() {
@@ -13,7 +14,8 @@ export default {
       applications: {},
       countries: [],
       hiringDepartments: [],
-      selectedCountry: "",
+      selectedCountry: "all",
+      selectedDept: "all",
       selectedSkills: [],
       staffId: {},
     };
@@ -114,11 +116,26 @@ export default {
       
       for(let listing of listings){
         let listingId = Object.keys(listing)[0]
-        if(listing[listingId].country == this.selectedCountry){
+        var listingSkills = 
+          await axios.get(`${backend_url}/get_role_skill/${listing[listingId].role_name}`)
+          .then((response) => {
+            return response.data.data
+          })
+          .catch(() => {
+            return []
+          });
+
+        if(isSubset(this.selectedSkills, listingSkills) && (this.selectedCountry == listing[listingId].country || this.selectedCountry == "all") && (this.selectedDept == listing[listingId].dept || this.selectedDept == "all")){
           filteredListings[listingId] = listing[listingId]
         }
       }
       this.roleListings = filteredListings
+    },
+    clearFilter(){
+      this.selectedCountry = "all"
+      this.selectedDept = "all"
+      this.selectedSkills = []
+      this.fetchData()
     }
   },
   created() {
@@ -130,7 +147,6 @@ export default {
 
 
 <template>
-  {{ roleListings }}
   <div class="bg-beige px-10 py-5">
     <div>
       <h1 class="text-xl font-serif text-center py-20" id="title">Find Your Next Role With Us</h1>
@@ -140,24 +156,24 @@ export default {
     <div class="flex flex-row">
       <div class="p-10 me-5 bg-white rounded-xl w-1/3">
         <div class="font-serif text-green text-xl">Filter</div>
-        <div>{{ selectedCountry }}</div>
         <select class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter()" v-model="selectedCountry" id="country">
-            <option selected disabled> Country </option>
+            <option selected disabled value="all"> Country </option>
             <option v-for="country of countries" :value=country> {{ country }}</option>
         </select>
-        <select class="mt-7 p-2 rounded-md w-full outline outline-1" id="department">
-            <option selected disabled> Hiring Department </option>
-            <option v-for="dept of hiringDepartments" > {{ dept }}</option>
+        <select class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter()" v-model="selectedDept" id="department">
+            <option selected disabled value="all"> Hiring Department </option>
+            <option v-for="dept of hiringDepartments" :value="dept"> {{ dept }}</option>
         </select>
 
         <div class="my-10 flex flex-col">
           <span>REQUIRED SKILLS</span> 
+          <div><input type="checkbox" v-model="selectAllSkills"> Select All</div>
           <div v-for="skill of userSkills">
-            <input type="checkbox" :value=skill v-model="selectedSkills"> {{ skill }} 
+            <input @change="updateFilter()" type="checkbox" class="skill" :value=skill v-model="selectedSkills"> {{ skill }} 
           </div>
         </div>
 
-        <button type="button" class="w-full outline outline-yellow-1 py-2 px-5 rounded-lg text-sm text-yellow font-serif btn hover:bg-yellow hover:text-white focus:ring-4 focus:ring-yellow-300">
+        <button type="button" @click="clearFilter()" class="w-full outline outline-yellow-1 py-2 px-5 rounded-lg text-sm text-yellow font-serif btn hover:bg-yellow hover:text-white focus:ring-4 focus:ring-yellow-300">
           Clear All Filters
         </button>
       </div>
@@ -167,7 +183,7 @@ export default {
         <ul class="rolelisting-container">
           <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center">
             <div class="grow"></div>
-            <div class="font-bold">No listings available!</div>
+            <div class="font-bold">No matching roles available!</div>
             <div class="grow"></div>
           </li>
           <li v-else v-for="(listing, id) in roleListings" :key="id"
