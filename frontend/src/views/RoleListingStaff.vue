@@ -14,6 +14,7 @@ export default {
       countries: [],
       hiringDepartments: [],
       selectedCountry: "",
+      selectedSkills: [],
       staffId: {},
     };
   },
@@ -98,6 +99,16 @@ export default {
         }
       }
       return processedStaff;
+    },
+    updateFilter(listings){
+      listings = this.roleListings
+      const filteredListings = {}
+      for (const key in listings){
+        if(listings[key].country == this.selectedCountry){
+          filteredListings[key] = listings[key]
+        }
+      }
+      this.roleListings = filteredListings
     }
   },
   created() {
@@ -109,8 +120,8 @@ export default {
 
 
 <template>
+  {{ roleListings }}
   <div class="bg-beige px-10 py-5">
-    {{ userSkills }}
     <div>
       <h1 class="text-xl font-serif text-center py-20" id="title">Find Your Next Role With Us</h1>
     </div>
@@ -119,9 +130,10 @@ export default {
     <div class="flex flex-row">
       <div class="p-10 me-5 bg-white rounded-xl w-1/3">
         <div class="font-serif text-green text-xl">Filter</div>
-        <select class="mt-7 p-2 rounded-md w-full outline outline-1 " id="country">
+        <div>{{ selectedCountry }}</div>
+        <select class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter" v-model="selectedCountry" id="country">
             <option selected disabled> Country </option>
-            <option v-for="country of countries" > {{ country }}</option>
+            <option v-for="country of countries" :value=country> {{ country }}</option>
         </select>
         <select class="mt-7 p-2 rounded-md w-full outline outline-1" id="department">
             <option selected disabled> Hiring Department </option>
@@ -130,8 +142,8 @@ export default {
 
         <div class="my-10 flex flex-col">
           <span>REQUIRED SKILLS</span> 
-          <div>
-            <input id="default-checkbox" type="checkbox" value="Check" class="w-4 h-4 bg-gray-100 border-gray-300 rounded"> <span class="w-4 h-4">Check</span>
+          <div v-for="skill of userSkills">
+            <input type="checkbox" :value=skill v-model="selectedSkills"> {{ skill }} 
           </div>
         </div>
 
