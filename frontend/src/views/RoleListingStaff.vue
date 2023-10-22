@@ -5,6 +5,7 @@ import { useConstantStore } from '@/store/useConstantStore';
 import { useUserStore } from '@/store/useUserStore';
 import router from "@/router";
 import { isSubset } from "@/utils/isSubset";
+import FilterComponent from "@/components/FilterComponent.vue"
 
 export default {
   data() {
@@ -19,6 +20,9 @@ export default {
       selectedSkills: [],
       staffId: {},
     };
+  },
+  components: {
+    FilterComponent,
   },
   methods: {
     async fetchData() {
@@ -102,7 +106,11 @@ export default {
       }
       return processedStaff;
     },
-    async updateFilter(){
+    async updateFilter(data){
+      this.selectedCountry = data.selectedCountry
+      this.selectedDept = data.selectedDept
+      this.selectedSkills = data.selectedSkills
+      
       var filteredListings = {}
       const backend_url = useConstantStore().backend_url;
       var listings =
@@ -152,33 +160,15 @@ export default {
       <h1 class="text-xl font-serif text-center py-20" id="title">Find Your Next Role With Us</h1>
     </div>
 
-    <!-- card starts here -->
     <div class="flex flex-row">
-      <div class="p-10 me-5 bg-white rounded-xl w-1/3">
-        <div class="font-serif text-green text-xl">Filter</div>
-        <select class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter()" v-model="selectedCountry" id="country">
-            <option selected disabled value="all"> Country </option>
-            <option v-for="country of countries" :value=country> {{ country }}</option>
-        </select>
-        <select class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter()" v-model="selectedDept" id="department">
-            <option selected disabled value="all"> Hiring Department </option>
-            <option v-for="dept of hiringDepartments" :value="dept"> {{ dept }}</option>
-        </select>
+      <filter-component
+        :countries="countries"
+        :hiringDepartments="hiringDepartments"
+        :userSkills="userSkills"
+        @filter-updated="updateFilter"
+        @filter-cleared="clearFilter"
+      ></filter-component>
 
-        <div class="my-10 flex flex-col">
-          <span>REQUIRED SKILLS</span> 
-          <div><input type="checkbox" v-model="selectAllSkills"> Select All</div>
-          <div v-for="skill of userSkills">
-            <input @change="updateFilter()" type="checkbox" class="skill" :value=skill v-model="selectedSkills"> {{ skill }} 
-          </div>
-        </div>
-
-        <button type="button" @click="clearFilter()" class="w-full outline outline-yellow-1 py-2 px-5 rounded-lg text-sm text-yellow font-serif btn hover:bg-yellow hover:text-white focus:ring-4 focus:ring-yellow-300">
-          Clear All Filters
-        </button>
-      </div>
-
-      <!-- card ends here -->
       <div class="w-full">
         <ul class="rolelisting-container">
           <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center">
