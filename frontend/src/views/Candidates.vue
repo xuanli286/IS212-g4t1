@@ -19,13 +19,13 @@
                 <div class="flex justify-center">
                     <img :src="require(`@/assets/${getRandomInt()}.svg`)">
                 </div>
-                <h4 class="mt-2 text-yellow text-lg font-semibold">{{ staffInfo.staff_FName }} {{ staffInfo.staff_LName }}</h4>
-                <p class="text-sm mt-2"><i class="bi bi-person-badge"></i> {{ staffInfo.staff_ID }}</p>
-                <p class="text-xs mt-2"><i class="bi bi-envelope-at-fill mr-2"></i><span class="text-grey">{{ staffInfo.email }}</span></p>
+                <h4 class="mt-2 text-yellow text-lg font-semibold staff_name">{{ staffInfo.staff_FName }} {{ staffInfo.staff_LName }}</h4>
+                <p class="text-sm mt-2 staff_ID"><i class="bi bi-person-badge"></i> {{ staffInfo.staff_ID }}</p>
+                <p class="text-xs mt-2 staff_email"><i class="bi bi-envelope-at-fill mr-2"></i><span class="text-grey">{{ staffInfo.email }}</span></p>
                 <div class="flex justify-center content-center text-center text-yellow mt-2">
-                    <div class="font-bold">{{ staffInfo.dept }}</div>
+                    <div class="font-bold staff_dept">{{ staffInfo.dept }}</div>
                     <div class="role-department bg-yellow mx-2 h-1 w-1 rounded-full place-self-center"> </div>
-                    <div class="role-country">{{ staffInfo.country }}</div>
+                    <div class="role-country staff_country">{{ staffInfo.country }}</div>
                 </div>
             </div>
             <div class="flex justify-between items-center col-span-4 mb-5">

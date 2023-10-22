@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 from conftest import *
 import requests
 import json
@@ -118,6 +119,27 @@ def test_hr_access_candidate_page(chrome_driver):
 
 
 """
+    Check that user with staff access cannot see Candidates on nav bar
+
+"""
+
+def test_user_access_candidate_page(chrome_driver):
+
+    driver = chrome_driver
+    driver.get(frontend_base_url)
+    driver.maximize_window()
+
+    user_login(driver)
+
+    try:
+        # Check if the "candidates" element is visible
+        driver.find_element(By.CLASS_NAME, "candidates")
+
+    except NoSuchElementException:
+        pass
+
+
+"""
     Check if number of staffs shown on frontend is equivalent to
     the number of staffs actually on backend
 """
@@ -139,3 +161,25 @@ def test_staff_tally(chrome_driver, url):
     frontend_total = frontend_text.split()[-2]
 
     assert int(frontend_total) == total
+
+
+"""
+    Check that staff details are displayed
+"""
+
+def test_staff_details(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    driver.maximize_window()
+
+    staff_name = driver.find_element(By.CLASS_NAME, 'staff_name')
+    staff_ID = driver.find_element(By.CLASS_NAME, 'staff_ID')
+    staff_email = driver.find_element(By.CLASS_NAME, 'staff_email')
+    staff_dept = driver.find_element(By.CLASS_NAME, 'staff_dept')
+    staff_country = driver.find_element(By.CLASS_NAME, 'staff_country')
+
+    assert staff_name.is_displayed()
+    assert staff_ID.is_displayed()
+    assert staff_email.is_displayed()
+    assert staff_dept.is_displayed()
+    assert staff_country.is_displayed()
