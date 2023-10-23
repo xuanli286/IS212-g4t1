@@ -19,6 +19,7 @@ export default {
       selectedDept: "all",
       selectedSkills: [],
       staffId: {},
+      searchQuery: ""
     };
   },
   components: {
@@ -108,6 +109,20 @@ export default {
       }
       return processedStaff;
     },
+    searchRoles() {
+      // need to update this so that it will axios call
+      var filteredListings = {};
+      for (let listing of Object.keys(this.roleListings)) {
+        if (
+          this.roleListings[listing].role_name
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
+        ) {
+          filteredListings[listing] = this.roleListings[listing];
+        }
+      }
+      this.roleListings = filteredListings;
+    },
     async updateFilter(data) {
       this.selectedCountry = data.selectedCountry;
       this.selectedDept = data.selectedDept;
@@ -171,8 +186,8 @@ export default {
 
     <!-- search bar -->
     <div>
-      <form class="flex items-center pb-10">
-        <label for="simple-search" class="sr-only">Search</label>
+      <form class="flex items-center pb-10" @submit.prevent="searchRoles">
+        <label for="role-search" class="sr-only">Search</label>
         <div class="relative w-full">
           <div
             class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
@@ -195,7 +210,8 @@ export default {
           </div>
           <input
             type="text"
-            id="simple-search"
+            id="role-search"
+            v-model="searchQuery"
             class="bg-gray-50 border border-yellow text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search Roles"
             required
