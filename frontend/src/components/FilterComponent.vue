@@ -54,7 +54,6 @@ export default {
       this.selectedCountry = "all"
       this.selectedDept = "all"
       this.selectedSkills = []
-      // this.fetchData()
       this.$emit('filter-cleared');
     }
   },
