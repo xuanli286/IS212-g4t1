@@ -18,6 +18,7 @@ export default {
       selectedCountry: "all",
       selectedDept: "all",
       selectedSkills: [],
+      allSkills: [],
     };
   },
   components: {
@@ -42,8 +43,8 @@ export default {
           });
       const staffResponse = await axios.get(`${backend_url}/staff`);
 
-      // const skillResponse = await axios.get(`${backend_url}/get_staff_skill/${user.staff_ID}`)
-      // this.userSkills = skillResponse.data.data
+      const skillResponse = await axios.get(`${backend_url}/get_all_skill`);
+      this.allSkills = this.getAllSkills(skillResponse.data.data);
 
       this.roleListings = this.processListings(openResponse.data.data.rolelisting.concat(closeResponse.data.data.rolelisting));
       for (let key of Object.keys(this.roleListings)) {
@@ -107,6 +108,14 @@ export default {
         }
       }
       return processedStaff;
+    },
+    getAllSkills(skillsResponse) {
+      const allSkills = []
+      skillsResponse.forEach(item => {
+        let skillName = Object.keys(item)[0];
+        allSkills.push(skillName);
+      });
+      return allSkills;
     },
     async updateFilter(data) {
       this.selectedCountry = data.selectedCountry
@@ -175,7 +184,7 @@ export default {
       </div>
     </div>
     <div class="flex flex-row mx-20">
-      <filter-component :countries="countries" :hiringDepartments="hiringDepartments" :userSkills="userSkills"
+      <filter-component :countries="countries" :hiringDepartments="hiringDepartments" :userSkills="allSkills"
         @filter-updated="updateFilter" @filter-cleared="clearFilter"></filter-component>
       <div class="w-full">
         <ul class="min-w-fit rolelisting-container">
