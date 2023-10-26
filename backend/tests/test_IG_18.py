@@ -61,7 +61,7 @@ def test_max_page(chrome_driver, url):
     max_page_on_fe = driver.find_element(By.CLASS_NAME, 'max_page').text
     input_search = driver.find_element(By.CLASS_NAME, 'input-search')
 
-    assert int(input_search) == max_page
+    assert int(input_search.get_attribute('value')) == max_page
     assert int(max_page_on_fe) == max_page 
     assert not max_button.is_enabled()
     assert not right_button.is_enabled()
