@@ -13,6 +13,8 @@ import math
 def url():
     return f'{frontend_base_url}/candidates'
 
+##################### FRONTEND TESTING #####################
+
 """
     Check that left buttons should be disabled and input value should be 1 when on first page
 """
@@ -183,3 +185,22 @@ def test_staff_details(chrome_driver, url):
     assert staff_email.is_displayed()
     assert staff_dept.is_displayed()
     assert staff_country.is_displayed()
+
+
+##################### BACKEND TESTING #####################
+
+"""
+    Check get all staff
+"""
+
+def test_get_all_staff():
+    
+    response = requests.get(f'{backend_base_url_production}/staff')
+
+    assert response.status_code == 200
+
+    response_data = json.loads(response.content)
+    assert "code" in response_data
+    assert "data" in response_data
+    assert "message" not in response_data
+    assert len(response_data["data"]["staff"]) == 555
