@@ -56,6 +56,10 @@ def test_max_page(chrome_driver, url):
     driver.find_element(By.CLASS_NAME, 'input-search').send_keys(max_page)
     driver.find_element(By.CLASS_NAME, 'input-search').send_keys(Keys.ENTER)
 
+    WebDriverWait(driver, 10).until(
+        EC.text_to_be_present_in_element((By.CLASS_NAME, 'max_page'), str(max_page))
+    )
+
     max_button = driver.find_element(By.CLASS_NAME, 'max_button')
     right_button = driver.find_element(By.CLASS_NAME, 'right_button')
     max_page_on_fe = driver.find_element(By.CLASS_NAME, 'max_page').text
@@ -158,6 +162,10 @@ def test_staff_tally(chrome_driver, url):
     if total == 0:
         total = 1
 
+    WebDriverWait(driver, 10).until(
+        EC.text_to_be_present_in_element((By.CLASS_NAME, 'records'), str(total))
+    )
+
     frontend_text = driver.find_element(By.CLASS_NAME, 'records').text
 
     frontend_total = frontend_text.split()[-2]
@@ -174,11 +182,12 @@ def test_staff_details(chrome_driver, url):
     driver.get(url)
     driver.maximize_window()
 
-    staff_name = driver.find_element(By.CLASS_NAME, 'staff_name')
-    staff_ID = driver.find_element(By.CLASS_NAME, 'staff_ID')
-    staff_email = driver.find_element(By.CLASS_NAME, 'staff_email')
-    staff_dept = driver.find_element(By.CLASS_NAME, 'staff_dept')
-    staff_country = driver.find_element(By.CLASS_NAME, 'staff_country')
+    wait = WebDriverWait(driver, 10)  # Adjust the timeout as needed
+    staff_name = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_name')))
+    staff_ID = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_ID')))
+    staff_email = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_email')))
+    staff_dept = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_dept')))
+    staff_country = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_country')))
 
     assert staff_name.is_displayed()
     assert staff_ID.is_displayed()
