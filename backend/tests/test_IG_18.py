@@ -53,19 +53,15 @@ def test_max_page(chrome_driver, url):
 
     max_page = math.ceil(total/20)
 
-    driver.find_element(By.CLASS_NAME, 'input-search').send_keys(max_page)
-    driver.find_element(By.CLASS_NAME, 'input-search').send_keys(Keys.ENTER)
-
-    wait = WebDriverWait(driver, 10)
-
-    wait.until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'max_page'), str(max_page)))
-
     max_button = driver.find_element(By.CLASS_NAME, 'max_button')
+
+    max_button.click()
+
     right_button = driver.find_element(By.CLASS_NAME, 'right_button')
     max_page_on_fe = driver.find_element(By.CLASS_NAME, 'max_page').text
+    input_search = driver.find_element(By.CLASS_NAME, 'input-search')
 
-    wait.until_not(EC.element_to_be_clickable((By.CLASS_NAME, 'max_button')))
-
+    assert int(input_search) == max_page
     assert int(max_page_on_fe) == max_page 
     assert not max_button.is_enabled()
     assert not right_button.is_enabled()
