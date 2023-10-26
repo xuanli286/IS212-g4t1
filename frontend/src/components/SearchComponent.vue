@@ -22,6 +22,7 @@
         <button
           type="submit"
           @submit="updateRoles()"
+          id="search-button"
           class="p-2.5 ml-2 text-sm font-medium text-blue bg-yellow rounded-lg border border-blue-700 hover:bg-yellow focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800"
         >
           <svg
