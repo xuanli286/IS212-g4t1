@@ -24,15 +24,15 @@
     <div class="grid grid-rows-2 grid-cols-3 mt-10 px-10 gap-y-10">
       <div>
         <p class="font-bold text-yellow">Full Name</p>
-        <p>{{ staffDetails.staff_FName }} {{ staffDetails.staff_LName }}</p>
+        <p id="name">{{ staffDetails.staff_FName }} {{ staffDetails.staff_LName }}</p>
       </div>
       <div>
         <p class="font-bold text-yellow">Staff ID</p>
-        <p>{{ applicantID }}</p>
+        <p id="id">{{ applicantID }}</p>
       </div>
       <div>
         <p class="font-bold text-yellow">Skill Match</p>
-        <p>{{ specificApplication.percentage_match }}%</p>
+        <p id="percentageMatch">{{ specificApplication.percentage_match }}%</p>
       </div>
       <div>
         <p class="font-bold text-yellow">Email</p>
