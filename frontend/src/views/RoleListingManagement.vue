@@ -124,7 +124,9 @@ export default {
 
       var filteredListings = {}
       const backend_url = useConstantStore().backend_url;
-      var listings =
+
+      // Get both open and closed listings
+      var openListings =
         await axios.get(`${backend_url}/openrolelisting`)
           .then((response) => {
             return response.data.data.rolelisting
@@ -132,6 +134,18 @@ export default {
           .catch(() => {
             return []
           });
+
+      var closeListings =
+        await axios.get(`${backend_url}/closerolelisting`)
+          .then((response) => {
+            return response.data.data.rolelisting
+          })
+          .catch(() => {
+            return []
+          });
+
+      // Combine both open and closed listings
+      var listings = openListings.concat(closeListings);
 
       for (let listing of listings) {
         let listingId = Object.keys(listing)[0]
@@ -144,7 +158,9 @@ export default {
               return []
             });
 
-        if (isSubset(this.selectedSkills, listingSkills) && (this.selectedCountry == listing[listingId].country || this.selectedCountry == "all") && (this.selectedDept == listing[listingId].dept || this.selectedDept == "all")) {
+        if (isSubset(this.selectedSkills, listingSkills) &&
+          (this.selectedCountry == listing[listingId].country || this.selectedCountry == "all") &&
+          (this.selectedDept == listing[listingId].dept || this.selectedDept == "all")) {
           filteredListings[listingId] = listing[listingId]
         }
       }
