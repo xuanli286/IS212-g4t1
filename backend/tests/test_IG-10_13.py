@@ -95,10 +95,22 @@ def test_application_deadline():
     Check if values of role listing returned tallies with that stored in test database
 """
 def test_all_available_fields():
+    rolelisting_data = {
+        "role_name": "Account Manager",
+        "application_opening": "2023-09-21",
+        "application_deadline": "2024-09-30",
+        "dept": "Sales",
+        "country": "Vietnam",
+        "manager_ID": 140003
+    }
+    add_response = requests.post(f'{backend_base_url}/addrolelisting', json=rolelisting_data)
+    assert add_response.status_code == 201
+    for key in json.loads(add_response.content)['data'].keys():
+        new_role_listing_id = key
     # Fields: Role Title, Hiring Department, Application Deadline, Geographic Location of the role
-    rolelisting_response = requests.get(f'{backend_base_url_production}/rolelisting/{rolelisting_ID}')
+    rolelisting_response = requests.get(f'{backend_base_url_production}/rolelisting/{new_role_listing_id}')
     assert rolelisting_response.status_code == 200
-    rolelisting_data = json.loads(rolelisting_response.content)["data"][rolelisting_ID]
+    rolelisting_data = json.loads(rolelisting_response.content)["data"][new_role_listing_id]
     role_name = rolelisting_data["role_name"]
     assert role_name == "Account Manager"
     assert rolelisting_data["dept"] == "Sales"
@@ -124,3 +136,5 @@ def test_all_available_fields():
     assert role_skill_response.status_code == 200
     role_skill_data = json.loads(role_skill_response.content)["data"]
     assert(role_skill_data == ["Account Management", "Budgeting", "Business Development", "Business Needs Analysis", "Business Negotiation", "Collaboration", "Communication", "Data Analytics", "Pricing Strategy", "Problem Solving", "Product Management", "Sales Strategy", "Stakeholder Management"])
+    delete_response = requests.delete(f'{backend_base_url}/deleterolelisting/{new_role_listing_id}')
+    assert delete_response.status_code == 200
