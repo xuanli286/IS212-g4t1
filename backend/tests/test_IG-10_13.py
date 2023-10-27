@@ -25,8 +25,10 @@ def test_all_visible_fields_selenium(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
     user_login(driver)
-    rolelisting_element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, f'rolelisting-4')))
-    rolelisting_element.click()
+    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
+    for listing in rolelistings:
+        listing.click()
+        break
     fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
     for field in fields:
         fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
