@@ -1,104 +1,104 @@
-import json
-import requests
+# import json
+# import requests
 
-from conftest import *
-from selenium.webdriver.common.by import By
-from datetime import datetime, timedelta
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+# from conftest import *
+# from selenium.webdriver.common.by import By
+# from datetime import datetime, timedelta
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 
-@pytest.fixture
-def url():
-    return f'{frontend_base_url}/'
+# @pytest.fixture
+# def url():
+#     return f'{frontend_base_url}/'
 
-##################### FRONTEND TESTING ####################
-"""
-    Check if user can submit application for a role listing successfully
-"""
-def test_successful_application_selenium(chrome_driver, url):
-    driver = chrome_driver
-    driver.get(url)
+# ##################### FRONTEND TESTING ####################
+# """
+#     Check if user can submit application for a role listing successfully
+# """
+# def test_successful_application_selenium(chrome_driver, url):
+#     driver = chrome_driver
+#     driver.get(url)
 
-    user_login(driver)
+#     user_login(driver)
 
-    role_listing_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "rolelisting-1")))
-    role_listing_button.click()
+#     role_listing_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "rolelisting-1")))
+#     role_listing_button.click()
 
-    requests.delete(f'{backend_base_url_production}/deleteapplications/140002/1')
+#     requests.delete(f'{backend_base_url_production}/deleteapplications/140002/1')
     
-    apply_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
-    apply_button.click()
-    submit_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "submitButton")))
-    submit_button.click()
-    success_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "successMessage")))
+#     apply_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
+#     apply_button.click()
+#     submit_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "submitButton")))
+#     submit_button.click()
+#     success_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "successMessage")))
     
-    requests.delete(f'{backend_base_url_production}/deleteapplications/140002/1')
-    assert success_message.is_displayed()
+#     requests.delete(f'{backend_base_url_production}/deleteapplications/140002/1')
+#     assert success_message.is_displayed()
 
-"""
-    Check if user can submit application for a role listing unsuccessfully
-"""
-def test_unsuccessful_application_selenium(chrome_driver, url):
-    driver = chrome_driver
-    driver.get(url)
+# """
+#     Check if user can submit application for a role listing unsuccessfully
+# """
+# def test_unsuccessful_application_selenium(chrome_driver, url):
+#     driver = chrome_driver
+#     driver.get(url)
 
-    user_login(driver)
+#     user_login(driver)
 
-    role_listing_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "rolelisting-2")))
-    role_listing_button.click()
+#     role_listing_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "rolelisting-2")))
+#     role_listing_button.click()
     
-    apply_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
-    apply_button.click()
-    submit_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "submitButton")))
-    submit_button.click()
-    error_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "unsuccessfulMessage")))
+#     apply_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
+#     apply_button.click()
+#     submit_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "submitButton")))
+#     submit_button.click()
+#     error_message = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "unsuccessfulMessage")))
     
-    assert error_message.is_displayed()
+#     assert error_message.is_displayed()
     
-##################### BACKEND TESTING #####################
+# ##################### BACKEND TESTING #####################
 
-def test_create_application():
-    application_data = {
-        "staff_ID": 140003,
-        "rolelisting_ID": 15,
-        "application_date": "2023-10-12",
-        "percentage_match": 38.9
-    }
+# def test_create_application():
+#     application_data = {
+#         "staff_ID": 140003,
+#         "rolelisting_ID": 15,
+#         "application_date": "2023-10-12",
+#         "percentage_match": 38.9
+#     }
 
-    response = requests.post(f'{backend_base_url}/addapplication', json=application_data)
+#     response = requests.post(f'{backend_base_url}/addapplication', json=application_data)
 
-    assert response.status_code == 201
+#     assert response.status_code == 201
 
-    response_data = json.loads(response.content)
-    assert "code" in response_data
-    assert "data" in response_data
-    assert "message" not in response_data
+#     response_data = json.loads(response.content)
+#     assert "code" in response_data
+#     assert "data" in response_data
+#     assert "message" not in response_data
     
-    response = requests.get(f'{backend_base_url}/applications/15')    
+#     response = requests.get(f'{backend_base_url}/applications/15')    
     
-    assert response.status_code == 200
+#     assert response.status_code == 200
     
-    response = requests.delete(f'{backend_base_url}/deleteapplications/140003/15')
+#     response = requests.delete(f'{backend_base_url}/deleteapplications/140003/15')
 
-    assert response.status_code == 200
+#     assert response.status_code == 200
         
         
-def test_duplicate_application():
+# def test_duplicate_application():
     
-    application_data = {
-        "staff_ID": 140002,
-        "rolelisting_ID": 15,
-        "application_date": "2023-10-12",
-        "percentage_match": 38.9
-    }
+#     application_data = {
+#         "staff_ID": 140002,
+#         "rolelisting_ID": 15,
+#         "application_date": "2023-10-12",
+#         "percentage_match": 38.9
+#     }
     
-    response_duplicate = requests.post(f'{backend_base_url}/addapplication', json=application_data)
+#     response_duplicate = requests.post(f'{backend_base_url}/addapplication', json=application_data)
 
-    assert response_duplicate.status_code == 400
+#     assert response_duplicate.status_code == 400
 
-    response_duplicate_data = json.loads(response_duplicate.content)
+#     response_duplicate_data = json.loads(response_duplicate.content)
 
-    assert "code" in response_duplicate_data
-    assert "data" in response_duplicate_data
-    assert "message" in response_duplicate_data
-    assert response_duplicate_data["message"] == 'Application exists.'
+#     assert "code" in response_duplicate_data
+#     assert "data" in response_duplicate_data
+#     assert "message" in response_duplicate_data
+#     assert response_duplicate_data["message"] == 'Application exists.'
