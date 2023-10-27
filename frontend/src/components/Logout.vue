@@ -33,7 +33,7 @@
             <router-link :class="$route.name === 'Home' ? 'font-semibold text-yellow' : ''" to="/home">
                 View
             </router-link>
-            <router-link class="ml-12" v-if="user.access_ID == 4" :class="$route.name === 'Role Listing Management' ? 'font-semibold text-yellow' : ''" to="/rolelistingmanagement">
+            <router-link id="manageRoute" class="ml-12" v-if="user.access_ID == 4" :class="$route.name === 'Role Listing Management' ? 'font-semibold text-yellow' : ''" to="/rolelistingmanagement">
                 Manage
             </router-link>
         </div>

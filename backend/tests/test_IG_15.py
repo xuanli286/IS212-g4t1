@@ -3,16 +3,53 @@ import requests
 from conftest import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+import time
 
 ##################### FRONTEND TESTING ####################
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/addrolelisting'
+    return f'{frontend_base_url}'
 
-
-
+"""
+    Check that all applicants are shown for a specific rolelisting
+"""
+def test_show_applicants(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    
+    hr_login(driver)
+    
+    manage_route_button = WebDriverWait(driver, 30).until(
+    EC.presence_of_element_located((By.ID, "manageRoute"))
+    )
+    manage_route_button.click()
+    
+    time.sleep(10)
+    
+    role_listings = WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
+    )
+    applicant_element = role_listings[1].find_element(By.ID, 'numberApplicants')
+    applicant_element.click()
+    
+    time.sleep(10)
+    
+    try:
+        applications_panel = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, 'applicants-panel'))
+        )
+        assert applications_panel
+        
+    except TimeoutException:
+        no_matching_application_element = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
+        )
+        assert no_matching_application_element.is_displayed()
 
 ##################### BACKEND TESTING #####################
 

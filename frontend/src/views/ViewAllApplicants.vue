@@ -7,7 +7,7 @@
     </div>
 
     <ul class="mx-64 min-w-fit applications-container">
-      <li v-if="Object.keys(applications).length == 0" class="py-5 text-center">
+      <li v-if="Object.keys(applications).length == 0" class="py-5 text-center message">
         <div class="grow"></div>
         <div class="font-bold">No applications available!</div>
         <div class="grow"></div>
