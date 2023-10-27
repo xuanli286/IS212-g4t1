@@ -1,5 +1,7 @@
 # IG_21      Staff can view their own skills profile
+import json
 import pytest
+import requests
 
 from conftest import *
 from selenium.webdriver.common.by import By
@@ -27,3 +29,14 @@ def test_user_details_selenium(chrome_driver, url):
     for field in fields:
         fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
         assert fieldDisplayed.is_displayed()
+
+
+"""
+    Check if skills data is returned
+"""
+def test_user_skills():
+    staff_skills_response = requests.get(f'{backend_base_url_production}/get_staff_skill/140002')
+    assert staff_skills_response.status_code == 200
+    staff_skills = json.loads(staff_skills_response.content)["data"]
+    correct_staff_skills = ['Accounting and Tax Systems', 'Business Environment Analysis', 'Customer Relationship Management', 'Professional and Business Ethics']
+    assert staff_skills == correct_staff_skills
