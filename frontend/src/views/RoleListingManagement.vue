@@ -242,6 +242,7 @@ export default {
       </div>
     </div>
     <div class="flex flex-row mx-20">
+
       <filter-component
         :countries="countries"
         :hiringDepartments="hiringDepartments"
@@ -250,11 +251,12 @@ export default {
         @filter-updated="updateFilter"
         @filter-cleared="clearFilter"
       ></filter-component>
+
       <div class="w-full">
         <ul class="min-w-fit rolelisting-container">
           <li
             v-if="Object.keys(roleListings).length == 0"
-            class="py-5 text-center"
+            class="py-5 text-center message"
           >
             <div class="grow"></div>
             <div class="font-bold">No listings available!</div>
@@ -304,9 +306,9 @@ export default {
                 </div>
               </div>
               <div class="flex flex-row items-center text-yellow pt-3">
-                <div class="font-bold">{{ listing.dept }}</div>
+                <div class="role-department font-bold">{{ listing.dept }}</div>
                 <div
-                  class="role-department flex bg-yellow mx-2 h-1 w-1 rounded-full"
+                  class="flex bg-yellow mx-2 h-1 w-1 rounded-full"
                 ></div>
                 <div class="role-country">{{ listing.country }}</div>
               </div>

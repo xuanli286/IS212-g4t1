@@ -85,41 +85,6 @@ def test_successful_filter_department(chrome_driver, url):
         assert no_matching_roles_element.is_displayed()
 
 """
-    Check if filter by department work successfully
-"""
-def test_successful_filter_department(chrome_driver, url):
-    driver = chrome_driver
-    driver.get(url)
-
-    user_login(driver)
-
-    department_element = WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.ID, 'department'))
-    )
-
-    option_to_select = department_element.find_element(By.XPATH, f".//option[text()='Consultancy']")
-    option_to_select.click()
-    
-    time.sleep(10)
-    
-    department_results = []
-    
-    try:
-        role_listings = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
-        )
-        for listing in role_listings:
-            role_department = listing.find_element(By.CLASS_NAME, 'role-department').text
-            print(role_department)
-            department_results.append(role_department == "Consultancy")
-        assert all(department_results)
-    except TimeoutException:
-        no_matching_roles_element = WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
-        )
-        assert no_matching_roles_element.is_displayed()
-
-"""
     Check if filter by skills work successfully
 """
 def test_successful_filter_skills(chrome_driver, url):
@@ -128,9 +93,9 @@ def test_successful_filter_skills(chrome_driver, url):
 
     user_login(driver)
 
-    checkbox_label = "Applications Integration"
-    checkbox = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f'//input[@type="checkbox" and @class="skill"][following-sibling::text()="{checkbox_label}"]'))
+    checkbox_label = "Accounting and Tax Systems"
+    checkbox = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.ID, checkbox_label))
     )
 
     checkbox.click()

@@ -24,7 +24,7 @@
           <input type="checkbox" v-model="selectAllSkills"> Select All
         </div>
         <div v-for="skill in userSkills" :key="skill">
-          <input @change="updateFilter()" type="checkbox" class="skill" :value="skill" v-model="selectedSkills"> {{ skill }} 
+          <input @change="updateFilter()" type="checkbox" class="skill" :value="skill" v-model="selectedSkills" :id="`${skill}`"> {{ skill }} 
         </div>
       </div>
 
