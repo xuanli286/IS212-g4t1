@@ -189,6 +189,7 @@ def test_user_input_application_deadline_selenium(chrome_driver, url):
 ##################### BACKEND TESTING #####################
 
 def test_create_rolelisting():
+    
     rolelisting_data = {
             "role_name": "Account Manager",
             "application_opening": "2023-09-21",
@@ -237,6 +238,8 @@ def test_duplicate_rolelisting():
         "dept": "Sales",
         "country": "Vietnam",
     }
+    
+    response = requests.post(f'{backend_base_url}/addrolelisting', json=rolelisting_data)
     
     response_duplicate = requests.post(f'{backend_base_url}/addrolelisting', json=rolelisting_data)
 

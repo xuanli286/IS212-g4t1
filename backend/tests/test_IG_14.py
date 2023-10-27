@@ -58,10 +58,13 @@ def test_unsuccessful_application_selenium(chrome_driver, url):
 ##################### BACKEND TESTING #####################
 
 def test_create_application():
+    
+    response = requests.delete(f'{backend_base_url}/deleteapplications/140008/1')
+    
     application_data = {
-        "staff_ID": 140003,
-        "rolelisting_ID": 15,
-        "application_date": "2023-10-12",
+        "staff_ID": 140008,
+        "rolelisting_ID": 1,
+        "application_date": "2023-10-13",
         "percentage_match": 38.9
     }
 
@@ -74,11 +77,11 @@ def test_create_application():
     assert "data" in response_data
     assert "message" not in response_data
     
-    response = requests.get(f'{backend_base_url}/applications/15')    
+    response = requests.get(f'{backend_base_url}/applications/1')    
     
     assert response.status_code == 200
     
-    response = requests.delete(f'{backend_base_url}/deleteapplications/140003/15')
+    response = requests.delete(f'{backend_base_url}/deleteapplications/140008/1')
 
     assert response.status_code == 200
         
@@ -87,10 +90,11 @@ def test_duplicate_application():
     
     application_data = {
         "staff_ID": 140002,
-        "rolelisting_ID": 15,
+        "rolelisting_ID": 1,
         "application_date": "2023-10-12",
         "percentage_match": 38.9
     }
+    response = requests.post(f'{backend_base_url}/addapplication', json=application_data)
     
     response_duplicate = requests.post(f'{backend_base_url}/addapplication', json=application_data)
 

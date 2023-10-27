@@ -172,9 +172,9 @@ export default {
 
       <div class="w-full">
         <ul class="rolelisting-container">
-          <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center">
+          <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center message">
             <div class="grow"></div>
-            <div class="font-bold">No matching roles available!</div>
+            <div class="font-bold ">No matching roles available!</div>
             <div class="grow"></div>
           </li>
           <li v-else v-for="(listing, id) in roleListings" :key="id"
@@ -202,8 +202,8 @@ export default {
                 <div class="grow"></div>
               </div>
               <div class="flex flex-row items-center text-yellow pt-3">
-                <div class="font-bold">{{ listing.dept }}</div>
-                <div class="role-department flex bg-yellow mx-2 h-1 w-1 rounded-full"> </div>
+                <div class="font-bold role-department ">{{ listing.dept }}</div>
+                <div class="flex bg-yellow mx-2 h-1 w-1 rounded-full"> </div>
                 <div class="role-country">{{ listing.country }}</div>
               </div>
             </div>
