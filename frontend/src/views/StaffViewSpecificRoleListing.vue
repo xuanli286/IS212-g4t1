@@ -1,33 +1,33 @@
 <template>
-  <div class="bg-beige px-10 py-7">
-    <div class="flex items-center">
-      <div>
+    <div class="bg-beige px-10 py-7">
         <div class="flex items-center">
-          <img id="back" src="@/assets/icons/back.svg" alt="" @click=back()>
-          <p class="font-light text-2xl text-yellow ml-4" id="role-name">{{ roleName }}</p>
-        </div>
-        <div class="flex items-center ml-8">
-          <img src="@/assets/icons/clock.svg" alt="">
-          <p id="application-deadline" class="ml-1 text-grey text-sm">
-            <span class="font-bold">Expires On:</span>
-            <span class="font-light ml-1">{{ new Date(roleDetails.application_deadline).toLocaleDateString('en-US', {
-              day:
-                'numeric', month: 'long', year: 'numeric'
-            }) }}</span>
-          </p>
-        </div>
-      </div>
-      <Button id="apply" class="ml-auto" @click="openApply">
-        <template v-slot:icon>
-          <img class="mr-1" src="@/assets/icons/attachdocument.svg" alt="">
-        </template>
-        <template v-slot:text>
-          Apply Role
-        </template>
-      </Button>
-      <!-- Main modal -->
-      <div id="authentication-modal" aria-hidden="true"
-        class="inset-y-0 inset-x-0 hidden overflow-x-hidden overflow-y-auto bg-grey bg-opacity-75 fixed h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 flex items-center justify-center">
+            <div>
+                <div class="flex items-center">
+                    <img id="back" src="@/assets/icons/back.svg" alt="" @click=back()>
+                    <p class="font-light text-2xl text-yellow ml-4" id="role-name">{{ roleName }}</p>
+                </div>
+                <div class="flex items-center ml-8">
+                    <img src="@/assets/icons/clock.svg" alt="">
+                    <p id="application-deadline" class="ml-1 text-grey text-sm">
+                        <span class="font-bold">Expires On:</span>
+                        <span class="font-light ml-1">{{ new Date(roleDetails.application_deadline).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
+                    </p>
+                </div>
+            </div>
+            <Button id="applyButton" class="ml-auto" @click="openApply">
+                <template v-slot:icon>
+                    <img class="mr-1" src="@/assets/icons/attachdocument.svg" alt="">
+                </template>
+                <template v-slot:text>
+                    Apply Role
+                </template>
+            </Button>
+            <!-- Main modal -->
+      <div
+        id="authentication-modal"
+        aria-hidden="true"
+        class="inset-y-0 inset-x-0 hidden overflow-x-hidden overflow-y-auto bg-grey bg-opacity-75 fixed h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 flex items-center justify-center"
+      >
         >
         <div class="relative pt-6 h-full w-11/12 md:h-auto w">
           <!-- Modal content -->
@@ -38,9 +38,16 @@
             <div class="flex justify-end p-2">
               <button type="button"
                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                @click="closeApply">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd"
+                @click="closeApply" 
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                     clip-rule="evenodd"></path>
                 </svg>
@@ -88,8 +95,14 @@
                   <span class="font-bold">Your Skills</span>
                   <div class="flex flex-col gap-2">
                     <label v-for="(skill, index) in staffSkills" :key="index">
-                      <input type="checkbox" :name="skill" :id="skill" v-model="selectedSkills" :value="skill" disabled
-                        checked />
+                      <input
+                        type="checkbox"
+                        :name="skill"
+                        :id="skill"
+                        :value="skill"
+                        disabled
+                        checked
+                      />
                       {{ skill }}
                     </label>
                   </div>
@@ -100,8 +113,10 @@
                   class="text-white bg-grey border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded-md text-md mr-3">
                   Cancel
                 </button>
-                <button @click="submitApplication"
-                  class="text-white bg-yellow border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded-md text-md">
+                <button
+                  @click="submitApplication" id="submitButton"
+                  class="text-white bg-yellow border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded-md text-md"
+                >
                   Submit
                 </button>
                 <div id="confirm-modal" tabindex="-1"
@@ -121,9 +136,12 @@
                               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                           </svg>
                         </button>
-                        <span v-if="applicationSuccess" class="text-green relative font-serif text-lg">Role Applied
-                          Successfully!</span>
-                        <span v-else class="text-red relative font-serif text-lg">Application Unsuccessful</span>
+                        <span v-if="applicationSuccess" class="text-green relative font-serif text-lg" id="successMessage"
+                          >Role Applied Successfully!</span
+                        >
+                        <span v-else class="text-red relative font-serif text-lg" id="unsuccessfulMessage"
+                          >Application Unsuccessful</span
+                        >
                       </div>
                       <!-- Modal body -->
                       <div class="p-6 space-y-6 flex flex-col justify-center items-center h-full">
@@ -227,11 +245,10 @@ import router from "@/router";
 
 const route = useRoute();
 
-const userStore = useUserStore();
-const {
-  user,
-} = storeToRefs(userStore);
-console.log(user.value.staff_ID)
+    const userStore = useUserStore();
+    const {
+        user,
+    } = storeToRefs(userStore);
 
 const store = useConstantStore();
 const {
@@ -285,38 +302,32 @@ function back() {
   window.history.back();
 }
 
-function openApply() {
-  document
-    .getElementById("authentication-modal")
-    .classList.remove("hidden");
-  //   console.log(this.currentUser);
-  //   console.log(this.currentUser.access_ID);
-  //   console.log(this.staffSkills);
-}
+    function openApply() {
+        document
+        .getElementById("authentication-modal")
+        .classList.remove("hidden");
+    }
 
 function closeApply() {
   document.getElementById("authentication-modal").classList.add("hidden");
 }
 
-function submitApplication() {
-  console.log("Hello");
-  const body = {
-    staff_ID: user.value.staff_ID,
-    rolelisting_ID: rolelistingID,
-    application_date: new Date().toISOString().slice(0, 10),
-    percentage_match: getSkillPercentage(),
-  };
-  console.log(body);
-  axios
-    .post(`${backend_url.value}/addapplication`, body)
-    .then((response) => {
-      console.log(response);
-      applicationSuccess.value = true;
-    })
-    .catch((error) => {
-      console.log(error.message);
-      applicationSuccess.value = false;
-    });
+    function submitApplication() {
+      const body = {
+        staff_ID: user.value.staff_ID,
+        rolelisting_ID: rolelistingID,
+        application_date: new Date().toISOString().slice(0, 10),
+        percentage_match: getSkillPercentage().toFixed(2),
+      };
+      axios
+        .post(`${backend_url.value}/addapplication`, body)
+        .then((response) => {
+          applicationSuccess.value = true;
+        })
+        .catch((error) => {
+          console.log(error.message);
+          applicationSuccess.value = false;
+        });
 
   document.getElementById("confirm-modal").classList.remove("hidden");
 }
