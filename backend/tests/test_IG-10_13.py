@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/viewspecificrolelisting/4'
+    return f'{frontend_base_url}/'
 
 rolelisting_ID = "4"
 
@@ -21,38 +21,50 @@ rolelisting_ID = "4"
     Check if unique Role Title, Role Description, Hiring Department, Required Skills Set, Application Deadline, 
     Reporting Manager, and the Geographic Location of the role are displayed for staff to view
 """
-# def test_all_visible_fields_selenium(chrome_driver, url):
-#     driver = chrome_driver
-#     driver.get(url)
-#     fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
-#     for field in fields:
-#         fieldDisplayed = driver.find_element(By.ID, field)
-#         time.sleep(2)
-#         assert fieldDisplayed.is_displayed()
-
+def test_all_visible_fields_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
+    for listing in rolelistings:
+        listing.click()
+        fields = ["role-name", "role-description", "hiring-department", "required-skills", "application-deadline", "manager", "country"]
+        for field in fields:
+            fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
+            assert fieldDisplayed.is_displayed()
+        break
 
 """
     Check navigation back to the list of open role listings
 """
-# def test_back_button_selenium(chrome_driver, url):
-#     driver = chrome_driver
-#     previous_url = f"{frontend_base_url}/viewrolelistings"
-#     driver.get(previous_url)
-#     driver.get(url)
-#     back_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "back")))
-#     back_btn.click()
-#     url_after_click = driver.current_url
-#     assert url_after_click == previous_url
+def test_back_button_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
+    for listing in rolelistings:
+        listing.click()
+        previous_url = f"{frontend_base_url}/home"
+        back_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "back")))
+        back_btn.click()
+        url_after_click = driver.current_url
+        assert url_after_click == previous_url
+        break
 
 
 """
     Check for button to apply role
 """
-# def test_apply_role_button(chrome_driver, url):
-#     driver = chrome_driver
-#     driver.get(url)
-#     apply_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "apply")))
-#     assert apply_btn.is_displayed()
+def test_apply_role_button(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
+    for listing in rolelistings:
+        listing.click()
+        apply_btn = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "applyButton")))
+        assert apply_btn.is_displayed()
+        break
 
 
 """
@@ -61,13 +73,18 @@ rolelisting_ID = "4"
         list of matched and missing skills
     are displayed
 """
-# def test_percentage_match_selenium(chrome_driver, url): 
-#     driver = chrome_driver
-#     driver.get(url)
-#     fields = ["percentage", "matched-skills", "missing-skills"]
-#     for field in fields:
-#         fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
-#         assert fieldDisplayed.is_displayed()
+def test_percentage_match_selenium(chrome_driver, url): 
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
+    for listing in rolelistings:
+        listing.click()
+        fields = ["percentage", "matched-skills", "missing-skills"]
+        for field in fields:
+            fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
+            assert fieldDisplayed.is_displayed()
+        break
 
 
 """
@@ -84,14 +101,26 @@ def test_application_deadline():
     Check if values of role listing returned tallies with that stored in test database
 """
 def test_all_available_fields():
+    rolelisting_data = {
+        "role_name": "Account Manager",
+        "application_opening": "2023-09-21",
+        "application_deadline": "2024-12-31",
+        "dept": "Consultancy",
+        "country": "Vietnam",
+        "manager_ID": 140003
+    }
+    add_response = requests.post(f'{backend_base_url}/addrolelisting', json=rolelisting_data)
+    assert add_response.status_code == 201
+    for key in json.loads(add_response.content)['data'].keys():
+        new_role_listing_id = key
     # Fields: Role Title, Hiring Department, Application Deadline, Geographic Location of the role
-    rolelisting_response = requests.get(f'{backend_base_url_production}/rolelisting/{rolelisting_ID}')
+    rolelisting_response = requests.get(f'{backend_base_url}/rolelisting/{new_role_listing_id}')
     assert rolelisting_response.status_code == 200
-    rolelisting_data = json.loads(rolelisting_response.content)["data"][rolelisting_ID]
+    rolelisting_data = json.loads(rolelisting_response.content)["data"][new_role_listing_id]
     role_name = rolelisting_data["role_name"]
     assert role_name == "Account Manager"
-    assert rolelisting_data["dept"] == "Sales"
-    assert rolelisting_data["application_deadline"] == "2024-09-30"
+    assert rolelisting_data["dept"] == "Consultancy"
+    assert rolelisting_data["application_deadline"] == "2024-12-31"
     assert rolelisting_data["country"] == "Vietnam"
     manager_ID = str(rolelisting_data["manager_ID"])
     assert manager_ID == "140003"
@@ -113,3 +142,5 @@ def test_all_available_fields():
     assert role_skill_response.status_code == 200
     role_skill_data = json.loads(role_skill_response.content)["data"]
     assert(role_skill_data == ["Account Management", "Budgeting", "Business Development", "Business Needs Analysis", "Business Negotiation", "Collaboration", "Communication", "Data Analytics", "Pricing Strategy", "Problem Solving", "Product Management", "Sales Strategy", "Stakeholder Management"])
+    delete_response = requests.delete(f'{backend_base_url}/deleterolelisting/{new_role_listing_id}')
+    assert delete_response.status_code == 200

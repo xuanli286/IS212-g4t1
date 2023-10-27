@@ -2,14 +2,14 @@ import axios from "axios";
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
-export const useConstantStore = defineStore("constant", () => {
-  const hiringDepartment = ref([]);
-  const countries = ref([]);
-  const roleSkills = ref([]);
-  const staffSkills = ref([]);
-  const staff = ref({});
-  const roles = ref({});
-  const backend_url = ref("http://13.212.177.124:5000");
+export const useConstantStore = defineStore('constant', () => {
+    const hiringDepartment = ref([]);
+    const countries = ref([]);
+    const roleSkills = ref([]);
+    const staffSkills = ref([]);
+    const staff = ref({});
+    const roles = ref({});
+    const backend_url = ref("http://18.143.92.81:5000");
 
   axios
     .get(`${backend_url.value}/get_dept_country/dept`)

@@ -22,14 +22,9 @@ export default {
           .catch(() => {
             return { data: { data: {} } }
           });
-      const closeResponse =
-        await axios.get(`${backend_url}/closerolelisting`)
-          .catch(() => {
-            return { data: { data: {} } }
-          });
       const staffResponse = await axios.get(`${backend_url}/staff`);
 
-      this.roleListings = this.processListings(openResponse.data.data.rolelisting.concat(closeResponse.data.data.rolelisting));
+      this.roleListings = this.processListings(openResponse.data.data.rolelisting);
       for (let key of Object.keys(this.roleListings)) {
         this.applications[key] =
           await axios.get(`${backend_url}/applications/${key}`)
@@ -57,7 +52,7 @@ export default {
     },
     updateRoleListingId(id) {
       useRoleListingStore().setRoleListingId(id);
-      router.push('/specificrolelisting/' + id);
+      router.push('/viewspecificrolelisting/' + id);
     },
     getManagerName(id) {
       try {
@@ -100,7 +95,7 @@ export default {
 <template>
   <div class="bg-beige px-10 py-5">
     <div>
-      <h1 class="text-xl font-serif text-center py-20">Find Your Next Role With Us</h1>
+      <h1 class="text-xl font-serif text-center py-20" id="title">Find Your Next Role With Us</h1>
     </div>
 
     <ul class="mx-64 min-w-fit rolelisting-container">
@@ -111,23 +106,21 @@ export default {
       </li>
       <li v-else v-for="(listing, id) in roleListings" :key="id"
         class="rolelisting-panel flex border-t py-5 hover:bg-grey-50">
-        <router-link :to="'/viewspecificrolelisting/' + id" @click=updateRoleListingId(id)>
-          <div class="flex-none h-100">
-            <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
-            <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
-            <div class="flex flex-row text-xs">
-              <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
-              <div class="flex items-center mx-2">
-                <span class="bg-black h-1 w-1 rounded-full"></span>
-              </div>
-              <div class="role-applicants font-bold text-green">
-                {{ applications[id] }}
-                <span v-if="applications[id] == 1"> applicant </span>
-                <span v-else> applicants </span>
-              </div>
+        <div class="flex-none h-100" @click=updateRoleListingId(id)>
+          <div class="role-title text-yellow text-xl"> {{ listing.role_name }} </div>
+          <div class="role-manager text-base"> Reporting Manager: {{ getManagerName(listing.manager_ID) }} </div>
+          <div class="flex flex-row text-xs">
+            <div class="role-deadline text-grey"> Apply by {{ formatDate(listing.application_deadline) }}</div>
+            <div class="flex items-center mx-2">
+              <span class="bg-black h-1 w-1 rounded-full"></span>
+            </div>
+            <div class="role-applicants font-bold text-green">
+              {{ applications[id] }}
+              <span v-if="applications[id] == 1"> applicant </span>
+              <span v-else> applicants </span>
             </div>
           </div>
-        </router-link>
+        </div>
         <div class="grow"></div>
         <div>
           <div class="flex flex-row">
