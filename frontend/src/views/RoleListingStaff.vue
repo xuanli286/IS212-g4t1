@@ -165,6 +165,7 @@ export default {
         :countries="countries"
         :hiringDepartments="hiringDepartments"
         :userSkills="userSkills"
+        :inManagement=false
         @filter-updated="updateFilter"
         @filter-cleared="clearFilter"
       ></filter-component>

@@ -13,10 +13,6 @@ import json
 
 ##################### BACKEND TESTING #####################
 
-"""
-    Check if number of rolelistings shown on frontend is equivalent to
-    the number of rolelistings actually on backend
-"""
 def test_get_all_skill():
     
     response = requests.get(f'{backend_base_url_production}/get_all_skill')
