@@ -40,6 +40,9 @@
             <router-link class="ml-12" v-if="user.access_ID == 4" :class="$route.name === 'Role Listing Management' ? 'font-semibold text-yellow' : ''" to="/rolelistingmanagement">
                 Manage
             </router-link>
+            <router-link class="ml-12 candidates" v-if="user.access_ID == 3 || user.access_ID == 4" :class="$route.name === 'Candidates' ? 'font-semibold text-yellow' : ''" to="/candidates">
+                Candidates
+            </router-link>
         </div>
         <div class="ml-auto">
             <div class="flex ml-auto items-center relative">

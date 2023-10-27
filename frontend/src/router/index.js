@@ -10,6 +10,7 @@ import SkillProfile from "@/views/SkillProfile.vue";
 import StaffViewSpecificRoleListing from "@/views/StaffViewSpecificRoleListing.vue";
 import SpecificRoleListing from "../views/SpecificRoleListing.vue";
 import RoleListingStaff from "../views/RoleListingStaff.vue";
+import Candidates from "../views/Candidates.vue"
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -67,6 +68,11 @@ const router = createRouter({
       path: "/skillprofile",
       name: "SkillProfile",
       component: SkillProfile,
+    },
+    {
+      path: "/candidates",
+      name: "Candidates",
+      component: Candidates,
     },
   ],
 });
