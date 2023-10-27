@@ -5,7 +5,7 @@ on:
     workflows: [CI Workflow]
     types:
       - completed
-    branches: [develop] # run on develop branch only
+    # branches: [develop] # run on develop branch only
 
 jobs:
 
