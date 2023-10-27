@@ -127,7 +127,6 @@
                         type="checkbox"
                         :name="skill"
                         :id="skill"
-                        v-model="selectedSkills"
                         :value="skill"
                         disabled
                         checked
@@ -306,7 +305,6 @@
     const {
         user,
     } = storeToRefs(userStore);
-    console.log(user.value.staff_ID)
 
     const store = useConstantStore();
     const {
@@ -364,9 +362,6 @@
         document
         .getElementById("authentication-modal")
         .classList.remove("hidden");
-    //   console.log(this.currentUser);
-    //   console.log(this.currentUser.access_ID);
-    //   console.log(this.staffSkills);
     }
 
     function closeApply() {
@@ -374,18 +369,15 @@
     }
 
     function submitApplication() {
-        console.log("Hello");
       const body = {
         staff_ID: user.value.staff_ID,
         rolelisting_ID: rolelistingID,
         application_date: new Date().toISOString().slice(0, 10),
         percentage_match: getSkillPercentage().toFixed(2),
       };
-      console.log(body);
       axios
         .post(`${backend_url.value}/addapplication`, body)
         .then((response) => {
-          console.log(response);
           applicationSuccess.value = true;
         })
         .catch((error) => {
