@@ -4,6 +4,7 @@ from conftest import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 ##################### FRONTEND TESTING ####################
 @pytest.fixture
@@ -21,6 +22,8 @@ def test_search_selenium(chrome_driver, url):
 
     search_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "search-button")))
     search_button.click()
+    
+    time.sleep(10)
     
     results = []
 
