@@ -3,8 +3,8 @@ import chromedriver_autoinstaller
 import pytest
 from selenium.webdriver.common.by import By
 
-backend_base_url = "http://127.0.0.1:5001"
-backend_base_url_production = "http://127.0.0.1:5000" # ONLY USE FOR GET REQUEST
+backend_base_url = "http://18.143.92.81:5001"
+backend_base_url_production = "http://18.143.92.81:5000" # ONLY USE FOR GET REQUEST
 frontend_base_url = "http://localhost:8080"
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def chrome_driver():
     options = [
         "--window-size=1200,1200",
         "--ignore-certificate-errors",
-        "--headless",  # Enable headless mode
+        # "--headless",  # Enable headless mode
         "--disable-gpu",
         "--no-sandbox",
         "--disable-dev-shm-usage"
