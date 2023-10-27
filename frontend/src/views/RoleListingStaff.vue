@@ -212,6 +212,7 @@ export default {
       </h1>
     </div>
 
+    <!-- IG-12 search component for open role listings -->
     <search-component
       @search-updated="searchRoles($event)"
       :search="searchQuery"
