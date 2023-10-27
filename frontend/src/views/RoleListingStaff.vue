@@ -231,7 +231,7 @@ export default {
         <ul class="rolelisting-container">
           <li
             v-if="Object.keys(roleListings).length == 0"
-            class="py-5 text-center"
+            class="py-5 text-center message"
           >
             <div class="grow"></div>
             <div class="font-bold">No matching roles available!</div>

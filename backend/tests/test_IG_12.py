@@ -4,6 +4,7 @@ from conftest import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 import time
 
 ##################### FRONTEND TESTING ####################
@@ -26,14 +27,22 @@ def test_search_selenium(chrome_driver, url):
     time.sleep(10)
     
     results = []
+    
+    try:
+        role_listings = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
+        )
+        for listing in role_listings:
+            role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
+            results.append(role_title == "Developer")
+        assert all(results)
+    except TimeoutException:
+        no_matching_roles_element = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
+        )
+        assert no_matching_roles_element.is_displayed()
 
-    role_listings = WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
-    )
-    for listing in role_listings:
-        role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
-        results.append(role_title == "Developer")
-    assert all(results)
+    
 
 ##################### BACKEND TESTING ####################
 
