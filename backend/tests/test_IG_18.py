@@ -53,8 +53,9 @@ def test_max_page(chrome_driver, url):
 
     max_page = math.ceil(total/20)
 
-    max_button = driver.find_element(By.CLASS_NAME, 'max_button')
+    wait = WebDriverWait(driver, 30)
 
+    max_button = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'max_button')))
     max_button.click()
 
     right_button = driver.find_element(By.CLASS_NAME, 'right_button')
