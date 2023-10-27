@@ -14,7 +14,7 @@
       <div v-if="inManagement" class="my-10 flex flex-col">
         <span>STATUS</span> 
         <div v-for="status in statuses" :key="status">
-          <input @change="updateFilter()" type="checkbox" class="status" :value="status" v-model="selectedStatus" id="{{ status }}"> {{ status }} 
+          <input @change="updateFilter()" type="checkbox" class="status" :value="status" v-model="selectedStatus" :id="`${status}`"> {{ status }} 
         </div>
       </div>
 

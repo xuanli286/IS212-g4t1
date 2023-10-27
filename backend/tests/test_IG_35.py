@@ -32,7 +32,7 @@ def test_successful_filter_country(chrome_driver, url):
         EC.presence_of_element_located((By.ID, 'country'))
     )
 
-    option_to_select = WebDriverWait(country_element, 10).until(
+    option_to_select = WebDriverWait(country_element, 30).until(
         EC.presence_of_element_located((By.XPATH, ".//option[text()='Malaysia']"))
     )
     option_to_select.click()
@@ -75,7 +75,7 @@ def test_successful_filter_department(chrome_driver, url):
         EC.presence_of_element_located((By.ID, 'department'))
     )
 
-    option_to_select = WebDriverWait(department_element, 10).until(
+    option_to_select = WebDriverWait(department_element, 30).until(
         EC.presence_of_element_located((By.XPATH, ".//option[text()='Consultancy']"))
     )
     option_to_select.click()
@@ -92,6 +92,51 @@ def test_successful_filter_department(chrome_driver, url):
             role_department = listing.find_element(By.CLASS_NAME, 'role-department').text
             department_results.append(role_department == "Consultancy")
         assert all(department_results)
+    except TimeoutException:
+        no_matching_roles_element = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
+        )
+        assert no_matching_roles_element.is_displayed()
+        
+"""
+    Check if filter by status work successfully
+"""
+def test_successful_filter_status(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+
+    hr_login(driver)
+    
+    manage_route_button = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.ID, "manageRoute"))
+    )
+    manage_route_button.click()
+
+    checkbox_label = "Open"
+    checkbox = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.ID, checkbox_label))
+    )
+
+    checkbox.click()
+    assert checkbox.is_selected()
+    
+    time.sleep(10)
+    
+    allMatch = []
+    
+    try:
+        role_listings = WebDriverWait(driver, 30).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
+        )
+        for listing in role_listings:
+            status_element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "statusElement"))
+            )
+
+            status_text = status_element.text
+            allMatch.append(status_text == "Open")
+        assert all(allMatch)
+        
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))

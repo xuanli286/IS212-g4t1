@@ -27,7 +27,9 @@ def test_successful_filter_country(chrome_driver, url):
         EC.presence_of_element_located((By.ID, 'country'))
     )
 
-    option_to_select = country_element.find_element(By.XPATH, f".//option[text()='Indonesia']")
+    option_to_select = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, f".//option[text()='Indonesia']"))
+    )
     option_to_select.click()
     
     time.sleep(10)
@@ -62,7 +64,9 @@ def test_successful_filter_department(chrome_driver, url):
         EC.presence_of_element_located((By.ID, 'department'))
     )
 
-    option_to_select = department_element.find_element(By.XPATH, f".//option[text()='Consultancy']")
+    option_to_select = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, f".//option[text()='Consultancy']"))
+    )
     option_to_select.click()
     
     time.sleep(10)
@@ -75,7 +79,6 @@ def test_successful_filter_department(chrome_driver, url):
         )
         for listing in role_listings:
             role_department = listing.find_element(By.CLASS_NAME, 'role-department').text
-            print(role_department)
             department_results.append(role_department == "Consultancy")
         assert all(department_results)
     except TimeoutException:
