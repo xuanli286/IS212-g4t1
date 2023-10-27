@@ -5,10 +5,13 @@ on:
     workflows: [CI Workflow]
     types:
       - completed
-    branches: [develop] # run on develop branch only
+    # branches: [develop] # run on develop branch only
 
 jobs:
+jobs:
 
+  build:
+    runs-on: ubuntu-latest
   build:
     runs-on: ubuntu-latest
 
