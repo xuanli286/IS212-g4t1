@@ -10,9 +10,7 @@ import SkillProfile from "@/views/SkillProfile.vue";
 import StaffViewSpecificRoleListing from "@/views/StaffViewSpecificRoleListing.vue";
 import SpecificRoleListing from "../views/SpecificRoleListing.vue";
 import RoleListingStaff from "../views/RoleListingStaff.vue";
-import Candidates from "../views/Candidates.vue"
-import ViewAllApplicants from "../views/ViewAllApplicants.vue";
-import ViewSpecificApplication from "../views/SpecificApplication.vue";
+import Candidates from "../views/Candidates.vue";
 
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {

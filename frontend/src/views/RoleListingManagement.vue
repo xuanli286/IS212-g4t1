@@ -80,9 +80,13 @@ export default {
       const year = date.getFullYear();
       return `${day} ${month} ${year}`;
     },
-    updateRoleListingId(id) {
+    viewListing(id) {
       useRoleListingStore().setRoleListingId(id);
-      router.push("/specificrolelisting/" + id);
+      router.push('/specificrolelisting/' + id);
+    },
+    viewApplicants(id) {
+      useRoleListingStore().setRoleListingId(id);
+      router.push('/applicants/' + id);
     },
     getManagerName(id) {
       try {
@@ -253,7 +257,8 @@ export default {
                 <div class="flex items-center mx-2">
                   <span class="bg-black h-1 w-1 rounded-full"></span>
                 </div>
-                <div class="role-applicants font-bold text-green">
+                <div id="numberApplicants" class="role-applicants font-bold text-green hover:underline cursor-pointer"
+                  @click.stop="viewApplicants(id)">
                   {{ applications[id] }}
                   <span v-if="applications[id] == 1"> applicant </span>
                   <span v-else> applicants </span>
