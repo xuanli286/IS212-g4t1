@@ -80,9 +80,13 @@ export default {
       const year = date.getFullYear();
       return `${day} ${month} ${year}`;
     },
-    updateRoleListingId(id) {
+    viewListing(id) {
       useRoleListingStore().setRoleListingId(id);
-      router.push("/specificrolelisting/" + id);
+      router.push('/specificrolelisting/' + id);
+    },
+    viewApplicants(id) {
+      useRoleListingStore().setRoleListingId(id);
+      router.push('/applicants/' + id);
     },
     getManagerName(id) {
       try {
@@ -130,7 +134,7 @@ export default {
 
       var filteredListings = {};
       const backend_url = useConstantStore().backend_url;
-      
+
       if (this.selectedStatus == "Open") {
         var listings = await axios
           .get(`${backend_url}/openrolelisting`)
@@ -140,7 +144,7 @@ export default {
           .catch(() => {
             return [];
           });
-      } else if (this.selectedStatus == "Closed"){
+      } else if (this.selectedStatus == "Closed") {
         var listings = await axios
           .get(`${backend_url}/closerolelisting`)
           .then((response) => {
@@ -158,7 +162,7 @@ export default {
           .catch(() => {
             return [];
           });
-          var closedListings = await axios
+        var closedListings = await axios
           .get(`${backend_url}/closerolelisting`)
           .then((response) => {
             return response.data.data.rolelisting;
@@ -166,7 +170,7 @@ export default {
           .catch(() => {
             return [];
           });
-          var listings = openListings.concat(closedListings)
+        var listings = openListings.concat(closedListings)
       }
 
       for (let listing of listings) {
@@ -209,33 +213,17 @@ export default {
 <template>
   <div class="bg-beige px-10 py-5">
     <div class="flex flex-row mx-20 mb-20">
-      <div
-        class="flex flex-row grow py-5 text-xl font-serif text-center"
-        id="roleListings"
-      >
+      <div class="flex flex-row grow py-5 text-xl font-serif text-center" id="roleListings">
         <div class="grow"></div>
         <h1 class="translate-x-[85px]">Manage Role Listing</h1>
         <div class="grow"></div>
       </div>
       <div class="flex items-center">
-        <router-link
-          id="addRoleListingButton"
-          to="/addrolelisting"
-          class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6 me-2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
+        <router-link id="addRoleListingButton" to="/addrolelisting"
+          class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="w-6 h-6 me-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div class="my-auto">Add Role Listing</div>
         </router-link>
@@ -243,32 +231,18 @@ export default {
     </div>
     <div class="flex flex-row mx-20">
 
-      <filter-component
-        :countries="countries"
-        :hiringDepartments="hiringDepartments"
-        :userSkills="allSkills"
-        :inManagement=true
-        @filter-updated="updateFilter"
-        @filter-cleared="clearFilter"
-      ></filter-component>
+      <filter-component :countries="countries" :hiringDepartments="hiringDepartments" :userSkills="allSkills"
+        :inManagement=true @filter-updated="updateFilter" @filter-cleared="clearFilter"></filter-component>
 
       <div class="w-full">
         <ul class="min-w-fit rolelisting-container">
-          <li
-            v-if="Object.keys(roleListings).length == 0"
-            class="py-5 text-center message"
-          >
+          <li v-if="Object.keys(roleListings).length == 0" class="py-5 text-center message">
             <div class="grow"></div>
             <div class="font-bold">No listings available!</div>
             <div class="grow"></div>
           </li>
-          <li
-            v-else
-            v-for="(listing, id) in roleListings"
-            :key="id"
-            class="rolelisting-panel flex border-t py-5 hover:bg-grey-50"
-            @click="updateRoleListingId(id)"
-          >
+          <li v-else v-for="(listing, id) in roleListings" :key="id"
+            class="rolelisting-panel flex border-t py-5 hover:bg-grey-50" @click="updateRoleListingId(id)">
             <div class="flex-none h-100">
               <div class="role-title text-yellow text-xl">
                 {{ listing.role_name }}
@@ -283,7 +257,8 @@ export default {
                 <div class="flex items-center mx-2">
                   <span class="bg-black h-1 w-1 rounded-full"></span>
                 </div>
-                <div class="role-applicants font-bold text-green">
+                <div id="numberApplicants" class="role-applicants font-bold text-green hover:underline cursor-pointer"
+                  @click.stop="viewApplicants(id)">
                   {{ applications[id] }}
                   <span v-if="applications[id] == 1"> applicant </span>
                   <span v-else> applicants </span>
@@ -294,23 +269,17 @@ export default {
             <div>
               <div class="flex flex-row">
                 <div class="grow"></div>
-                <div
-                  :class="{
-                    'bg-green': checkOpen(listing),
-                    'bg-red': !checkOpen(listing),
-                  }"
-                  class="role-status me-5 text-xs px-4 py-1 rounded-full text-white"
-                  id="statusElement"
-                >
+                <div :class="{
+                  'bg-green': checkOpen(listing),
+                  'bg-red': !checkOpen(listing),
+                }" class="role-status me-5 text-xs px-4 py-1 rounded-full text-white" id="statusElement">
                   <span v-if="checkOpen(listing)">Open</span>
                   <span v-else>Closed</span>
                 </div>
               </div>
               <div class="flex flex-row items-center text-yellow pt-3">
                 <div class="role-department font-bold">{{ listing.dept }}</div>
-                <div
-                  class="flex bg-yellow mx-2 h-1 w-1 rounded-full"
-                ></div>
+                <div class="flex bg-yellow mx-2 h-1 w-1 rounded-full"></div>
                 <div class="role-country">{{ listing.country }}</div>
               </div>
             </div>
