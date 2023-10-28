@@ -21,6 +21,10 @@
         router.push({name: 'Login'});
         user.value = null;
     }
+
+    function skillProfile() {
+        router.push("/skillprofile")
+    }
 </script>
 
 <template>
@@ -30,11 +34,14 @@
             <img class="w-16" src="@/assets/logo.png" alt="">
         </div>
         <div class="mx-auto text-lg">
-            <router-link :class="$route.name === 'Home' ? 'font-semibold text-yellow' : ''" to="/home">
+            <router-link id="viewRoute" :class="$route.name === 'Home' ? 'font-semibold text-yellow' : ''" to="/home">
                 View
             </router-link>
             <router-link id="manageRoute" class="ml-12" v-if="user.access_ID == 4" :class="$route.name === 'Role Listing Management' ? 'font-semibold text-yellow' : ''" to="/rolelistingmanagement">
                 Manage
+            </router-link>
+            <router-link class="ml-12 candidates" v-if="user.access_ID == 3 || user.access_ID == 4" :class="$route.name === 'Candidates' ? 'font-semibold text-yellow' : ''" to="/candidates">
+                Candidates
             </router-link>
         </div>
         <div class="ml-auto">
@@ -46,12 +53,12 @@
                     <p class="text-base">{{ user.staff_FName + " " + user.staff_LName }}</p>
                     <p class="text-xs">{{ access[user.access_ID] }}</p>
                 </div>
-                <img class="ml-3 cursor-pointer" src="@/assets/icons/dropdown.svg" alt="" @click="expandDropdown">
+                <img id="dropdown" class="ml-3 cursor-pointer" src="@/assets/icons/dropdown.svg" alt="" @click="expandDropdown">
             </div>
         </div>
     </div>
     <div v-if="isExpand" class="absolute right-0 mr-10 bg-grey-50 text-sm cursor-pointer">
-        <div class="flex w-36 p-3 rounded-md hover:bg-grey">
+        <div id="skillprofile" class="flex w-36 p-3 rounded-md hover:bg-grey" @click="skillProfile">
             <img class="mr-2" src="@/assets/icons/folder.svg" alt="">
             <p>My Skill Profile</p>
         </div>

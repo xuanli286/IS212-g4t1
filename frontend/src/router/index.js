@@ -6,9 +6,11 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import RoleListingManagement from "../views/RoleListingManagement.vue";
 import SkillManagement from "../views/SkillManagement.vue";
+import SkillProfile from "@/views/SkillProfile.vue";
 import StaffViewSpecificRoleListing from "@/views/StaffViewSpecificRoleListing.vue";
 import SpecificRoleListing from "../views/SpecificRoleListing.vue";
 import RoleListingStaff from "../views/RoleListingStaff.vue";
+import Candidates from "../views/Candidates.vue";
 import ViewAllApplicants from "../views/ViewAllApplicants.vue";
 
 const router = createRouter({
@@ -62,6 +64,16 @@ const router = createRouter({
       path: "/rolelistingstaff",
       name: "Role Listing Staff",
       component: RoleListingStaff,
+    },
+    {
+      path: "/skillprofile",
+      name: "SkillProfile",
+      component: SkillProfile,
+    },
+    {
+      path: "/candidates",
+      name: "Candidates",
+      component: Candidates,
     },
     {
       path: "/applicants/:id",

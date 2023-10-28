@@ -56,6 +56,26 @@ class Staff(db.Model):
                 "access_ID": self.access_ID
             }
         }
+    
+
+class Skill(db.Model):
+
+    __tablename__ = "skill"
+
+    skill_name = db.Column(db.String(50), primary_key=True)
+    skill_desc = db.Column(db.Text, nullable=False)
+   
+
+    # properties of the skill when it is created
+    def __init__(self, skill_name, skill_desc):
+        self.skill_name = skill_name
+        self.skill_desc = skill_desc
+
+    # specify how to represent our role_listing object as a JSON string
+    def json(self):
+        return {
+            self.skill_name: self.skill_desc
+        }
 
 
 class StaffSkill(db.Model):
@@ -63,7 +83,7 @@ class StaffSkill(db.Model):
     __tablename__ = "staff_skill"
 
     staff_ID = db.Column(db.Integer, db.ForeignKey("staff.staff_ID"), primary_key=True)
-    skill_name = db.Column(db.String(50), primary_key=True)
+    skill_name = db.Column(db.String(50), db.ForeignKey("skill.skill_name"), primary_key=True)
 
 
     # properties of the staff when it is created
@@ -139,7 +159,7 @@ class RoleSkill(db.Model):
     __tablename__ = "role_skill"
 
     role_name = db.Column(db.String(20), db.ForeignKey("role.role_name"), primary_key=True)
-    skill_name = db.Column(db.String(50), primary_key=True)
+    skill_name = db.Column(db.String(50), db.ForeignKey("skill.skill_name"), primary_key=True)
    
 
     # properties of the role_listing when it is created
@@ -270,6 +290,20 @@ def enum_values(column_name):
         {
             "code": 200,
             "data": enum_values
+        }
+    )
+
+
+# to retrieve all skill & skill_desc in a list of dictionary
+@app.route('/get_all_skill')
+def get_all_skill():
+
+    skilllist = Skill.query.all()
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": [skill.json() for skill in skilllist]
         }
     )
 
