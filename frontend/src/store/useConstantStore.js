@@ -46,48 +46,50 @@ export const useConstantStore = defineStore('constant', () => {
       console.log(error.message);
     });
 
-    axios.get(`${backend_url.value}/get_all_role`)
-        .then((response) => {
-            for (let i of response.data.data) {
-                for (let key in i) {
-                    roles.value[key] = i[key];
-                }
-            }
-        })
-        .catch((error) => {
-            console.log(error.message);
-        })
-
-    function getSkills(roleName) {
-        axios.get(`${backend_url.value}/get_role_skill/` + roleName)
-            .then((response) => {
-                roleSkills.value = response.data.data;
-            })
-            .catch((error) => {
-                console.log(error.message);
-            })
+  axios
+    .get(`${backend_url.value}/get_all_role`)
+    .then((response) => {
+      for (let i of response.data.data) {
+        for (let key in i) {
+          roles.value[key] = i[key];
         }
+      }
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
 
-    function getStaffSkills(staffID) {
-        axios.get(`${backend_url.value}/get_staff_skill/` + staffID)
-            .then((response) => {
-                staffSkills.value = response.data.data;
-            })
-            .catch((error) => {
-                console.log(error.message);
-            })
-    }
+  function getSkills(roleName) {
+    axios
+      .get(`${backend_url.value}/get_role_skill/` + roleName)
+      .then((response) => {
+        roleSkills.value = response.data.data;
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }
 
+  function getStaffSkills(staffID) {
+    axios
+      .get(`${backend_url.value}/get_staff_skill/` + staffID)
+      .then((response) => {
+        staffSkills.value = response.data.data;
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }
 
-    return {
-        hiringDepartment,
-        countries,
-        roleSkills,
-        staffSkills,
-        staff,
-        roles,
-        getSkills,
-        getStaffSkills,
-        backend_url,
-    };
-})
+  return {
+    hiringDepartment,
+    countries,
+    roleSkills,
+    staffSkills,
+    staff,
+    roles,
+    getSkills,
+    getStaffSkills,
+    backend_url,
+  };
+});

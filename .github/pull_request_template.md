@@ -8,6 +8,5 @@ This PR adds... <!-- A brief description of what your PR does -->
 
 -   [ ] I've kept this PR as small as possible (~600 lines) by splitting it into PRs with manageable chunks of code
 -   [ ] I've requested reviews from 1-2 reviewers
--   [ ] I've added/updated unit tests
--   [ ] I've added/updated e2e tests
--   [ ] I've added documentation in README/[Linear](insertlinkhere.com)
+-   [ ] I've added/updated pytest tests
+-   [ ] I've added/updated selenium tests
