@@ -78,9 +78,16 @@ def test_successful_filter_department(chrome_driver, url):
             EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
         )
         for listing in role_listings:
-            role_department = listing.find_element(By.CLASS_NAME, 'role-department').text
+            role_department_element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, 'role-department')))
+            
+            role_department = role_department_element.text
+            print(role_department)
+            
             department_results.append(role_department == "Consultancy")
+            print(department_results)
+
         assert all(department_results)
+        
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
