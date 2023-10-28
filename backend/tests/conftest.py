@@ -65,4 +65,3 @@ def hr_login(driver):
     login_button = driver.find_element(By.ID, "login")
     login_button.click()
 
-
