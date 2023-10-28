@@ -294,6 +294,20 @@ def enum_values(column_name):
     )
 
 
+# to retrieve all skill & skill_desc in a list of dictionary
+@app.route('/get_all_skill')
+def get_all_skill():
+
+    skilllist = Skill.query.all()
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": [skill.json() for skill in skilllist]
+        }
+    )
+
+
 # to retrieve all role & role_desc in a list of dictionary
 @app.route('/get_all_role')
 def get_all_role():
