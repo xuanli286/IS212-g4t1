@@ -26,7 +26,7 @@
         </template>
       </Button>
     </div>
-    <div class="grid grid-cols-3 mt-10">
+    <div class="mx-10 grid grid-cols-3 mt-10">
       <div>
         <p class="font-bold">Reporting Manager</p>
         <p id="manager">{{ staff[roleDetails.manager_ID] }}</p>
@@ -40,7 +40,7 @@
         <p id="country">{{ roleDetails.country }}</p>
       </div>
     </div>
-    <div class="grid grid-cols-2 gap-20 mt-10">
+    <div class="mx-10 grid grid-cols-2 gap-20 mt-10">
       <div>
         <p class="font-bold">Description</p>
         <p class="text-justify" id="role-description">{{ roles[roleName] }}</p>
