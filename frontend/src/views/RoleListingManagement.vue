@@ -97,6 +97,10 @@ export default {
         return "";
       }
     },
+    updateRoleListingId(id) {
+      useRoleListingStore().setRoleListingId(id);
+      router.push("/viewspecificrolelisting/" + id);
+    },
     processListings(listings) {
       const processedListings = {};
       for (const listing of listings) {
