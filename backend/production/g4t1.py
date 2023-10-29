@@ -345,7 +345,17 @@ def get_all_open_rolelisting():
     # get rolelisting whereby the application_deadline is today or after
     condition2 = RoleListing.application_deadline >= db.func.current_date()
 
-    rolelistinglist = RoleListing.query.filter(condition1, condition2).all()
+    manager_ID = request.args.get('manager_ID')
+
+    condition3 = RoleListing.manager_ID == manager_ID
+
+    if manager_ID:
+        rolelistinglist = RoleListing.query.filter(condition1, condition2, condition3).all()
+
+    else:
+        rolelistinglist = RoleListing.query.filter(condition1, condition2).all()
+
+
     if len(rolelistinglist):
         return jsonify(
             {
