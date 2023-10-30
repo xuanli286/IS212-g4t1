@@ -150,12 +150,10 @@ onMounted(async () => {
     // get staff skills
     const response_staffskills = await axios.get(`${backend_url.value}/get_staff_skill/${applicantID}`);
     staffSkills.value = response_staffskills.data.data;
-    console.log(staffSkills.value);
 
     // get role skills
     const response_roleskills = await axios.get(`${backend_url.value}/get_role_skill/${roleName.value}`);
     roleSkills.value = response_roleskills.data.data;
-    console.log(roleSkills.value);
 
   }
   catch (error) {
