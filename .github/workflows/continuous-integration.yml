@@ -113,14 +113,14 @@ jobs:
 
       - name: Build Production Docker image
         run:
-          docker build -t production -f backend/production_backend/prod.Dockerfile .
+          docker build -t production -f backend/production_backend/prod.Dockerfile ./backend
 
       - name: Run Production Docker container
         run: docker run production
 
       - name: Build Test Docker image
         run:
-          docker build -t test -f backend/test_backend/test.Dockerfile .
+          docker build -t test -f backend/test_backend/test.Dockerfile ./backend
 
       - name: Run Test Docker container
         run: docker run test
