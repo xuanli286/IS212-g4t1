@@ -43,10 +43,26 @@ jobs:
   #         cd frontend
   #         npm run build
 
+  create-testing-branch:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - name: Create Testing Branch
+        run: |
+          # Define the testing branch name
+          testing_branch="testing-${GITHUB_REF##*/}"
+          
+          # Check if the testing branch already exists
+          git fetch origin "refs/heads/${testing_branch}" || git checkout -b "${testing_branch}"
+          git push origin "${testing_branch}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   test:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 10
+    needs: create-testing-branch
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -84,3 +100,23 @@ jobs:
         run: |
           cd frontend
           npm run test
+      
+      - name: Merge Branch into Testing Branch
+        run: |
+          git fetch origin "refs/heads/${{ github.ref }}" --depth=1
+          git checkout -b pr-branch "${{ github.sha }}"
+          git merge --no-ff "refs/remotes/origin/${{ github.ref }}" --no-edit
+          git push origin pr-branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Delete Testing Branch
+        run: |
+          # Define the testing branch name
+          testing_branch="testing-${GITHUB_REF##*/}"
+          
+          # Delete the testing branch
+          git push origin --delete "${testing_branch}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
