@@ -52,9 +52,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: initialize
     steps:
+      - name: Setup Git environment
+        run: git config --global user.email "github-actions@github.com" && git config --global user.name "GitHub Actions"
+
       - name: Fetch Pull Request Merge Reference
-        run: git fetch origin "refs/pull/${{ github.event.pull_request.number }}/merge:pull-request-merge"
-        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin "refs/pull/${{ github.event.pull_request.number}}/merge:pull-request-merge"
+          git checkout pull-request-merge
 
   create-testing-branch:
     runs-on: ubuntu-latest
