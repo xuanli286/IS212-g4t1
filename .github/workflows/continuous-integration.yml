@@ -40,7 +40,7 @@ jobs:
       - name: Start Server
         run: |
           cd frontend
-          npm run build & 
+          npm run serve & 
           serve_pid=$! 
 
       - name: Wait for the Vue.js app to start
@@ -56,7 +56,7 @@ jobs:
           exit 1
       - name: List running processes
         run: ps aux
-        
+
       - name: Stop the Vue.js app
         run: |
           kill $serve_pid
