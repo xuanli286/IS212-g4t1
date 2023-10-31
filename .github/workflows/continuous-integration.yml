@@ -152,18 +152,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  delete-testing-branch:
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # delete-testing-branch:
+  #   runs-on: ubuntu-latest
+  #   continue-on-error: false
+  #   needs: test
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Delete Testing Branch
-        run: |
-          testing_branch="testing-${GITHUB_REF##*/}"
-          git push origin --delete "${testing_branch}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Delete Testing Branch
+  #       run: |
+  #         testing_branch="testing-${GITHUB_REF##*/}"
+  #         git push origin --delete "${testing_branch}"
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ...
