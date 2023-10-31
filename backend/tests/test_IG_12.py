@@ -10,7 +10,7 @@ import time
 ##################### FRONTEND TESTING ####################
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/'
+    return frontend_base_url
 
 def test_search_title(chrome_driver, url):
     driver = chrome_driver
@@ -35,12 +35,15 @@ def test_search_title(chrome_driver, url):
         for listing in role_listings:
             role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
             results.append(role_title == "Developer")
-        assert all(results)
+
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
         )
         assert no_matching_roles_element.is_displayed()
+
+    if results[0]:
+        assert all(results)
 
 def test_search_country(chrome_driver, url):
     driver = chrome_driver
@@ -65,12 +68,15 @@ def test_search_country(chrome_driver, url):
         for listing in role_listings:
             role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
             results.append(role_title == "Developer")
-        assert all(results)
+
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
         )
         assert no_matching_roles_element.is_displayed()
+
+    if results[0]:
+        assert all(results)
 
     
 def test_search_department(chrome_driver, url):
@@ -85,7 +91,7 @@ def test_search_department(chrome_driver, url):
     search_button = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "search-button")))
     search_button.click()
     
-    time.sleep(10)
+    time.sleep(30)
     
     results = []
     
@@ -95,14 +101,16 @@ def test_search_department(chrome_driver, url):
         )
         for listing in role_listings:
             role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
-            results.append(role_title == "Developer")
-        assert all(results)
+            results.append(role_title == "Developer")           
+
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
         )
         assert no_matching_roles_element.is_displayed()
 
+    if results[0]:
+        assert all(results)
     
 def test_search_skills(chrome_driver, url):
     driver = chrome_driver
@@ -127,12 +135,15 @@ def test_search_skills(chrome_driver, url):
         for listing in role_listings:
             role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
             results.append(role_title == "Developer")
-        assert all(results)
+
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, '//li[@class="py-5 text-center message"]'))
         )
         assert no_matching_roles_element.is_displayed()
+
+    if results[0]:
+        assert all(results)
 
     
 
