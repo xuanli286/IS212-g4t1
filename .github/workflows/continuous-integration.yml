@@ -97,7 +97,8 @@ jobs:
             git checkout -b $testing_branch
             git push origin $testing_branch
 
-            # Merge the source branch (e.g., feature-branch) of the pull request into testing-merge
+            git fetch origin ${{ github.head_ref }}
+
             git merge "${{ github.head_ref }}" --no-ff --no-edit
             git push origin $testing_branch
           else
