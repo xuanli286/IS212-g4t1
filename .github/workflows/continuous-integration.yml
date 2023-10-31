@@ -105,13 +105,15 @@ jobs:
     timeout-minutes: 5
     needs: create-and-merge-testing-branch
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build Production Docker image
         run: |
-          cd backend
-          cd production_backend
+          cd backend/production_backend
           docker build -t production .
 
       - name: Run Production Docker container
@@ -119,8 +121,7 @@ jobs:
 
       - name: Build Test Docker image
         run: |
-          cd backend
-          cd test_backend
+          cd backend/test_backend
           docker build -t test .
 
       - name: Run Test Docker container
