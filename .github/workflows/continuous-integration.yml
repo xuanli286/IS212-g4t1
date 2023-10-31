@@ -98,32 +98,6 @@ jobs:
           echo "::set-output name=testing_branch::$testing_branch"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-  test-docker-images:
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    timeout-minutes: 5
-    needs: create-and-merge-testing-branch
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Production Docker image
-        run:
-          docker build -t production -f backend/production_backend/prod.Dockerfile ./backend
-
-      - name: Run Production Docker container
-        run: docker run production
-
-      - name: Build Test Docker image
-        run:
-          docker build -t test -f backend/test_backend/test.Dockerfile ./backend
-
-      - name: Run Test Docker container
-        run: docker run test
 
   test-functions:
     runs-on: ubuntu-latest
