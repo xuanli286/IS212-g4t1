@@ -113,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 15
-    needs: create-testing-branch
+    needs: create-and-merge-testing-branch
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
