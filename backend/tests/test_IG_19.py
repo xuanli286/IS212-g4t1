@@ -58,7 +58,7 @@ def test_successful_filter(chrome_driver, url):
     Check filter by rolelisting
     """
 
-    time.sleep(100)
+    time.sleep(60)
 
     """
     Check filter by country
@@ -138,7 +138,7 @@ def test_successful_filter(chrome_driver, url):
     skill_checkbox = driver.find_element(By.ID, "Collaboration")
     skill_checkbox.click()
 
-    WebDriverWait(driver, 60).until(
+    wait.until(
         EC.visibility_of_element_located((By.CLASS_NAME, 'percentageMatch'))
     )
     
