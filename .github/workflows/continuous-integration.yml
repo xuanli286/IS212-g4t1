@@ -112,17 +112,15 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Production Docker image
-        run: |
-          cd backend/production_backend
-          docker build -t production .
+        run:
+          docker build -t production -f backend/production_backend/prod.Dockerfile .
 
       - name: Run Production Docker container
         run: docker run production
 
       - name: Build Test Docker image
-        run: |
-          cd backend/test_backend
-          docker build -t test .
+        run:
+          docker build -t test -f backend/test_backend/test.Dockerfile .
 
       - name: Run Test Docker container
         run: docker run test
