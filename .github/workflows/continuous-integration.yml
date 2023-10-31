@@ -85,13 +85,18 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 
+          
+      - name: Debugging
+        run: |
+          echo "Testing Branch: $testing_branch"
+          git branch
+        env:
+          testing_branch: ${{ steps.create-testing-branch.outputs.testing_branch }}
 
       - name: Create Testing Branch
         run: |
-          # Define the testing branch name
           testing_branch="testing-${GITHUB_REF##*/}"
-          
-          # Check if the testing branch already exists
+
           if ! git rev-parse --verify "$testing_branch" > /dev/null 2>&1; then
             git checkout -b "${testing_branch}"
             git push origin "${testing_branch}"
