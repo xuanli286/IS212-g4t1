@@ -116,9 +116,9 @@ jobs:
 
       - name: Merge PR Branch into Testing Branch
         run: |
-          git checkout "${{ needs.create-testing-branch.outputs.testing_branch }}"
-          git merge "${{ github.ref }}" --no-ff --no-edit
-          git push origin "${{ needs.create-testing-branch.outputs.testing_branch }}"
+          git checkout ${{ needs.create-testing-branch.outputs.testing_branch }}
+          git merge ${{ github.ref }} --no-ff --no-edit
+          git push origin ${{ needs.create-testing-branch.outputs.testing_branch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
