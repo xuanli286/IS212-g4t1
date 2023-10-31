@@ -40,8 +40,9 @@ jobs:
       - name: Start Server
         run: |
           cd frontend
-          npm run serve & 
-          serve_pid=$! 
+          npm run serve &
+          serve_pid=$!
+          echo "Serve process ID: $serve_pid"
 
       - name: Wait for the Vue.js app to start
         run: |
@@ -54,11 +55,10 @@ jobs:
           done
           echo "Vue.js app didn't start in time or encountered an error."
           exit 1
-      - name: List running processes
-        run: ps aux
 
       - name: Stop the Vue.js app
         run: |
+          echo "Serve process ID: $serve_pid"
           kill $serve_pid
   
   fetch-merge-reference:
