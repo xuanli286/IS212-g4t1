@@ -99,6 +99,8 @@ jobs:
 
             git fetch --all
 
+            git checkout "${{ github.head_ref }}"
+            git checkout $testing_branch
             git merge "${{ github.head_ref }}" --no-ff --no-edit
             git push origin $testing_branch
           else
