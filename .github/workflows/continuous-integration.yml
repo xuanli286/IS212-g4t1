@@ -76,7 +76,7 @@ jobs:
           git fetch origin "refs/pull/${{ github.event.pull_request.number}}/merge:pull-request-merge"
           git checkout pull-request-merge
 
-  create-testing-branch:
+  create-and-merge-testing-branch:
     runs-on: ubuntu-latest
     continue-on-error: false
     needs: fetch-merge-reference
@@ -96,6 +96,9 @@ jobs:
           if ! git rev-parse --verify $testing_branch > /dev/null 2>&1; then
             git checkout -b $testing_branch
             git push origin $testing_branch
+
+            git merge "${{ github.ref }}" --no-ff --no-edit
+            git push origin $testing_branch
           else
             git checkout $testing_branch
           fi
@@ -103,30 +106,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Delay
-        run: sleep 30
-
-  merge-testing-branch:
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    needs: create-testing-branch
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Merge PR Branch into Testing Branch
-        run: |
-          git checkout ${{ needs.create-testing-branch.outputs.testing_branch }}
-          git merge ${{ github.ref }} --no-ff --no-edit
-          git push origin ${{ needs.create-testing-branch.outputs.testing_branch }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   test:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 15
-    needs: merge-testing-branch
+    needs: create-and-merge-testing-branch
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -170,7 +154,8 @@ jobs:
   delete-testing-branch:
     runs-on: ubuntu-latest
     continue-on-error: false
-    needs: test
+    needs: create-testing-branch
+    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
