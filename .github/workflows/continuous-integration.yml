@@ -50,6 +50,7 @@ jobs:
 
   fetch-merge-reference:
     runs-on: ubuntu-latest
+    needs: initialize
     steps:
       - name: Fetch Pull Request Merge Reference
         run: git fetch origin "refs/pull/${{ github.event.pull_request.number }}/merge:pull-request-merge"
