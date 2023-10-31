@@ -23,12 +23,12 @@ jobs:
            
     - name: Build & Push Production Image
       run: |
-        docker build --build-arg DB_URL=${{secrets.DB_URL}} -f ./backend/production/prod.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod ./backend
+        docker build --build-arg DB_URL=${{secrets.DB_URL}} -f ./backend/production_backend/prod.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod ./backend
         docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-prod
 
     - name: Build & Push Test Image
       run: |
-        docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/test/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test ./backend
+        docker build --build-arg TEST_DB_URL=${{secrets.TEST_DB_URL}} -f ./backend/test_backend/test.Dockerfile -t ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test ./backend
         docker push ${{secrets.DOCKER_USERNAME}}/g4t1_sbrp:spm-test
 
   deploy:
