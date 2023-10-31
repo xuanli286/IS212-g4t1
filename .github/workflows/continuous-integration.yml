@@ -30,7 +30,7 @@ jobs:
         with:
           path: |
             frontend
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install Dependencies
         run: |
@@ -110,10 +110,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-  test-docker-image:
+  test-docker-images:
     runs-on: ubuntu-latest
     continue-on-error: false
-    timeout-minutes: 15
+    timeout-minutes: 5
     needs: create-and-merge-testing-branch
     steps:
       - name: Set up Docker
@@ -135,7 +135,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 15
-    needs: test-docker-image
+    needs: test-docker-images
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
