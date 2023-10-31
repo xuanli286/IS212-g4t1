@@ -88,7 +88,7 @@ jobs:
         with:
           fetch-depth: 0 
 
-      - name: Create Testing Branch
+      - name: Create and Merge Testing Branch
         id: create-testing-branch
         run: |
           testing_branch="testing-${GITHUB_REF##*/}"
@@ -97,7 +97,8 @@ jobs:
             git checkout -b $testing_branch
             git push origin $testing_branch
 
-            git merge "${{ github.ref }}" --no-ff --no-edit
+            # Merge the source branch (e.g., feature-branch) of the pull request into testing-merge
+            git merge "${{ github.head_ref }}" --no-ff --no-edit
             git push origin $testing_branch
           else
             git checkout $testing_branch
