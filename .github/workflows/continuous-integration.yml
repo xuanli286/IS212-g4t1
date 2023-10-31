@@ -76,41 +76,43 @@ jobs:
           git fetch origin "refs/pull/${{ github.event.pull_request.number}}/merge:pull-request-merge"
           git checkout pull-request-merge
 
-  create-and-merge-testing-branch:
+  create-testing-branch:
     runs-on: ubuntu-latest
     continue-on-error: false
     needs: fetch-merge-reference
+    outputs:
+      testing_branch: ${{ steps.create-testing-branch.outputs.testing_branch }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 
-          
-      - name: Debugging
-        run: |
-          echo "Testing Branch: $testing_branch"
-          git branch
-        env:
-          testing_branch: ${{ steps.create-testing-branch.outputs.testing_branch }}
 
       - name: Create Testing Branch
+        id: create-testing-branch
         run: |
           testing_branch="testing-${GITHUB_REF##*/}"
-
+          
           if ! git rev-parse --verify "$testing_branch" > /dev/null 2>&1; then
             git checkout -b "${testing_branch}"
             git push origin "${testing_branch}"
           else
             git checkout "${testing_branch}"
           fi
+          echo "::set-output name=testing_branch::${testing_branch}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  merge-testing-branch:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    needs: create-testing-branch
+    steps:
       - name: Merge PR Branch into Testing Branch
         run: |
-          git checkout "${testing_branch}"
+          git checkout "${{ needs.create-testing-branch.outputs.testing_branch }}"
           git merge "${{ github.ref }}" --no-ff --no-edit
-          git push origin "${testing_branch}"
+          git push origin "${{ needs.create-testing-branch.outputs.testing_branch }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
