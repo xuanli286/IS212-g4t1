@@ -111,7 +111,7 @@ jobs:
           cd frontend
           npm run test
       
-       - name: Merge Branch into Testing Branch
+      - name: Merge Branch into Testing Branch
         run: |
           git fetch origin "refs/heads/${{ github.ref }}" --depth=1
           git checkout -b pr-branch "${{ github.sha }}"
