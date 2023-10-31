@@ -42,6 +42,12 @@ jobs:
   #         cd frontend
   #         npm run build
 
+  initialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
   fetch-merge-reference:
     runs-on: ubuntu-latest
     steps:
@@ -52,11 +58,8 @@ jobs:
   create-testing-branch:
     runs-on: ubuntu-latest
     continue-on-error: false
+    needs: fetch-merge-reference
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 
       - name: Create Testing Branch
         run: |
           # Define the testing branch name
@@ -74,9 +77,6 @@ jobs:
     timeout-minutes: 15
     needs: create-testing-branch
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
