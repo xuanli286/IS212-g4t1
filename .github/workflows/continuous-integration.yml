@@ -12,36 +12,23 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    continue-on-error: false
-    timeout-minutes: 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: "14"
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          node-version: 14
 
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            frontend
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Install Dependencies
-        run: |
-          cd frontend
-          npm ci
+      - name: Install project dependencies
+        run: npm install
 
       - name: Start Server
         run: |
           cd frontend
           npm run serve &
-          serve_pid=$!
+          export serve_pid=$!
           echo "Serve process ID: $serve_pid"
 
       - name: Wait for the Vue.js app to start
