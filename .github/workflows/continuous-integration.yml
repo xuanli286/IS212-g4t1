@@ -155,7 +155,7 @@ jobs:
   delete-testing-branch:
     runs-on: ubuntu-latest
     continue-on-error: false
-    needs: create-and-merge-testing-branch
+    needs: test
     if: always()
     steps:
       - name: Checkout code
