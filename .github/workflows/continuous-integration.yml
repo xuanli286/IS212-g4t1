@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 15
-    needs: test-docker-images
+    needs: create-and-merge-testing-branch
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
