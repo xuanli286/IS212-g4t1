@@ -47,6 +47,10 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
       - name: Create Testing Branch
         run: |
           # Define the testing branch name
@@ -61,7 +65,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     continue-on-error: false
-    timeout-minutes: 10
+    timeout-minutes: 15
     needs: create-testing-branch
     steps:
       - name: Checkout code
@@ -109,7 +113,7 @@ jobs:
           git push origin pr-branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Delete Testing Branch
         run: |
           # Define the testing branch name
