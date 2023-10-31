@@ -95,6 +95,11 @@ class StaffSkill(db.Model):
     # specify how to represent our staff object as a JSON string
     def json(self):
         return self.skill_name
+    
+    def staff_json(self):
+        return {
+            self.staff_ID : self.skill_name
+        }
 
 
 class Role(db.Model):
@@ -228,12 +233,31 @@ class Application(db.Model):
 @app.route("/staff")
 def get_all():
     stafflist = Staff.query.all()
+
+    staff_results = []
+
+    staffskilllist = StaffSkill.query.order_by(StaffSkill.staff_ID).all()
+
+    staffskill_results = [staff_skill.staff_json() for staff_skill in staffskilllist] 
+
+    for staff in stafflist:
+
+        new_dict = staff.json()
+
+        staff_ID = list(new_dict.keys())[0]
+
+        matching_results = [item[staff_ID] for item in staffskill_results if staff_ID in item]
+
+        new_dict[staff_ID]["staff_skills"] = matching_results     
+
+        staff_results.append(new_dict)
+
     if len(stafflist):
         return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "staff": [staff.json() for staff in stafflist]
+                    "staff": staff_results
                 }
             }
         )
