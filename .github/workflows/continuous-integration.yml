@@ -33,7 +33,6 @@ jobs:
           cd frontend
           npm run serve &
           serve_pid=$!
-          echo "Serve process ID: $serve_pid"
 
           # Wait for the Vue.js app to start
           for _ in {1..18}; do
@@ -47,7 +46,6 @@ jobs:
           exit 1
 
           # Stop the Vue.js app
-          echo "Serve process ID: $serve_pid"
           kill $serve_pid
 
   fetch-merge-reference:
@@ -107,9 +105,9 @@ jobs:
     timeout-minutes: 5
     needs: create-and-merge-testing-branch
     steps:
-      - name: Set up Docker
-        uses: docker/setup-action@v2
-
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
       - name: Build Production Docker image
         run: docker build -t production -f backend/production_backend/Dockerfile .
 
