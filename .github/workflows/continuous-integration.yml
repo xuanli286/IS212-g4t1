@@ -1,7 +1,6 @@
 ---
 name: CI Workflow
 
-
 on:
   pull_request:
     branches:
@@ -42,6 +41,13 @@ jobs:
   #       run: |
   #         cd frontend
   #         npm run build
+
+  fetch-merge-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Pull Request Merge Reference
+        run: git fetch origin "refs/pull/${{ github.event.pull_request.number }}/merge:pull-request-merge"
+        if: github.event_name == 'pull_request'
 
   create-testing-branch:
     runs-on: ubuntu-latest
@@ -105,7 +111,7 @@ jobs:
           cd frontend
           npm run test
       
-      - name: Merge Branch into Testing Branch
+       - name: Merge Branch into Testing Branch
         run: |
           git fetch origin "refs/heads/${{ github.ref }}" --depth=1
           git checkout -b pr-branch "${{ github.sha }}"
