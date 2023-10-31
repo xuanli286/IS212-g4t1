@@ -102,6 +102,9 @@ jobs:
           echo "::set-output name=testing_branch::${testing_branch}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Delay
+        run: sleep 60
 
   merge-testing-branch:
     runs-on: ubuntu-latest
@@ -110,7 +113,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Merge PR Branch into Testing Branch
         run: |
           git checkout "${{ needs.create-testing-branch.outputs.testing_branch }}"
