@@ -45,7 +45,7 @@ def test_successful_filter(chrome_driver, url):
 
     manager_login(driver)
 
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 10)
 
     wait.until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
