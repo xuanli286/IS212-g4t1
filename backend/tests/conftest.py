@@ -4,7 +4,7 @@ import pytest
 from selenium.webdriver.common.by import By
 
 backend_base_url = "http://18.143.92.81:5001"
-backend_base_url_production = "http://18.143.92.81:5000" # ONLY USE FOR GET REQUEST
+backend_base_url_production = "http://18.143.92.81:5000" # ONLY USE FOR GET REQUEST or when need to show effect on frontend
 frontend_base_url = "http://localhost:8080"
 
 @pytest.fixture
