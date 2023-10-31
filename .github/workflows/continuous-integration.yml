@@ -10,62 +10,54 @@ concurrency:
   group: ${{ github.ref }}-ci-workflow
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    timeout-minutes: 5
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # build:
+  #   runs-on: ubuntu-latest
+  #   continue-on-error: false
+  #   timeout-minutes: 5
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "14"
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "14"
+  #         cache: 'npm'
+  #         cache-dependency-path: frontend/package-lock.json
 
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            frontend
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+  #     - name: Cache node modules
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: |
+  #           frontend
+  #       key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install Dependencies
-        run: |
-          cd frontend
-          npm ci
+  #     - name: Install Dependencies
+  #       run: |
+  #         cd frontend
+  #         npm ci
 
-      - name: Start Server
-        run: |
-          cd frontend
-          npm run serve &  # Start the Vue.js app in the background
-          serve_pid=$!    # Capture the process ID of the npm run serve process
+  #     - name: Start Server
+  #       run: |
+  #         cd frontend
+  #         npm run serve & 
+  #         serve_pid=$! 
 
-      - name: Wait for the Vue.js app to start
-        run: |
-          # Wait for the Vue.js app to be accessible at http://localhost:8080
-          for _ in {1..18}; do
-            if curl -I http://localhost:8080 -s -f -o /dev/null; then
-              echo "Vue.js app is running."
-              exit 0  # The app is running, exit the loop
-            fi
-            sleep 10
-          done
-          echo "Vue.js app didn't start in time or encountered an error."
-          exit 1
+  #     - name: Wait for the Vue.js app to start
+  #       run: |
+  #         for _ in {1..18}; do
+  #           if curl -I http://localhost:8080 -s -f -o /dev/null; then
+  #             echo "Vue.js app is running."
+  #             exit 0  # The app is running, exit the loop
+  #           fi
+  #           sleep 10
+  #         done
+  #         echo "Vue.js app didn't start in time or encountered an error."
+  #         exit 1
 
-      - name: Run Tests
-        run: |
-          # Add commands to run your tests against the running Vue.js app
-          # You can use tools like Cypress, Selenium, or other testing frameworks
-          # Replace with your actual test commands
-
-      - name: Stop the Vue.js app
-        run: |
-          # Use the process ID captured earlier to stop the Vue.js app
-          kill $serve_pid
+  #     - name: Stop the Vue.js app
+  #       run: |
+  #         kill $serve_pid
       
   fetch-merge-reference:
     runs-on: ubuntu-latest
