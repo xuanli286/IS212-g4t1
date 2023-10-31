@@ -101,12 +101,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge Testing Branch
+      - name: Merge PR Branch into Testing Branch
         run: |
-          # Merge the testing branch into the target branch (e.g., main)
-          git checkout main
-          git merge --no-ff "${{ github.sha }}" --no-edit
-          git push origin main
+          git checkout "${testing_branch}"
+          git merge "${{ github.ref }}" --no-ff --no-edit
+          git push origin "${testing_branch}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
