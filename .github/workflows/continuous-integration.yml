@@ -155,7 +155,6 @@ jobs:
   delete-testing-branch:
     runs-on: ubuntu-latest
     continue-on-error: false
-    timeout-minutes: 15
     needs: test
     steps:
       - name: Checkout code
@@ -163,11 +162,8 @@ jobs:
 
       - name: Delete Testing Branch
         run: |
-          # Define the testing branch name
           testing_branch="testing-${GITHUB_REF##*/}"
-          
-          # Delete the testing branch
           git push origin --delete "${testing_branch}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+...
