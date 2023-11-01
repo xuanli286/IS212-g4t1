@@ -11,7 +11,7 @@ import math
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/candidates'
+    return frontend_base_url
 
 ##################### FRONTEND TESTING #####################
 
@@ -19,10 +19,23 @@ def url():
     Check that left buttons should be disabled and input value should be 1 when on first page
 """
 
-def test_min_page(chrome_driver, url):
+def test_min_page(chrome_driver):
     driver = chrome_driver
-    driver.get(url)
+    driver.get(frontend_base_url)
     driver.maximize_window()
+
+    manager_login(driver)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
+    )
+
+    candidate_link = driver.find_element(By.CLASS_NAME, "candidates")
+    candidate_link.click()
+
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, 'min_button'))
+    )
 
     min_button = driver.find_element(By.CLASS_NAME, 'min_button')
     back_button = driver.find_element(By.CLASS_NAME, 'back_button')
@@ -34,15 +47,23 @@ def test_min_page(chrome_driver, url):
 
     driver.close()
 
-
 """
     Check that right buttons should be disabled and input value should match output returned by backend on first page
 """
 
-def test_max_page(chrome_driver, url):
+def test_max_page(chrome_driver):
     driver = chrome_driver
-    driver.get(url)
+    driver.get(frontend_base_url)
     driver.maximize_window()
+
+    manager_login(driver)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
+    )
+
+    candidate_link = driver.find_element(By.CLASS_NAME, "candidates")
+    candidate_link.click()
 
     total_response = requests.get(f"{backend_base_url_production}/staff")
     total_data = json.loads(total_response.content)
@@ -145,14 +166,80 @@ def test_user_access_candidate_page(chrome_driver):
 
 
 """
+    Check that user that is reporting manager of a listed open role listing 
+    can access Candidates on nav bar 
+    and be directed to candidates page when clicked
+
+"""
+
+def test_reporting_manager_access_candidate_page(chrome_driver):
+
+    driver = chrome_driver
+    driver.get(frontend_base_url)
+    driver.maximize_window()
+
+    rolelisting_data = {
+        "role_name": "Account Manager",
+        "application_opening": "2023-09-21",
+        "application_deadline": "2023-12-31",
+        "dept": "Consultancy",
+        "country": "Vietnam",
+        "manager_ID": 151440
+    }
+
+    response = requests.post(f'{backend_base_url_production}/addrolelisting', json=rolelisting_data)
+
+    assert response.status_code == 201
+
+    response_data = json.loads(response.content)
+    rolelisting_id = list(response_data["data"].keys())[0]
+
+    staff_id = driver.find_element(By.ID, "staffId")
+    staff_id.send_keys("151440")
+
+    password = driver.find_element(By.ID, "password")
+    password.send_keys("sok@123")
+
+    login_button = driver.find_element(By.ID, "login")
+    login_button.click()
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
+    )
+
+    candidate_link = driver.find_element(By.CLASS_NAME, "candidates")
+    candidate_link.click()
+
+    assert candidate_link.is_displayed()
+    assert candidate_link.text == "Candidates"
+    assert '/candidates' in driver.current_url
+
+    # delete rolelisting
+
+    response = requests.delete(f'{backend_base_url_production}/deleterolelisting/{rolelisting_id}')
+    assert response.status_code == 200
+
+    driver.close()
+
+
+"""
     Check if number of staffs shown on frontend is equivalent to
     the number of staffs actually on backend
 """
 
 def test_staff_tally(chrome_driver, url):
     driver = chrome_driver
-    driver.get(url)
+    driver.get(frontend_base_url)
     driver.maximize_window()
+
+    manager_login(driver)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
+    )
+
+    candidate_link = driver.find_element(By.CLASS_NAME, "candidates")
+    candidate_link.click()
 
     total_response = requests.get(f"{backend_base_url_production}/staff")
     total_data = json.loads(total_response.content)
@@ -161,7 +248,7 @@ def test_staff_tally(chrome_driver, url):
     if total == 0:
         total = 1
 
-    WebDriverWait(driver, 10).until(
+    WebDriverWait(driver, 30).until(
         EC.text_to_be_present_in_element((By.CLASS_NAME, 'records'), str(total))
     )
 
@@ -176,13 +263,22 @@ def test_staff_tally(chrome_driver, url):
     Check that staff details are displayed
 """
 
-def test_staff_details(chrome_driver, url):
+def test_staff_details(chrome_driver):
     driver = chrome_driver
-    driver.get(url)
+    driver.get(frontend_base_url)
     driver.maximize_window()
 
+    manager_login(driver)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "candidates"))
+    )
+
+    candidate_link = driver.find_element(By.CLASS_NAME, "candidates")
+    candidate_link.click()
+
+    staff_name = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_name')))
     wait = WebDriverWait(driver, 10)  # Adjust the timeout as needed
-    staff_name = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_name')))
     staff_ID = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_ID')))
     staff_email = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_email')))
     staff_dept = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'staff_dept')))
