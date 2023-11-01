@@ -34,7 +34,6 @@ jobs:
           npm run serve &
           serve_pid=$!
 
-          # Wait for the Vue.js app to start
           for _ in {1..18}; do
             if curl -I http://localhost:8080 -s -f -o /dev/null; then
               echo "Vue.js app is running."
@@ -45,7 +44,6 @@ jobs:
           echo "Vue.js app didn't start in time or encountered an error."
           exit 1
 
-          # Stop the Vue.js app
           kill $serve_pid
 
   fetch-merge-reference:
