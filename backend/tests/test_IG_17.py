@@ -133,7 +133,7 @@ def test_get_rolelisting():
         assert "code" in response_data
         assert "data" in response_data
 
-def get_staff_details():
+def test_get_staff_details():
     response = requests.get(f'{backend_base_url_production}/staff/140008')
     response_content = json.loads(response.content)
     
@@ -141,7 +141,7 @@ def get_staff_details():
     assert "data" in response_content
     assert "message" not in response_content
 
-def get_staff_skills():
+def test_get_staff_skills():
     response = requests.get(f'{backend_base_url_production}/get_staff_skill/140008')
     response_content = json.loads(response.content)
     
