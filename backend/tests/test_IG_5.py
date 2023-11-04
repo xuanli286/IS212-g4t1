@@ -14,14 +14,33 @@ def url():
 ##################### FRONTEND TESTING #####################
 
 """
-    Check if add rolelisting button is displayed and clickable to the correct page
+    Check if add rolelisting button is displayed and clickable to the correct page for HR
 """
-def test_add_rolelisting_button(chrome_driver, url):
+def test_add_rolelisting_button_hr(chrome_driver):
     driver = chrome_driver
-    driver.get(url)
+    driver.get(frontend_base_url)
     driver.maximize_window()
+
+    hr_login(driver)
+    manage_link = driver.find_element(By.ID, "manageRoute")
+    manage_link.click()
+
     driver.find_element(By.CSS_SELECTOR, "#addRoleListingButton").click()
     assert "/addrolelisting" in driver.current_url
+
+"""
+    Check if add rolelisting button is not displayed for Manager
+"""
+def test_add_rolelisting_button_hr(chrome_driver):
+    driver = chrome_driver
+    driver.get(frontend_base_url)
+    driver.maximize_window()
+
+    manager_login(driver)
+    manage_link = driver.find_element(By.ID, "manageRoute")
+    manage_link.click()
+
+    assert not driver.find_element(By.CSS_SELECTOR, "#addRoleListingButton").is_displayed()
 
 """
     Check if Open/Closed pill are the correct colors
