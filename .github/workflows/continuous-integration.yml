@@ -1,7 +1,6 @@
 ---
 name: CI Workflow
 
-
 on:
   pull_request:
     branches:
@@ -11,45 +10,103 @@ concurrency:
   group: ${{ github.ref }}-ci-workflow
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-  #   continue-on-error: false
-  #   timeout-minutes: 10
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "18"
-  #         cache: 'npm'
-  #         cache-dependency-path: frontend/package-lock.json
-
-  #     # - name: Cache node modules
-  #     #   uses: actions/cache@v3
-  #     #   with:
-  #     #     path: |
-  #     #       frontend
-  #     #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-
-  #     - name: Install Dependencies
-  #       run: |
-  #         cd frontend
-  #         npm ci
-
-  #     - name: Build code
-  #       run: |
-  #         cd frontend
-  #         npm run build
-
-  test:
+  build:
     runs-on: ubuntu-latest
     continue-on-error: false
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Test Server
+        run: |
+          cd frontend
+          npm run serve &
+          serve_pid=$!
+
+          for _ in {1..18}; do
+            if curl -I http://localhost:8080 -s -f -o /dev/null; then
+              echo "Vue.js app is running."
+              exit 0  # The app is running, exit the loop
+            fi
+            sleep 10
+          done
+          echo "Vue.js app didn't start in time or encountered an error."
+          exit 1
+
+          kill $serve_pid
+
+  fetch-merge-reference:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Git environment
+        run: git config --global user.email "github-actions@github.com" && git config --global user.name "GitHub Actions"
+
+      - name: Fetch Pull Request Merge Reference
+        run: |
+          git fetch origin "refs/pull/${{ github.event.pull_request.number}}/merge:pull-request-merge"
+          git checkout pull-request-merge
+
+  create-and-merge-testing-branch:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    needs: fetch-merge-reference
+    outputs:
+      testing_branch: ${{ steps.create-testing-branch.outputs.testing_branch }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - name: Create and Merge Testing Branch
+        id: create-testing-branch
+        run: |
+          testing_branch="testing-${GITHUB_REF##*/}"
+          
+          if ! git rev-parse --verify $testing_branch > /dev/null 2>&1; then
+            git checkout -b $testing_branch
+            git push origin $testing_branch
+
+            git fetch --all
+
+            git checkout "${{ github.head_ref }}"
+            git checkout $testing_branch
+            git merge "${{ github.head_ref }}" --no-ff --no-edit
+            git push origin $testing_branch
+          else
+            git checkout $testing_branch
+          fi
+          echo "::set-output name=testing_branch::$testing_branch"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test-functions:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 15
+    needs: create-and-merge-testing-branch
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: testing-merge
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -84,3 +141,20 @@ jobs:
         run: |
           cd frontend
           npm run test
+
+  delete-testing-branch:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    needs: test-functions
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Delete Testing Branch
+        run: |
+          testing_branch="testing-${GITHUB_REF##*/}"
+          git push origin --delete "${testing_branch}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+...

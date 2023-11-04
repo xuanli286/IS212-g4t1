@@ -1,15 +1,33 @@
 <script setup>
     import { ref } from "vue";
     import { useUserStore } from "@/store/useUserStore";
+    import { useConstantStore } from "@/store/useConstantStore";
     import { storeToRefs } from 'pinia';
     import router from '@/router';
+    import axios from "axios";
 
     const store = useUserStore();
-    const {
-        user,
-    } = storeToRefs(store);
+    const { user } = storeToRefs(store);
+
+    const constStore = useConstantStore();
+    const { backend_url } = storeToRefs(constStore);
 
     const access = {1: 'Admin', 2: 'Staff', 3: 'Manager', 4: 'HR Staff'};
+
+    const inCandidates = ref(false);
+
+    axios.get(`${backend_url.value}/openrolelisting?manager_ID=${user.value.staff_ID}`)
+        .then((response) => {
+
+            inCandidates.value = true;
+
+        })
+        .catch((error) => {
+            console.error(error)
+            // console.log("no role listing")
+            inCandidates.value = false;
+            
+        })
 
     const isExpand = ref(false);
 
@@ -40,7 +58,7 @@
             <router-link id="manageRoute" class="ml-12" v-if="user.access_ID == 4" :class="$route.name === 'Role Listing Management' ? 'font-semibold text-yellow' : ''" to="/rolelistingmanagement">
                 Manage
             </router-link>
-            <router-link class="ml-12 candidates" v-if="user.access_ID == 3 || user.access_ID == 4" :class="$route.name === 'Candidates' ? 'font-semibold text-yellow' : ''" to="/candidates">
+            <router-link id="candidateRoute" class="ml-12 candidates" v-if="user.access_ID == 3 || user.access_ID == 4 || inCandidates" :class="$route.name === 'Candidates' ? 'font-semibold text-yellow' : ''" to="/candidates">
                 Candidates
             </router-link>
         </div>
