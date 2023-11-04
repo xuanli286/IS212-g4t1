@@ -46,12 +46,9 @@ export default {
 
       const skillResponse = await axios.get(`${backend_url}/get_all_skill`);
       this.allSkills = this.getAllSkills(skillResponse.data.data);
-
-      this.roleListings = this.processListings(
-        openResponse.data.data.rolelisting.concat(
-          closeResponse.data.data.rolelisting
-        )
-      );
+    
+      this.roleListings = this.processListings(openResponse.data.data.rolelisting, closeResponse.data.data.rolelisting)
+      
       for (let key of Object.keys(this.roleListings)) {
         this.applications[key] = await axios
           .get(`${backend_url}/applications/${key}`)
@@ -101,7 +98,17 @@ export default {
       useRoleListingStore().setRoleListingId(id);
       router.push("/viewspecificrolelisting/" + id);
     },
-    processListings(listings) {
+    processListings(listings1, listings2) {
+      var listings
+      if(listings1 != null && listings2 != null){
+        listings = listings1.concat(listings2)
+      } else if (listings1 != null){
+        listings = listings1
+      } else if (listings2 != null){
+        listings = listings2
+      } else {
+        return {}
+      }
       const processedListings = {};
       for (const listing of listings) {
         for (const key in listing) {

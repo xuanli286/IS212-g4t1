@@ -45,10 +45,10 @@ export default {
         `${backend_url}/get_staff_skill/${user.staff_ID}`
       );
       this.userSkills = skillResponse.data.data;
+      if(openResponse.data.data.rolelisting != null){      
+        this.roleListings = this.processListings(openResponse.data.data.rolelisting)
+      }
 
-      this.roleListings = this.processListings(
-        openResponse.data.data.rolelisting
-      );
       for (let key of Object.keys(this.roleListings)) {
         this.applications[key] = await axios
           .get(`${backend_url}/applications/${key}`)
