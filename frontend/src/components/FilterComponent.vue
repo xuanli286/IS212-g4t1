@@ -28,10 +28,10 @@
         <span>REQUIRED SKILLS</span> 
         <div class="h-72 overflow-y-auto">
           <div>
-            <input type="checkbox" v-model="selectAllSkills"> Select All
+            <input type="checkbox" v-model="selectAllSkills" @change="selectAll()"> Select All
           </div>
           <div v-if="inCandidates" v-for="roleSkill in roleSkils" :key="roleSkill">
-            <input @change="updateFilter()" type="checkbox" class="skill" :value="roleSkill" v-model="selectedSkills" :id="`${roleSkill}`"> {{ roleSkill }} 
+            <input @change="updateFilter()" type="checkbox" class="skill" :value="roleSkill" v-model="selectedSkills" :id="`${roleSkill}`" checked> {{ roleSkill }} 
           </div>
           <div v-else v-for="skill in userSkills" :key="skill">
             <input @change="updateFilter()" type="checkbox" class="skill" :value="skill" v-model="selectedSkills" :id="`${skill}`"> {{ skill }} 
@@ -85,6 +85,16 @@ export default {
     }
   },
   methods: {
+    selectAll() {
+      this.selectedSkills = []
+      this.$emit('filter-updated', {
+        selectedCountry: this.selectedCountry,
+        selectedDept: this.selectedDept,
+        selectedStatus: this.selectedStatus,
+        selectedSkills: this.selectedSkills,
+        selectedRoleListing: this.selectedRoleListing,      
+      });
+    },
     async updateFilter(){
 
       console.log(this.roleSkils.length);
