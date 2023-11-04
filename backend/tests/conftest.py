@@ -17,7 +17,7 @@ def chrome_driver():
     options = [
         "--window-size=1200,1200",
         "--ignore-certificate-errors",
-        "--headless",  # Enable headless mode
+        # "--headless",  # Enable headless mode
         "--disable-gpu",
         "--no-sandbox",
         "--disable-dev-shm-usage"

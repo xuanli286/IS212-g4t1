@@ -24,7 +24,7 @@ def test_rolelisting_applications(chrome_driver, url):
     hr_login(driver)
 
     WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.CLASS_NAME, "manage"))
+        EC.presence_of_element_located((By.ID, "manageRoute"))
     )
 
     manage_link = driver.find_element(By.ID, "manageRoute")

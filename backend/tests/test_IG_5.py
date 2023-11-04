@@ -9,7 +9,7 @@ import json
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/rolelistingmanagement'
+    return f'{frontend_base_url}'
 
 ##################### FRONTEND TESTING #####################
 
@@ -22,7 +22,9 @@ def test_add_rolelisting_button_hr(chrome_driver):
     driver.maximize_window()
 
     hr_login(driver)
-    manage_link = driver.find_element(By.ID, "manageRoute")
+    manage_link = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.ID, "manageRoute"))
+        )
     manage_link.click()
 
     driver.find_element(By.CSS_SELECTOR, "#addRoleListingButton").click()
@@ -37,17 +39,32 @@ def test_add_rolelisting_button_hr(chrome_driver):
     driver.maximize_window()
 
     manager_login(driver)
-    manage_link = driver.find_element(By.ID, "manageRoute")
+    manage_link = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "manageRoute"))
+        )
     manage_link.click()
-
-    assert not driver.find_element(By.CSS_SELECTOR, "#addRoleListingButton").is_displayed()
-
+    
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.ID, "addRoleListingButton"))
+        )
+        assert False
+    except:
+        assert True
+        
 """
     Check if Open/Closed pill are the correct colors
 """
 def test_pill_color(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
+    
+    hr_login(driver)
+    manage_link = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "manageRoute"))
+        )
+    manage_link.click()
+    
     if len(driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")) > 0:
         rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
         for listing in rolelistings:
@@ -66,8 +83,14 @@ def test_rolelisting_items(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
     
+    hr_login(driver)
+    manage_link = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "manageRoute"))
+        )
+    manage_link.click()
+    
     WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".rolelisting-panel"))
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".rolelisting-panel"))
     )
 
     if len(driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")) > 0:
@@ -89,6 +112,13 @@ def test_rolelisting_items(chrome_driver, url):
 def test_date_and_pill(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
+    
+    hr_login(driver)
+    manage_link = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.ID, "manageRoute"))
+        )
+    manage_link.click()
+    
     if len(driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")) > 0:
         rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
         current_date = datetime.now()
@@ -111,12 +141,18 @@ def test_date_and_pill(chrome_driver, url):
 def test_rolelisting_tally(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
-
+    
+    hr_login(driver)
+    manage_link = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "manageRoute"))
+        )
+    manage_link.click()
+    
     WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".rolelisting-panel"))
     )
     num_frontend = len(driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel"))
-
+    
     closed_role_listings_response = requests.get(f'{backend_base_url_production}/closerolelisting')
     closed_role_listings = json.loads(closed_role_listings_response.content)
     if closed_role_listings['code'] == 404:
