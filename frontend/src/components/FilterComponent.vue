@@ -1,5 +1,5 @@
 <template>
-    <div class="p-10 me-5 bg-white rounded-xl w-1/3 border-4 border-yellow">
+    <div class="p-10 me-5 mb-5 bg-white rounded-xl w-1/3 border-yellow">
       <div class="font-serif text-green text-xl">Filter</div>
 
       <select v-if="inCandidates" class="mt-7 p-2 rounded-md w-full outline outline-1" @change="updateFilter()" v-model="selectedRoleListing" id="rolelisting">
