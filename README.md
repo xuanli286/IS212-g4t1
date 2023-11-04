@@ -11,7 +11,7 @@ Before you begin, ensure you have the following prerequisites:
 
 1. Clone this repository to your local machine:  
   ```
-  git clone [https://github.com/your-username/your-vue-app.git](https://github.com/xuanli286/IS212-g4t1.git)https://github.com/xuanli286/IS212-g4t1.git
+  git clone https://github.com/xuanli286/IS212-g4t1.git
   ```
 
 3. Change the working directory to your project folder:  
