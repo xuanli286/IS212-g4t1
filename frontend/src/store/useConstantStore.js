@@ -10,6 +10,8 @@ export const useConstantStore = defineStore('constant', () => {
     const staff = ref({});
     const roles = ref({});
     const backend_url = ref("http://18.143.92.81:5000");
+    // const backend_url = ref("http://localhost:5000");
+
 
   axios
     .get(`${backend_url.value}/get_dept_country/dept`)
