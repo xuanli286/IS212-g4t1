@@ -20,6 +20,7 @@ export default {
       selectedSkills: [],
       selectedStatus: "all",
       allSkills: [],
+      user: {}
     };
   },
   components: {
@@ -31,6 +32,7 @@ export default {
       const { backend_url, countries, hiringDepartment } = constStore;
       const userStore = useUserStore();
       const { user } = userStore;
+      this.user = user;
 
       const openResponse = await axios
         .get(`${backend_url}/openrolelisting`)
@@ -229,7 +231,7 @@ export default {
         <h1 class="translate-x-[85px]">Manage Role Listing</h1>
         <div class="grow"></div>
       </div>
-      <div class="flex items-center">
+      <div v-if="user.access_ID == 4" class="flex items-center">
         <router-link id="addRoleListingButton" to="/addrolelisting"
           class="flex flex-row bg-yellow py-2 px-5 rounded-full text-white text-sm">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
