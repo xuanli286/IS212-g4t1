@@ -66,8 +66,8 @@ def test_search_country(chrome_driver, url):
             EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
         )
         for listing in role_listings:
-            role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
-            results.append(role_title == "Developer")
+            role_country = listing.find_element(By.CLASS_NAME, 'role-country').text
+            results.append(role_country == "Singapore")
 
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(
@@ -100,8 +100,8 @@ def test_search_department(chrome_driver, url):
             EC.presence_of_all_elements_located((By.XPATH, '//li[contains(@class, "rolelisting-panel")]'))
         )
         for listing in role_listings:
-            role_title = listing.find_element(By.CLASS_NAME, 'role-title').text
-            results.append(role_title == "Developer")           
+            role_dept = listing.find_element(By.CLASS_NAME, 'role-department').text
+            results.append(role_dept == "Sales")           
 
     except TimeoutException:
         no_matching_roles_element = WebDriverWait(driver, 30).until(

@@ -39,7 +39,7 @@ Before you begin, ensure you have the following prerequisites:
    Follow steps in [Local Backend Documentation](https://docs.google.com/document/d/1TLUOgL72Z1CxHkzniq_yQ9lF1X6Rhm28illRnb1LxyM/edit)
    > Notes: </br>
    > Make sure your working directory is IS212-g4t1/backend  </br>
-   > Make sure frontend/src/store/useConstStore.js line 12 is commented out and line 13 uncommented. This switches the database environment from AWS EC2 to local.
+   > <b>Make sure frontend/src/store/useConstStore.js line 12 is commented out and line 13 uncommented. This switches the database environment from AWS EC2 to local.</b>
    ```
    cd production_backend
    python g4t1.py
