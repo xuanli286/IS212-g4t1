@@ -119,11 +119,11 @@ function addRoleListing() {
           isOpen.value = true;
           isSuccess.value = true;
           for (const key in response.data) {
-              roleListingId = key;
+              roleListingId.value = key;
           }
         })
         .catch((error) => {
-          errorMessage.value = error.response.data.message;
+          errorMessage.value = error.message;
           isOpen.value = true;
         });
     }

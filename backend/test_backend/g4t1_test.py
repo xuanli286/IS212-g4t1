@@ -365,9 +365,9 @@ def get_role_skill(role_name):
 def get_all_open_rolelisting():
 
     # get rolelisting whereby the application_opening is before today inclusive
-    condition1 = RoleListing.application_opening <= db.func.current_date()
+    condition1 = RoleListing.application_opening <= db.func.current_date() + 1
     # get rolelisting whereby the application_deadline is today or after
-    condition2 = RoleListing.application_deadline >= db.func.current_date()
+    condition2 = RoleListing.application_deadline >= db.func.current_date() + 1
     
     manager_ID = request.args.get('manager_ID')
 
@@ -401,9 +401,9 @@ def get_all_open_rolelisting():
 def get_all_close_rolelisting():
 
     # get rolelisting whereby the application_opening is before today inclusive
-    condition1 = RoleListing.application_opening <= db.func.current_date()
+    condition1 = RoleListing.application_opening <= db.func.current_date() + 1
     # get rolelisting whereby the application_deadline is today or after
-    condition2 = RoleListing.application_deadline >= db.func.current_date()
+    condition2 = RoleListing.application_deadline >= db.func.current_date() + 1
 
     rolelistinglist = RoleListing.query.filter(~(condition1 & condition2)).all()
     if len(rolelistinglist):

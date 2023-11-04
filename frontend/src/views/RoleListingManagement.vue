@@ -98,7 +98,7 @@ export default {
     },
     updateRoleListingId(id) {
       useRoleListingStore().setRoleListingId(id);
-      router.push("/viewspecificrolelisting/" + id);
+      router.push("/specificrolelisting/" + id);
     },
     processListings(listings1, listings2) {
       var listings

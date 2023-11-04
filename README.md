@@ -36,12 +36,15 @@ Before you begin, ensure you have the following prerequisites:
   **Option 1** : AWS EC2 (set up Continuous Development)  
   Follow steps in [CD Documentation](https://docs.google.com/document/d/1g4fEYBYLkMK1JdJ0Rc-Ovfa3eD7IXG25xN-9f-8slTE/edit?usp=sharing)  
   **Option 2**: Local database environment
-   Follow steps in [Local Backend Documentation](https://docs.google.com/document/d/1TLUOgL72Z1CxHkzniq_yQ9lF1X6Rhm28illRnb1LxyM/edit)  
-   > Note: Make sure your working directory is IS212-g4t1/backend  
+   Follow steps in [Local Backend Documentation](https://docs.google.com/document/d/1TLUOgL72Z1CxHkzniq_yQ9lF1X6Rhm28illRnb1LxyM/edit)
+   > Notes: </br>
+   > Make sure your working directory is IS212-g4t1/backend  </br>
+   > Make sure frontend/src/store/useConstStore.js line 12 is commented out and line 13 uncommented. This switches the database environment from AWS EC2 to local.
    ```
    cd production_backend
    python g4t1.py
    ```
+
    
 ## Pytest and Selenium Tests
 
