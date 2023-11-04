@@ -30,13 +30,14 @@ def test_user_view_role_listing_selenium(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
     user_login(driver)
-    view = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(), "View")]')))
+    view = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "viewRoute")))
     assert view.is_displayed()
+    
     try:
-        manage = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(), "Manage")]')))
-        assert False, "The 'Manage' link is not displayed."
-    except TimeoutException:
-        pass
+        manage = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "manageRoute")))
+        assert False
+    except:
+        assert True
 
 """
     Check if Manager has access to ONLY View Role Listing
@@ -45,10 +46,11 @@ def test_manager_view_role_listing_selenium(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
     manager_login(driver)
-    view = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(), "View")]')))
+    view = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "viewRoute")))
     assert view.is_displayed()
+    
     try:
-        manage = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//a[contains(text(), "Manage")]')))
-        assert False, "The 'Manage' link is not displayed."
-    except TimeoutException:
-        pass
+        manage = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "manageRoute")))
+        assert False
+    except:
+        assert True

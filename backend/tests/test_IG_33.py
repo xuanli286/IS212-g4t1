@@ -9,7 +9,7 @@ import json
 
 @pytest.fixture
 def url():
-    return f'{frontend_base_url}/rolelistingmanagement'
+    return f'{frontend_base_url}'
 
 ##################### FRONTEND TESTING #####################
 
@@ -17,9 +17,18 @@ def url():
     Check if applicant number is shown on each rolelisting panel
         else, the page should display 'No listings available!'
 """
-def test_add_rolelisting_button(chrome_driver, url):
+def test_rolelisting_applications(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
+
+    hr_login(driver)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "manageRoute"))
+    )
+
+    manage_link = driver.find_element(By.ID, "manageRoute")
+    manage_link.click()
     
     WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".rolelisting-panel"))
