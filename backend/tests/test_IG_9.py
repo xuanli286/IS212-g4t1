@@ -66,3 +66,19 @@ def test_openrolelisting(chrome_driver, url):
 
 
 ##################### BACKEND TESTING #####################
+
+"""
+    Check get all open rolelisting
+"""
+
+def test_get_open_rolelisting():
+        
+    open_role_listings_response = requests.get(f'{backend_base_url_production}/openrolelisting')
+    
+    assert open_role_listings_response.status_code == 200
+    
+    response_data = json.loads(open_role_listings_response.content)
+    
+    assert "code" in response_data
+    assert "data" in response_data
+    assert "message" not in response_data

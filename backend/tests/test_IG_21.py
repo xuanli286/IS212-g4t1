@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 def url():
     return f'{frontend_base_url}/'
 
+##################### FRONTEND TESTING #####################
 
 """
     Check if all user details are present
@@ -29,6 +30,9 @@ def test_user_details_selenium(chrome_driver, url):
     for field in fields:
         fieldDisplayed = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, field)))
         assert fieldDisplayed.is_displayed()
+
+
+##################### BACKEND TESTING #####################
 
 
 """

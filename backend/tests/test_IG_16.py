@@ -15,6 +15,8 @@ from selenium.webdriver.support.ui import Select
 def url():
     return f'{frontend_base_url}/'
 
+##################### FRONTEND & BACKEND TESTING #####################
+
 """
     Check that sorting button is present for HR to see
 """
@@ -31,6 +33,38 @@ def test_sort_present_hr_selenium(chrome_driver, url):
         sort = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "sort")))
         assert sort.is_displayed()
         break
+
+
+"""
+    Check that sorting button is present for Manager to see
+"""
+def test_sort_present_manager_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    manager_login(driver)
+    manage = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "manageRoute")))
+    manage.click()
+    rolelistings = driver.find_elements(By.CSS_SELECTOR, ".rolelisting-panel")
+    for listing in rolelistings:
+        applicants = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "numberApplicants")))
+        applicants.click()
+        sort = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "sort")))
+        assert sort.is_displayed()
+        break
+
+
+"""
+    Check that sorting button is NOT present for Staff to see
+"""
+def test_sort_present_staff_selenium(chrome_driver, url):
+    driver = chrome_driver
+    driver.get(url)
+    user_login(driver)
+    try:
+        manage = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "manageRoute")))
+        assert False
+    except:
+        assert True
 
 
 ################################################################################################################
