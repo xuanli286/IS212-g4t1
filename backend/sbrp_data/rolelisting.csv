@@ -1,0 +1,5 @@
+RoleListing_ID,Role_Name,Application_Opening,Application_Deadline,Manager_ID,Dept,Country
+1,"Account Manager",2023-09-10,2024-09-30,140001,Consultancy,"Hong Kong"
+2,Developer,2022-12-10,2024-09-30,151440,Engineering,Singapore
+3,"Finance Executive",2022-01-05,2023-05-04,171033,Finance,Malaysia
+4,"Finance Executive",2023-06-16,2023-12-29,171033,Finance,Malaysia

@@ -74,10 +74,16 @@ CREATE TABLE IF NOT EXISTS application (
 
 
 -- ---------------------------------------------------------
--- Load Data into tables
+-- Load Data into tables (for local db only)
+-- Please refer to CD Setup Documentation on how to load data
+-- Please change file reference link to where the directory pointed by secure_file_priv
+-- Example: "C:/wamp64/tmp/"
 -- ---------------------------------------------------------
 
-LOAD DATA INFILE "/opt/lampp/temp/data/Access_Control.csv"
+-- uncomment this line to find which directory to save sbrp_data in
+-- SHOW VARIABLES LIKE "secure_file_priv"
+
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/Access_Control.csv"
 INTO TABLE access_control
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -85,19 +91,13 @@ ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
-LOAD DATA INFILE "/opt/lampp/temp/data/staff.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/staff.csv"
 INTO TABLE staff
-CHARACTER SET latin1
 FIELDS TERMINATED BY ","
 ENCLOSED BY '"'
-LINES TERMINATED BY "\r\n"
-IGNORE 1 LINES
-(Staff_ID, Staff_FName, Staff_LName, Dept, Country, Email, @Role)
-SET 
-	Access_ID = @Role,
-    Staff_password = CONCAT(LOWER(Staff_FName), "@123");
+IGNORE 1 LINES;
 
-LOAD DATA INFILE "/opt/lampp/temp/data/role.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/role.csv"
 INTO TABLE `role`
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -105,8 +105,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
-
-LOAD DATA INFILE "/opt/lampp/temp/data/skill.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/skill.csv"
 INTO TABLE skill
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -114,7 +113,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
-LOAD DATA INFILE "/opt/lampp/temp/data/role_skill.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/role_skill.csv"
 INTO TABLE role_skill
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
@@ -122,12 +121,24 @@ ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
 IGNORE 1 LINES;
 
-LOAD DATA INFILE "/opt/lampp/temp/data/staff_skill.csv"
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/staff_skill.csv"
 INTO TABLE staff_skill
 CHARACTER SET latin1
 FIELDS TERMINATED BY ","
 ENCLOSED BY '"'
 LINES TERMINATED BY "\r\n"
+IGNORE 1 LINES;
+
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/rolelisting.csv"
+INTO TABLE role_listing
+FIELDS TERMINATED BY ","
+ENCLOSED BY '"'
+IGNORE 1 LINES;
+
+LOAD DATA INFILE "C:/wamp64/tmp/sbrp_data/application.csv"
+INTO TABLE application
+FIELDS TERMINATED BY ","
+ENCLOSED BY '"'
 IGNORE 1 LINES;
 
     

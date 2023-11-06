@@ -41,7 +41,7 @@ def test_rolelisting_applications(chrome_driver, url):
     else:
         assert driver.find_element(By.XPATH, "//div[contains(text(), 'No listings available!')]").is_displayed()
 
-##################### FRONTEND TESTING #####################
+##################### BACKEND TESTING #####################
 
 def test_get_applications_from_secific_rolelisting():
 
