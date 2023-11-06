@@ -15,6 +15,8 @@ from selenium.webdriver.support.ui import Select
 def url():
     return f'{frontend_base_url}/'
 
+##################### FRONTEND & BACKEND TESTING #####################
+
 """
     Check that sorting button is present for HR to see
 """
