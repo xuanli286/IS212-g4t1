@@ -1,0 +1,247 @@
+Role_Name,Skill_Name
+Account Manager,Account Management
+Consultancy Director,Account Management
+Consultant,Account Management
+Sales Director,Account Management
+Solutioning Director,Account Management
+Finance Executive,Accounting and Tax Systems
+Finance Director,Accounting and Tax Systems
+Finance Manager,Accounting and Tax Systems
+Finance Executive,Accounting Standards
+Finance Manager,Accounting Standards
+Developer,Applications Development
+Developer,Applications Integration
+Developer,Applications Support and Enhancement
+Finance Executive,Audit Compliance
+Finance Director,Audit Compliance
+Finance Manager,Audit Compliance
+Finance Manager,Audit Frameworks
+Senior Engineer,Automated Equipment and Control Configuration
+Account Manager,Budgeting
+Consultancy Director,Budgeting
+Engineering Director,Budgeting
+Sales Director,Budgeting
+Sales Manager,Budgeting
+Solutioning Director,Budgeting
+Finance Manager,Business Acumen
+HR Director,Business Acumen
+IT Director,Business Acumen
+Account Manager,Business Development
+Consultancy Director,Business Development
+Consultant,Business Development
+Sales Director,Business Development
+Solutioning Director,Business Development
+Developer,Business Environment Analysis
+Account Manager,Business Needs Analysis
+Consultancy Director,Business Needs Analysis
+Consultant,Business Needs Analysis
+Developer,Business Needs Analysis
+IT Analyst,Business Needs Analysis
+Sales Director,Business Needs Analysis
+Solutioning Director,Business Needs Analysis
+Support Engineer,Business Needs Analysis
+Account Manager,Business Negotiation
+Sales Director,Business Negotiation
+Sales Manager,Business Negotiation
+Sales Manager,Business Presentation Delivery
+Developer,Business Requirements Mapping
+Developer,Business Risk Management
+Call Centre,Call Centre Management
+Account Manager,Collaboration
+Admin Executive,Collaboration
+Call Centre,Collaboration
+Consultant,Collaboration
+Developer,Collaboration
+Finance Executive,Collaboration
+Finance Manager,Collaboration
+HR Executive,Collaboration
+IT Analyst,Collaboration
+Junior Engineer,Collaboration
+L&D Executive,Collaboration
+Ops Planning Exec,Collaboration
+Sales Director,Collaboration
+Sales Manager,Collaboration
+Senior Engineer,Collaboration
+Support Engineer,Collaboration
+Account Manager,Communication
+Admin Executive,Communication
+Call Centre,Communication
+Consultancy Director,Communication
+Consultant,Communication
+Developer,Communication
+Engineering Director,Communication
+Finance Executive,Communication
+Finance Director,Communication
+Finance Manager,Communication
+HR Director,Communication
+HR Executive,Communication
+IT Analyst,Communication
+IT Director,Communication
+Junior Engineer,Communication
+L&D Executive,Communication
+Ops Planning Exec,Communication
+Sales Director,Communication
+Sales Manager,Communication
+Senior Engineer,Communication
+Solutioning Director,Communication
+Support Engineer,Communication
+Developer,Configuration Tracking
+Support Engineer,Configuration Tracking
+Sales Manager,Customer Acquisition Management
+Admin Executive,Customer Relationship Management
+Call Centre,Customer Relationship Management
+Sales Manager,Customer Relationship Management
+Account Manager,Data Analytics
+Consultancy Director,Data Analytics
+Consultant,Data Analytics
+Finance Executive,Data Analytics
+Finance Director,Data Analytics
+Finance Manager,Data Analytics
+Sales Director,Data Analytics
+Solutioning Director,Data Analytics
+Developer,Database Administration
+HR Director,Developing People
+Call Centre,Digital Fluency
+HR Executive,Digital Fluency
+HR Director,Employee Communication Management
+HR Executive,Employee Communication Management
+L&D Executive,Employee Communication Management
+HR Executive,Employee Engagement Management
+Finance Director,Finance Business Partnering
+Finance Manager,Finance Business Partnering
+HR Director,Financial Acumen
+IT Director,Financial Acumen
+Finance Executive,Financial Closing
+Finance Executive,Financial Management
+Finance Director,Financial Management
+Finance Manager,Financial Management
+Finance Director,Financial Planning
+Finance Manager,Financial Planning
+Finance Executive,Financial Reporting
+Finance Director,Financial Reporting
+Finance Manager,Financial Reporting
+Finance Manager,Financial Statements Analysis
+Finance Executive,Financial Transactions
+HR Director,Human Resource Advisory
+IT Director,Human Resource Advisory
+HR Director,Human Resource Practices Implementation
+HR Executive,Human Resource Practices Implementation
+L&D Executive,Human Resource Practices Implementation
+HR Director,Human Resource Strategy Formulation
+IT Director,Human Resource Strategy Formulation
+HR Executive,Human Resource Systems Management
+IT Director,Human Resource Systems Management
+L&D Executive,Human Resource Systems Management
+IT Analyst,Infrastructure Deployment
+IT Analyst,Infrastructure Support
+Support Engineer,Infrastructure Support
+L&D Executive,Learning and Development Programme Management
+L&D Executive,Learning Needs Analysis
+IT Analyst,Network Administration and Maintenance
+Support Engineer,Network Administration and Maintenance
+HR Executive,Onboarding
+HR Director,Organisational Design
+Consultancy Director,People and Performance Management
+Sales Director,People and Performance Management
+Solutioning Director,People and Performance Management
+Support Engineer,People and Performance Management
+Account Manager,Pricing Strategy
+Sales Director,Pricing Strategy
+Consultancy Director,Problem Management
+Consultant,Problem Management
+Developer,Problem Management
+Solutioning Director,Problem Management
+Support Engineer,Problem Management
+Account Manager,Problem Solving
+Admin Executive,Problem Solving
+Call Centre,Problem Solving
+Consultancy Director,Problem Solving
+Consultant,Problem Solving
+Developer,Problem Solving
+Engineering Director,Problem Solving
+Finance Executive,Problem Solving
+IT Analyst,Problem Solving
+Junior Engineer,Problem Solving
+L&D Executive,Problem Solving
+Ops Planning Exec,Problem Solving
+Sales Director,Problem Solving
+Sales Manager,Problem Solving
+Senior Engineer,Problem Solving
+Solutioning Director,Problem Solving
+Support Engineer,Problem Solving
+Account Manager,Product Management
+Consultancy Director,Product Management
+Consultant,Product Management
+Developer,Product Management
+Sales Director,Product Management
+Solutioning Director,Product Management
+Finance Executive,Professional and Business Ethics
+Finance Director,Professional and Business Ethics
+Finance Manager,Professional and Business Ethics
+Consultancy Director,Project Management
+Consultant,Project Management
+Developer,Project Management
+Finance Executive,Project Management
+Finance Manager,Project Management
+HR Director,Project Management
+IT Analyst,Project Management
+IT Director,Project Management
+Ops Planning Exec,Project Management
+Sales Director,Project Management
+Solutioning Director,Project Management
+Support Engineer,Project Management
+Finance Manager,Regulatory Compliance
+Finance Manager,Regulatory Risk Assessment
+Finance Director,Regulatory Strategy
+Sales Manager,Sales Closure
+Account Manager,Sales Strategy
+Consultancy Director,Sales Strategy
+Sales Director,Sales Strategy
+Solutioning Director,Sales Strategy
+Support Engineer,Security Administration
+Finance Executive,Sense Making
+Junior Engineer,Sense Making
+IT Analyst,Service Level Management
+Support Engineer,Service Level Management
+HR Director,Skills Framework Adoption
+HR Executive,Skills Framework Adoption
+IT Director,Skills Framework Adoption
+L&D Executive,Skills Framework Adoption
+Developer,Software Configuration
+Developer,Software Design
+Developer,Software Testing
+Developer,Solution Architecture
+Admin Executive,Solutions Design Thinking
+Ops Planning Exec,SOP Development and Implementation
+Account Manager,Stakeholder Management
+Admin Executive,Stakeholder Management
+Call Centre,Stakeholder Management
+Consultancy Director,Stakeholder Management
+Consultant,Stakeholder Management
+Developer,Stakeholder Management
+Engineering Director,Stakeholder Management
+Finance Director,Stakeholder Management
+Finance Manager,Stakeholder Management
+IT Analyst,Stakeholder Management
+Sales Director,Stakeholder Management
+Sales Manager,Stakeholder Management
+Solutioning Director,Stakeholder Management
+Support Engineer,Stakeholder Management
+Consultancy Director,Strategy Planning
+Sales Director,Strategy Planning
+Sales Manager,Strategy Planning
+Solutioning Director,Strategy Planning
+Developer,System Integration
+Support Engineer,System Integration
+HR Director,Talent Management
+Finance Executive,Tax Computation
+Finance Executive,Tax Implications
+Finance Director,Tax Implications
+Finance Manager,Tax Implications
+Call Centre,Technology Application
+Admin Executive,Technology Integration
+HR Director,Technology Integration
+IT Director,Technology Integration
+Sales Manager,Technology Integration
+Engineering Director,Technology Road Mapping
+Developer,User Interface Design
