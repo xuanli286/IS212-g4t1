@@ -80,7 +80,7 @@
             <img class="mr-2" src="@/assets/icons/folder.svg" alt="">
             <p>My Skill Profile</p>
         </div>
-        <div class="flex w-36 p-3 rounded-md hover:bg-grey" @click="logout">
+        <div id="logout" class="flex w-36 p-3 rounded-md hover:bg-grey" @click="logout">
             <img class="mr-2" src="@/assets/icons/logout.svg" alt="">
             <p>Logout</p>
         </div>

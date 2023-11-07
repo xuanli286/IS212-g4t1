@@ -33,7 +33,7 @@ def test_add_rolelisting_button_hr(chrome_driver):
 """
     Check if add rolelisting button is not displayed for Manager
 """
-def test_add_rolelisting_button_hr(chrome_driver):
+def test_add_rolelisting_button_mgr(chrome_driver):
     driver = chrome_driver
     driver.get(frontend_base_url)
     driver.maximize_window()
