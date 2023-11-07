@@ -185,7 +185,7 @@ def test_sort_by_skill_descending_selenium(chrome_driver, url):
         if there are multiple applications with the same skill match percentage, 
         the secondary sorting criterion is chronological order of submission (descending order)
 """
-def test_sort_by_skill_descending_selenium(chrome_driver, url):
+def test_sort_by_same_skill_descending_selenium(chrome_driver, url):
     driver = chrome_driver
     driver.get(url)
     hr_login(driver)

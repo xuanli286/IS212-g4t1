@@ -26,7 +26,7 @@ def test_manager_dropdown_selenium(chrome_driver, url):
     
     all_options = [option.text for option in select.options]
     
-    response = requests.get(f'{backend_base_url}/staff')
+    response = requests.get(f'{backend_base_url_production}/staff')
     expected_options=[]
     
     if response.status_code == 200:
